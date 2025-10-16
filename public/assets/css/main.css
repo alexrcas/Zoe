@@ -1,0 +1,109 @@
+.scanner-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.scanner-container video {
+    width: 90vw;
+    height: 30dvh;
+    object-fit: cover;
+  }
+
+  .nutrient-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+  }
+
+  .nutrient-table th,
+  .nutrient-table td {
+    padding: 0.25rem 0.5rem;
+    font-weight: 500;
+  }
+
+  .nutrient-table th {
+    font-size: 0.85rem;
+    color: #555;
+  }
+
+  .nutrient-table td {
+    font-size: 0.95rem;
+  }
+
+  .meal-item {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .meal-name {
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .meal-values {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 0.8rem; /* ya estaba compacta */
+    color: #555;
+    margin-top: 0.1rem;
+  }
+
+  .meal-values td {
+    width: 25%;          /* 4 columnas iguales */
+    min-width: 35px;     /* opcional: no se compriman demasiado */
+    text-align: center;
+    padding: 0 0.2rem;
+  }
+
+  .meal-values td strong {
+    display: inline-block;   /* evita que números cortos se muevan */
+    width: 100%;             /* ocupa todo el ancho de la celda */
+  }
+
+    .modal-body p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .modal-body input[type="text"] {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  .modal-body input[type="text"]:focus {
+    border-color: #0d6efd; /* azul bootstrap */
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+
+  .modal-header h5.modal-title {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .modal-footer button {
+    min-width: 80px;
+  }
+
+  /* Opcional: resaltar los valores nutricionales en fila */
+  .nutrient-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    color: #555;
+  }
+
+  .nutrient-values span {
+    flex: 1;
+    text-align: center;
+  }

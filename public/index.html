@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyGoldenRecord</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="./assets/css/main.css" rel="stylesheet">
+
+
+</head>
+
+<style>
+  :root {
+    --bottom-nav-height: 70px;
+  }
+
+  main {
+    padding-bottom: var(--bottom-nav-height);
+  }
+</style>
+
+
+<body class="bg-light d-flex flex-column" style="height: 100dvh; overflow: hidden;">
+
+  <!-- Contenedor principal -->
+  <main id="app" class="flex-grow-1 overflow-auto"></main>
+
+  <!-- Barra inferior fija -->
+  <nav class="navbar navbar-light bg-white border-top fixed-bottom py-0 d-flex align-items-start" style="height: var(--bottom-nav-height);">
+    <div class="container d-flex justify-content-around align-items-center pt-2">
+      <a href="#home" class="text-dark text-decoration-none text-center"><i class="bi bi-house-fill fs-4"></i></a>
+      <a href="#about" class="text-dark text-decoration-none text-center"><i class="bi bi-search fs-4"></i></a>
+    </div>
+  </nav>
+
+  <!-- Main JS File -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script src="./assets/js/main.js" type="module"></script>
+
+</body>
+
+</html>

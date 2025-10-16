@@ -1,0 +1,48 @@
+import '../../pages/home-page.js';
+import '../../pages/about-page.js';
+import '../../pages/scan-page.js';
+
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(err => console.error('Error registrando SW', err));
+  });
+}
+
+
+const app = document.getElementById('app');
+
+function renderPage() {
+  const route = window.location.hash.replace('#', '') || 'home';
+  app.innerHTML = `<${route}-page></${route}-page>`;
+  updateNav(route);
+}
+
+function updateNav(activeRoute) {
+  const links = document.querySelectorAll('nav a');
+  links.forEach(link => {
+    const isActive = link.getAttribute('href') === `#${activeRoute}`;
+    link.classList.toggle('text-primary', isActive);
+    link.classList.toggle('text-dark', !isActive);
+  });
+}
+
+window.addEventListener('load', renderPage);
+window.addEventListener('hashchange', renderPage);
+
+/*
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                     || window.navigator.standalone  // iOS
+                     || document.referrer.startsWith('android-app://'); // Android WebAPK
+
+if (!isStandalone) {
+  document.body.innerHTML = `
+    <div class="landing-overlay">
+      <h2>Instala la app para continuar</h2>
+      <p>Ve al menú del navegador y selecciona "Añadir a pantalla de inicio".</p>
+    </div>
+  `;
+}
+
+*/
