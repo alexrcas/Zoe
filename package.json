@@ -1,0 +1,24 @@
+{
+  "name": "zoe",
+  "version": "1.0.0",
+  "description": "He estado explorando distintas opciones para desarrollar mi próxima app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexrcas/Zoe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexrcas/Zoe/issues"
+  },
+  "homepage": "https://github.com/alexrcas/Zoe#readme",
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/ios": "^7.4.3"
+  }
+}
