@@ -39,8 +39,7 @@ export class HomePage extends LitElement {
     render() {
         return html`
       <div class="container">
-
-        <div class="card mt-1">
+        <div class="card" style="margin-top: 10dvh">
             <div class="card-body d-flex py-0">
             <table class="nutrient-table">
       <thead>
