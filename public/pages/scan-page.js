@@ -152,47 +152,49 @@ export class ScanPage extends LitElement {
 
     render() {
         return html`
-            <h2>Escaner actualizado</h2>
-            <h4>lecturas ${this.lecturas}</h4>
-
-            <div class="scanner-container">
-                <video autoplay muted playsinline></video>
-            </div>
-
-            <div class="modal fade" id="scanModal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Código Escaneado</h5>
-                            <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <p class="fw-semibold">${this.product.name}</p>
-
-                            <div class="nutrient-values">
-                                <span>${this.displayValues.kcals || 0} kcals</span>
-                                <span>${this.displayValues.proteins || 0} P</span>
-                                <span>${this.displayValues.carbs || 0} Ch</span>
-                                <span>${this.displayValues.fats || 0} G</span>
+            
+            <div class="container" style="height:100%; background: black">
+                
+            
+                <div class="scanner-container" style="padding-top: 50%">
+                    <video autoplay muted playsinline></video>
+                </div>
+    
+                <div class="modal fade" id="scanModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Código Escaneado</h5>
+                                <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
                             </div>
-
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad en gramos"
-                                   value=${this.grams} @input=${e => {
-                                this.updateValues(e.target.value)
-                            }}/>
-
-                            <p>Cantidad: <span>${this.grams || 0}</span> g</p>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-success" @click=${() => this.addEntry()}>Añadir</button>
-                            <button class="btn btn-secondary" @click=${() => {
-                                this.bsModal.hide();
-                                window.location.hash = '#home'
-                            }}>Cerrar
-                            </button>
+    
+                            <div class="modal-body">
+                                <p class="fw-semibold">${this.product.name}</p>
+    
+                                <div class="nutrient-values">
+                                    <span>${this.displayValues.kcals || 0} kcals</span>
+                                    <span>${this.displayValues.proteins || 0} P</span>
+                                    <span>${this.displayValues.carbs || 0} Ch</span>
+                                    <span>${this.displayValues.fats || 0} G</span>
+                                </div>
+    
+                                <input type="number" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad en gramos"
+                                       value=${this.grams} @input=${e => {
+                                    this.updateValues(e.target.value)
+                                }}/>
+    
+                                <p>Cantidad: <span>${this.grams || 0}</span> g</p>
+    
+                            </div>
+    
+                            <div class="modal-footer">
+                                <button class="btn btn-success" @click=${() => this.addEntry()}>Añadir</button>
+                                <button class="btn btn-secondary" @click=${() => {
+                                    this.bsModal.hide();
+                                    window.location.hash = '#home'
+                                }}>Cerrar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
