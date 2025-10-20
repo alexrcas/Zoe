@@ -19,7 +19,7 @@ export class HomePage extends LitElement {
 
     async firstUpdated() {
 
-        this.meals = await this.dao.listEntres();
+        this.meals = await this.dao.listEntries();
 
         this.meals.forEach(meal => {
             this.total.kcals += Math.round(meal.nutriments.kcals);
@@ -69,10 +69,10 @@ ${this.meals.map(
       <table class="meal-values">
         <tbody>
           <tr>
-            <td><strong>${Math.round(meal.nutriments.kcals)}</strong> kcals</td>
-            <td><strong>${Math.round(meal.nutriments.proteins)}</strong> P</td>
-            <td><strong>${Math.round(meal.nutriments.carbs)}</strong> Ch</td>
-            <td><strong>${Math.round(meal.nutriments.fats)}</strong> G</td>
+            <td><strong>${meal.nutriments.kcals}</strong> kcals</td>
+            <td><strong>${meal.nutriments.proteins}</strong> P</td>
+            <td><strong>${meal.nutriments.carbs}</strong> Ch</td>
+            <td><strong>${meal.nutriments.fats}</strong> G</td>
           </tr>
         </tbody>
       </table>
@@ -81,7 +81,7 @@ ${this.meals.map(
 )}
 
         <div class="d-flex justify-content-center pt-2 pb-2">
-            <button @click=${() => window.location.hash = '#scan'} class="btn btn-primary">+</button>
+            <button @click=${() => window.location.hash = '#recents'} class="btn btn-primary">+</button>
         </div>
 
       </div>

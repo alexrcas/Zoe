@@ -97,7 +97,7 @@ export class ScanPage extends LitElement {
 
   async fetchInfo(code) {
 
-    const localProduct = await this.dao.findMealByBarcode(code);
+    const localProduct = await this.dao.findProductByBarcode(code);
     if (localProduct) {
         this.product = localProduct;
         this.updateValues(this.grams);

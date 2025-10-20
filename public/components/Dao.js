@@ -22,9 +22,14 @@ export class Dao {
         await this.db.add('entries', entry);
     }
 
-    async listEntres() {
+    async listEntries() {
         await this.init();
         return await this.db.getAll('entries');
+    }
+
+    async listProducts() {
+        await this.init();
+        return await this.db.getAll('products');
     }
 
     async saveProduct(product) {
@@ -34,7 +39,7 @@ export class Dao {
         await this.db.add('products', product)
     }
 
-    async findMealByBarcode(barcode) {
+    async findProductByBarcode(barcode) {
         await this.init();
         return await this.db.get('products', barcode);
     }

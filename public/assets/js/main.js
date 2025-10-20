@@ -1,5 +1,5 @@
 import '../../pages/home-page.js';
-import '../../pages/about-page.js';
+import '../../pages/recents-page.js';
 import '../../pages/scan-page.js';
 
 
