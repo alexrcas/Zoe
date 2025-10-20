@@ -69,17 +69,30 @@ export class RecentsPage extends LitElement {
     render() {
         return html`
             <div class="container">
+                <h5 class="pt-2 pb-0 mb-0">Alimentos recientes</h5>
+                <em style="font-weight: 300; font-size: 0.85em">Valores nutricionales por 100 grs. / ml.</em>
 
+                    <div class="row justify-content-center my-1">
+                        <div class="col-md-6">
+                            <div class="search-container">
+                                <input type="text" class="form-control search-input" placeholder="Busca un alimento...">
+                                <i style="font-size: 0.75em" class="fas fa-search search-icon"></i>
+                            </div>
+                        </div>
+                        </div>
+                    
+<div class="list-group mt-2">
                 ${this.products.map(
                         product => html`
-                            <div class="meal-item py-2 border-bottom">
-                                <!-- Fila 1: nombre -->
-                                <div class="meal-name fw-medium text-body mb-1">
-                                    ${product.name}
+                            
+                            <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" aria-current="true">
+                                <div class="d-flex w-100 justify-content-between align-items-start">
+                                    <div>
+                                        <h6 style="font-weight: 400; font-size: 0.80em">${product.name}</h6>
+                                    </div>
                                 </div>
 
-                                <!-- Fila 2: tabla de valores compacta -->
-                                <table class="meal-values">
+                                <table class="meal-values w-100">
                                     <tbody>
                                     <tr @click="${() => this.onSelect(product)}">
                                         <td><strong>${product.nutriments.kcals}</strong> kcals</td>
@@ -89,10 +102,10 @@ export class RecentsPage extends LitElement {
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </a>
                         `
                 )}
-
+</div>
                 <div class="d-flex justify-content-center pt-2 pb-2">
                     <button @click=${() => window.location.hash = '#scan'} class="btn btn-primary">+</button>
                 </div>
@@ -104,7 +117,7 @@ export class RecentsPage extends LitElement {
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Código Escaneado</h5>
+                            <h5 class="modal-title">Añadir alimento</h5>
                             <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
                         </div>
 

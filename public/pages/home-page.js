@@ -35,53 +35,58 @@ export class HomePage extends LitElement {
 
     render() {
         return html`
-            <div class="container">
-                <div class="card mt-2">
-                    <div class="card-body d-flex py-0">
-                        <table class="nutrient-table">
-                            <thead>
-                            <tr>
-                                <th>kcals</th>
-                                <th>P</th>
-                                <th>Ch</th>
-                                <th>G</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>${this.total.kcals}</td>
-                                <td>${this.total.proteins}</td>
-                                <td>${this.total.carbs}</td>
-                                <td>${this.total.fats}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+
+<div class="list-group mt-2">
+                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" aria-current="true">
+                    <div class="d-flex w-100 justify-content-between align-items-start">
+                        <div>
+                            <h6 style="font-weight: 400; font-size: 0.80em">Recuento total</h6>
+                        </div>
                     </div>
-                </div>
+
+                    <table class="meal-values w-100">
+                        <tbody>
+                        <tr>
+                            <td><strong style="font-weight: 400">${this.total.kcals}</strong> kcals</td>
+                            <td><strong style="font-weight: 400">${this.total.proteins}</strong> Prot.</td>
+                            <td><strong style="font-weight: 400">${this.total.carbs}</strong> Carb.</td>
+                            <td><strong style="font-weight: 400">${this.total.fats}</strong> Grasas</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </a>
+</div>
+                
+                <div class="list-group mt-2">
 
                 ${this.entries.map(
                         entry => html`
-                            <div class="meal-item py-2 border-bottom">
-                                <!-- Fila 1: nombre -->
-                                <div class="meal-name fw-medium text-body mb-1">
-                                    ${entry.name} - ${entry.grams} grs.
-                                </div>
 
-                                <!-- Fila 2: tabla de valores compacta -->
-                                <table class="meal-values">
-                                    <tbody>
-                                    <tr>
-                                        <td><strong>${entry.nutriments.kcals}</strong> kcals</td>
-                                        <td><strong>${entry.nutriments.proteins}</strong> P</td>
-                                        <td><strong>${entry.nutriments.carbs}</strong> Ch</td>
-                                        <td><strong>${entry.nutriments.fats}</strong> G</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
+
+                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <div>
+                                            <h6 style="font-weight: 400; font-size: 0.80em">${entry.name}</h6>
+                                        </div>
+                                        <small class="opacity-50 text-nowrap">${entry.grams} grs.</small>
+                                    </div>
+
+                                    <table class="meal-values w-100">
+                                        <tbody>
+                                        <tr>
+                                            <td><strong style="font-weight: 400">${entry.nutriments.kcals}</strong> kcals</td>
+                                            <td><strong style="font-weight: 400">${entry.nutriments.proteins}</strong> Prot.</td>
+                                            <td><strong style="font-weight: 400">${entry.nutriments.carbs}</strong> Carb.</td>
+                                            <td><strong style="font-weight: 400">${entry.nutriments.fats}</strong> Grasas</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </a>
                         `
                 )}
 
+                </div>
                 <div class="d-flex justify-content-center pt-2 pb-2">
                     <button @click=${() => window.location.hash = '#recents'} class="btn btn-primary">+</button>
                 </div>
