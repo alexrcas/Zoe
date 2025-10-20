@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit@3.2.0/index.js?module';
 import { BrowserMultiFormatReader } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/+esm'
-import { openDB } from 'https://unpkg.com/idb?module';
+import { MealDao } from '../components/MealDao.js'; 
 
 export class ScanPage extends LitElement {
 
@@ -11,9 +11,9 @@ export class ScanPage extends LitElement {
     this.scannedCode = '';
     this.product = {};
     this.bsModal = null;
-    this.db = null;
     this.grams = 100;
     this.displayValues = {};
+    this.mealDao = new MealDao();
   }
 
   createRenderRoot() { return this; }
@@ -22,11 +22,6 @@ export class ScanPage extends LitElement {
     this.modalElement = this.querySelector('#scanModal');
     this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
     this.startScanner();
-    this.db = await openDB('scanDB', 1, {
-      upgrade(db) {
-        db.createObjectStore('dailyMeals', { keyPath: 'id', autoIncrement: true });
-      }
-    })
   }
 
 
@@ -100,6 +95,7 @@ export class ScanPage extends LitElement {
 
   async fetchInfo(code) {
 
+
     const response = await fetch(`https://world.openfoodfacts.net/api/v2/product/${code}.json`, {
       method: "GET"
     });
@@ -108,21 +104,24 @@ export class ScanPage extends LitElement {
     if (json.status != 1) { return; }
 
     this.product = json.product;
+
+  
+
     this.updateValues(this.grams);
   }
 
 
   async addMeal() {
-    await this.db.add('dailyMeals', {
+    const meal = {
       name: this.product.product_name,
-      fecha: Date.now(),
       nutriments: {
         kcal: this.displayValues.kcal,
         proteins: this.displayValues.proteins,
         carbs: this.displayValues.carbs,
         fats: this.displayValues.fats
       }
-    });
+    }
+    await this.mealDao.saveDailyMeal(meal);
     this.bsModal.hide();
     window.location.hash = '#home';
   }

@@ -1,12 +1,13 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit@3.2.0/index.js?module';
 import { openDB } from 'https://unpkg.com/idb?module';
+import { MealDao } from '../components/MealDao.js'; 
 
 export class HomePage extends LitElement {
 
     constructor() {
         super();
         this.meals = [];
-        this.db = null;
+        this.mealDao = new MealDao();
         this.total = {
             kcal: 0,
             proteins: 0,
@@ -24,7 +25,7 @@ export class HomePage extends LitElement {
             }
         });
 
-        this.meals = await this.db.getAll('dailyMeals');
+        this.meals = await this.mealDao.listDailyMeals();
 
         this.meals.forEach(meal => {
             this.total.kcal += Math.round(meal.nutriments.kcal);
