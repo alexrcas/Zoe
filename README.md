@@ -1,4 +1,21 @@
-He estado explorando distintas opciones para desarrollar mi próxima app.
+# Zoe
+
+Zoe es un clon de la conocida MyFitnessPal. La idea es llevar la cuenta de las calorías y macronutrientes que se han ingerido al día para poder hacer un seguimiento de la dieta.
+
+El flujo de la app es muy sencillo. Para cada día, se introducen alimentos bien mediante búsqueda o bien escaneando su código de barras y estos van quedando registrados en el diario de comidas, que muestra el cómputo de calorías y macronutrientes.
+
+La app tiene potencial para evolucionar en funcionalidades y complejidad —recetas, funciones sociales, integración en la nube…—, pero el objetivo principal es centrarse en un producto mínimo viable: algo realista, funcional y utilizable en un plazo corto. Al ser usuario habitual de este tipo de aplicaciones, puedo evaluar de manera directa y realista cómo se comporta en el día a día.
+
+Como en muchos de mis side-projects, que más que metas concretas son una excusa para experimentar y aprender, lo esencial no es la meta sino el camino. Durante el desarrollo no habrá una ruta estricta; iré haciendo y deshaciendo, añadiendo y quitando tecnologías o librerías y experimentando y recopilando sensaciones y aprendizajes.
+
+#### Demo
+
+Cuando se añade un alimento al diario, este queda guardado en alimentos recientes. La segunda vez que se quiera añadir el alimento simplemente puede hacerse desde esta listado, evitando la necesidad de consultar a la API. Incluso aunque se escanee el código de barras de nuevo, la aplicación consultará localmente si el alimento existe.
+
+![](/docs/animation.gif)
+
+
+### Diario de desarrollo
 
 Mi primera intención fue usar Ionic, pero me encontré con bastantes problemas de configuración y el clásico dependency hell de npm.
 
