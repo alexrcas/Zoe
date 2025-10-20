@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'https://unpkg.com/lit@3.2.0/index.js?module';
 import { BrowserMultiFormatReader } from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/+esm'
-import { MealDao } from '../components/MealDao.js'; 
+import { ApiService } from '../components/ApiService.js';
+import { Dao } from '../components/Dao.js';
 
 export class ScanPage extends LitElement {
 
@@ -13,7 +14,8 @@ export class ScanPage extends LitElement {
     this.bsModal = null;
     this.grams = 100;
     this.displayValues = {};
-    this.mealDao = new MealDao();
+    this.dao = new Dao();
+    this.apiService = new ApiService();
   }
 
   createRenderRoot() { return this; }
@@ -95,33 +97,34 @@ export class ScanPage extends LitElement {
 
   async fetchInfo(code) {
 
+    const localProduct = await this.dao.findMealByBarcode(code);
+    if (localProduct) {
+        this.product = localProduct;
+        this.updateValues(this.grams);
+        return;
+    }
 
-    const response = await fetch(`https://world.openfoodfacts.net/api/v2/product/${code}.json`, {
-      method: "GET"
-    });
-
-    const json = await response.json();
-    if (json.status != 1) { return; }
-
-    this.product = json.product;
-
-  
-
+    const apiProduct = await this.apiService.findByBarcode(code);
+    if (!apiProduct) {return;}
+    this.product = apiProduct;
     this.updateValues(this.grams);
   }
 
 
-  async addMeal() {
-    const meal = {
-      name: this.product.product_name,
-      nutriments: {
-        kcal: this.displayValues.kcal,
-        proteins: this.displayValues.proteins,
-        carbs: this.displayValues.carbs,
-        fats: this.displayValues.fats
-      }
-    }
-    await this.mealDao.saveDailyMeal(meal);
+  async addEntry() {
+    const entry = {
+        name: this.product.name,
+        grams: this.grams,
+        code: this.scannedCode,
+            nutriments: {
+            kcals: this.displayValues.kcals,
+            proteins: this.displayValues.proteins,
+            carbs: this.displayValues.carbs,
+            fats: this.displayValues.fats
+            }
+        }
+    await this.dao.saveEntry(entry);
+    await this.dao.saveProduct(this.product)
     this.bsModal.hide();
     window.location.hash = '#home';
   }
@@ -133,10 +136,10 @@ export class ScanPage extends LitElement {
     const factor = this.grams / 100; // factor de escala
 
     this.displayValues = {
-      kcal: (this.product.nutriments['energy-kcal_100g'] * factor).toFixed(1),
-      proteins: (this.product.nutriments.proteins_100g * factor).toFixed(1),
-      carbs: (this.product.nutriments.carbohydrates_100g * factor).toFixed(1),
-      fats: (this.product.nutriments.fat_100g * factor).toFixed(1)
+      kcals: (this.product.nutriments.kcals * factor).toFixed(1),
+      proteins: (this.product.nutriments.proteins * factor).toFixed(1),
+      carbs: (this.product.nutriments.carbs * factor).toFixed(1),
+      fats: (this.product.nutriments.fats * factor).toFixed(1)
     };
 
     this.requestUpdate();
@@ -161,10 +164,10 @@ export class ScanPage extends LitElement {
     </div>
 
     <div class="modal-body">
-      <p class="fw-semibold">${this.product.product_name}</p>
+      <p class="fw-semibold">${this.product.name}</p>
 
       <div class="nutrient-values">
-        <span>${this.displayValues.kcal || 0} kcal</span>
+        <span>${this.displayValues.kcals || 0} kcals</span>
         <span>${this.displayValues.proteins || 0} P</span>
         <span>${this.displayValues.carbs || 0} Ch</span>
         <span>${this.displayValues.fats || 0} G</span>
@@ -177,7 +180,7 @@ export class ScanPage extends LitElement {
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-success" @click=${() => this.addMeal()}>Añadir</button>
+      <button class="btn btn-success" @click=${() => this.addEntry()}>Añadir</button>
       <button class="btn btn-secondary" @click=${() => {this.bsModal.hide(); window.location.hash = '#home'}}>Cerrar</button>
     </div>
   </div>
