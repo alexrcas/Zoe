@@ -1,5 +1,6 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
 import {Dao} from '../components/Dao.js';
+import '../components/product-search.js';
 
 
 export class RecentsPage extends LitElement {
@@ -25,7 +26,7 @@ export class RecentsPage extends LitElement {
         this.requestUpdate();
     }
 
-    onSelect(product) {
+    selectProduct(product) {
         this.selectedProduct = product;
         this.updateValues(this.grams);
         this.requestUpdate();
@@ -71,41 +72,35 @@ export class RecentsPage extends LitElement {
             <div class="container">
                 <h5 class="pt-2 pb-0 mb-0">Alimentos recientes</h5>
                 <em style="font-weight: 300; font-size: 0.85em">Valores nutricionales por 100 grs. / ml.</em>
+                
+                <product-search></product-search>
 
-                    <div class="row justify-content-center my-1">
-                        <div class="col-md-6">
-                            <div class="search-container">
-                                <input type="text" class="form-control search-input" placeholder="Busca un alimento...">
-                                <i style="font-size: 0.75em" class="fas fa-search search-icon"></i>
-                            </div>
-                        </div>
-                        </div>
-                    
-<div class="list-group mt-2">
-                ${this.products.map(
-                        product => html`
-                            
-                            <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" aria-current="true">
-                                <div class="d-flex w-100 justify-content-between align-items-start">
-                                    <div>
-                                        <h6 style="font-weight: 400; font-size: 0.80em">${product.name}</h6>
+                <div class="list-group mt-2">
+                    ${this.products.map(
+                            product => html`
+
+                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" @click=${(e) => { e.preventDefault(); this.selectProduct(product); }}
+                                   aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <div>
+                                            <h6 style="font-weight: 400; font-size: 0.80em">${product.name}</h6>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <table class="meal-values w-100">
-                                    <tbody>
-                                    <tr @click="${() => this.onSelect(product)}">
-                                        <td><strong>${product.nutriments.kcals}</strong> kcals</td>
-                                        <td><strong>${product.nutriments.proteins}</strong> P</td>
-                                        <td><strong>${product.nutriments.carbs}</strong> Ch</td>
-                                        <td><strong>${product.nutriments.fats}</strong> G</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </a>
-                        `
-                )}
-</div>
+                                    <table class="meal-values w-100">
+                                        <tbody>
+                                        <tr>
+                                            <td><strong>${product.nutriments.kcals}</strong> kcals</td>
+                                            <td><strong>${product.nutriments.proteins}</strong> P</td>
+                                            <td><strong>${product.nutriments.carbs}</strong> Ch</td>
+                                            <td><strong>${product.nutriments.fats}</strong> G</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </a>
+                            `
+                    )}
+                </div>
                 <div class="d-flex justify-content-center pt-2 pb-2">
                     <button @click=${() => window.location.hash = '#scan'} class="btn btn-primary">+</button>
                 </div>
