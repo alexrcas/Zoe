@@ -25,4 +25,32 @@ export class ApiService {
             }
         }
     }
+
+    async search(terms) {
+        terms = terms.replaceAll(' ', '+');
+
+        console.log('searching', terms);
+
+        const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${terms}&search_simple=1&fields=code,product_name,brands,nutriments&page_size=10&page=1&json=1`, {
+            method: "GET"
+        });
+
+        if (!response.ok) { return []; }
+
+        const json = await response.json();
+
+        return json.products.map(p =>
+            ({
+                name: p.product_name,
+                brands: p.brands,
+                code: p.code,
+                nutriments: {
+                    kcals: p.nutriments['energy-kcal_100g'],
+                    proteins: p.nutriments.proteins_100g,
+                    carbs: p.nutriments.carbohydrates_100g,
+                    fats: p.nutriments.fat_100g
+                }
+            })
+        );
+    }
 }
