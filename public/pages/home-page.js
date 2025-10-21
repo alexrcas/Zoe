@@ -41,7 +41,7 @@ export class HomePage extends LitElement {
                 <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" aria-current="true">
                     <div class="d-flex w-100 justify-content-between align-items-start">
                         <div>
-                            <h6 style="font-weight: 400; font-size: 0.80em">Recuento total</h6>
+                            <h6 style="font-weight: 400; font-size: 0.80em">Total</h6>
                         </div>
                     </div>
 

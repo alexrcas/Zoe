@@ -23,15 +23,15 @@ export class ProductSearch extends LitElement {
 
     async handleSearch(e) {
         if (e.key != 'Enter') { return; }
-        this.searchResult = await this.apiService.search(this.searchValue);
-        console.log('resultado', this.searchResult);
         this.bsSearchModal.show();
+        this.requestUpdate();
+        this.searchResult = await this.apiService.search(this.searchValue);
         this.requestUpdate();
     }
 
     render() {
         return html`
-            <div class="row justify-content-center my-1">
+            <div class="row justify-content-center my-2">
                 <div class="col-md-6">
                     <div class="search-container">
                         <input type="text" @keydown=${this.handleSearch} class="form-control search-input" value=${this.searchValue} @input="${e => this.searchValue = e.target.value}" placeholder="Busca un alimento...">
@@ -44,18 +44,18 @@ export class ProductSearch extends LitElement {
             <div class="modal fade" id="searchModal" tabindex="-1">
                 <div class="modal-dialog modal-fullscreen-sm-down">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header pb-2">
                             <h5 class="modal-title">Resultados para "${this.searchValue}"</h5>
                             <button type="button" class="btn-close" @click=${() => this.bsSearchModal.hide()}></button>
                         </div>
 
-                        <div class="modal-body">
+                        <div class="modal-body px-0 pt-0">
                             <div class="list-group">
                                 
                                 ${this.searchResult.map(
                                         product => html`
 
-                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2"
+                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" @click=${(e) => { e.preventDefault();}}
                                    aria-current="true">
                                     <div class="d-flex w-100 justify-content-between align-items-start">
                                         <div>
@@ -78,14 +78,6 @@ export class ProductSearch extends LitElement {
                             `
                                 )}
                             </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-success">Añadir</button>
-                            <button class="btn btn-secondary" @click=${() => {
-                                this.bsSearchModal.hide()
-                            }}>Cerrar
-                            </button>
                         </div>
                     </div>
                 </div>

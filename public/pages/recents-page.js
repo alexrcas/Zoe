@@ -105,7 +105,9 @@ export class RecentsPage extends LitElement {
                     )}
                 </div>
                 <div class="d-flex justify-content-center pt-2 pb-2">
-                    <button @click=${() => window.location.hash = '#scan'} class="btn btn-primary">+</button>
+                    <button @click=${() => window.location.hash = '#scan'} class="btn btn-primary">
+                        Escanear <i class="fa-solid fa-barcode"></i>
+                    </button>
                 </div>
 
             </div>
@@ -115,11 +117,11 @@ export class RecentsPage extends LitElement {
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Añadir alimento</h5>
+                            <h5 class="modal-title">Añadir</h5>
                             <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
                         </div>
 
-                        <div class="modal-body px-2">
+                        <div class="modal-body px-3 pb-0 pt-1">
 
                                 <a class="list-group-item list-group-item-action d-flex flex-column py-2" @click=${(e) => { e.preventDefault()}}
                                    aria-current="true">
@@ -141,11 +143,17 @@ export class RecentsPage extends LitElement {
                                     </table>
                                 </a>
 
+                            <div class="d-flex justify-content-center pt-1">
+                            <div class="input-group input-group-sm pb-2" style="width: 35%">
+                                <input class="form-control" type="number" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad en gramos"
+                                       value=${this.grams} @input=${e => {
+                                    this.updateValues(e.target.value)
+                                }}/>
+                                <span class="input-group-text" id="basic-addon2">grs.</span>
+                            </div>
+                            </div>
 
-                            <input class="mt-2" type="number" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad en gramos"
-                                   value=${this.grams} @input=${e => {
-                                this.updateValues(e.target.value)
-                            }}/>
+                            
 
                         </div>
 
