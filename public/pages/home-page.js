@@ -36,7 +36,7 @@ export class HomePage extends LitElement {
     render() {
         return html`
 
-            <div class="container">
+            <div class="container px-0">
 <div class="list-group mt-2">
                 <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" aria-current="true">
                     <div class="d-flex w-100 justify-content-between align-items-start">

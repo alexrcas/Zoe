@@ -11,31 +11,23 @@ export class ProductSearch extends LitElement {
         this.apiService = new ApiService();
     }
 
-    /*
-        https://world.openfoodfacts.org/cgi/search.pl?search_terms=chocolate+hacendado&search_simple=1&fields=product_name&page_size=20&page=1&json=1
-        https://world.openfoodfacts.org/cgi/search.pl?search_terms=chocolate+hacendado&search_simple=1&fields=product_name,nutriments&page_size=20&page=1&json=1
-        https://world.openfoodfacts.org/cgi/search.pl?search_terms=chocolate+hacendado&search_simple=1&fields=product_name,brands,nutriments&page_size=20&page=1&json=1
-     */
-
     async firstUpdated() {
         this.modalElement = this.querySelector('#searchModal');
         this.bsSearchModal = new bootstrap.Modal(this.modalElement, {backdrop: 'static'});
         this.requestUpdate();
     }
 
-
     createRenderRoot() {
         return this;
     }
 
-
     async handleSearch(e) {
         if (e.key != 'Enter') { return; }
-        this.bsSearchModal.show();
         this.searchResult = await this.apiService.search(this.searchValue);
+        console.log('resultado', this.searchResult);
+        this.bsSearchModal.show();
         this.requestUpdate();
     }
-
 
     render() {
         return html`

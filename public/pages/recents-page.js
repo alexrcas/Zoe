@@ -74,6 +74,9 @@ export class RecentsPage extends LitElement {
                 <em style="font-weight: 300; font-size: 0.85em">Valores nutricionales por 100 grs. / ml.</em>
                 
                 <product-search></product-search>
+            </div>
+            
+            <div class="container px-0">
 
                 <div class="list-group mt-2">
                     ${this.products.map(
@@ -116,31 +119,38 @@ export class RecentsPage extends LitElement {
                             <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
                         </div>
 
-                        <div class="modal-body">
-                            <p class="fw-semibold">${this.selectedProduct.name}</p>
+                        <div class="modal-body px-2">
 
-                            <div class="nutrient-values">
-                                <span>${this.displayValues.kcals || 0} kcals</span>
-                                <span>${this.displayValues.proteins || 0} P</span>
-                                <span>${this.displayValues.carbs || 0} Ch</span>
-                                <span>${this.displayValues.fats || 0} G</span>
-                            </div>
+                                <a class="list-group-item list-group-item-action d-flex flex-column py-2" @click=${(e) => { e.preventDefault()}}
+                                   aria-current="true">
+                                    <div class="d-flex w-100 justify-content-between align-items-start">
+                                        <div>
+                                            <h6 style="font-weight: 400; font-size: 0.80em">${this.selectedProduct.name}</h6>
+                                        </div>
+                                    </div>
+    
+                                    <table class="meal-values w-100">
+                                        <tbody>
+                                        <tr>
+                                            <td><strong style="font-weight: 400">${this.displayValues.kcals}</strong> kcals</td>
+                                            <td><strong style="font-weight: 400">${this.displayValues.proteins}</strong> Prot.</td>
+                                            <td><strong style="font-weight: 400">${this.displayValues.carbs}</strong> Carb.</td>
+                                            <td><strong style="font-weight: 400">${this.displayValues.fats}</strong> Grasas</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </a>
 
-                            <input type="number" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad en gramos"
+
+                            <input class="mt-2" type="number" inputmode="numeric" pattern="[0-9]*" placeholder="Cantidad en gramos"
                                    value=${this.grams} @input=${e => {
                                 this.updateValues(e.target.value)
                             }}/>
-
-                            <p>Cantidad: <span>${this.grams || 0}</span> g</p>
 
                         </div>
 
                         <div class="modal-footer">
                             <button class="btn btn-success" @click=${() => this.addEntry()}>Añadir</button>
-                            <button class="btn btn-secondary" @click=${() => {
-                                this.bsModal.hide()
-                            }}>Cerrar
-                            </button>
                         </div>
                     </div>
                 </div>
