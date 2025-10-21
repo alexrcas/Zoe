@@ -90,10 +90,10 @@ export class RecentsPage extends LitElement {
                                     <table class="meal-values w-100">
                                         <tbody>
                                         <tr>
-                                            <td><strong>${product.nutriments.kcals}</strong> kcals</td>
-                                            <td><strong>${product.nutriments.proteins}</strong> P</td>
-                                            <td><strong>${product.nutriments.carbs}</strong> Ch</td>
-                                            <td><strong>${product.nutriments.fats}</strong> G</td>
+                                            <td><strong style="font-weight: 400">${product.nutriments.kcals}</strong> kcals</td>
+                                            <td><strong style="font-weight: 400">${product.nutriments.proteins}</strong> Prot.</td>
+                                            <td><strong style="font-weight: 400">${product.nutriments.carbs}</strong> Carb.</td>
+                                            <td><strong style="font-weight: 400">${product.nutriments.fats}</strong> Grasas</td>
                                         </tr>
                                         </tbody>
                                     </table>
