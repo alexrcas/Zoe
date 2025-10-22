@@ -62,6 +62,7 @@ export class RecentsPage extends LitElement {
             }
         }
         await this.dao.saveEntry(entry);
+        await this.dao.saveProduct(entry)
         this.bsModal.hide();
         window.location.hash = '#home';
     }
