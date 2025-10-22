@@ -66,6 +66,10 @@ export class RecentsPage extends LitElement {
         window.location.hash = '#home';
     }
 
+    handleProductSelected(event) {
+        this.selectProduct(event.detail)
+    }
+
 
     render() {
         return html`
@@ -73,7 +77,7 @@ export class RecentsPage extends LitElement {
                 <h5 class="pt-2 pb-0 mb-0">Alimentos recientes</h5>
                 <em style="font-weight: 300; font-size: 0.85em">Valores nutricionales por 100 grs. / ml.</em>
                 
-                <product-search></product-search>
+                <product-search @product-selected="${this.handleProductSelected}"></product-search>
             </div>
             
             <div class="container px-0">

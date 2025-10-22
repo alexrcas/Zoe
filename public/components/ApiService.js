@@ -29,8 +29,6 @@ export class ApiService {
     async search(terms) {
         terms = terms.replaceAll(' ', '+');
 
-        console.log('searching', terms);
-
         const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${terms}&search_simple=1&fields=code,product_name,brands,nutriments&page_size=10&page=1&json=1`, {
             method: "GET"
         });

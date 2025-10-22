@@ -55,7 +55,18 @@ export class ProductSearch extends LitElement {
                                 ${this.searchResult.map(
                                         product => html`
 
-                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" @click=${(e) => { e.preventDefault();}}
+                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2" @click=${
+                                            (e) => {
+                                                e.preventDefault();
+                                                this.dispatchEvent(
+                                                    new CustomEvent('product-selected', {
+                                                        detail: product,
+                                                        bubbles: true,
+                                                        composed: true
+                                                    })
+                                                );
+                                                this.bsSearchModal.hide();
+                                            }}
                                    aria-current="true">
                                     <div class="d-flex w-100 justify-content-between align-items-start">
                                         <div>
