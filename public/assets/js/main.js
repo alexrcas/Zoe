@@ -14,9 +14,10 @@ if ('serviceWorker' in navigator) {
 const app = document.getElementById('app');
 
 function renderPage() {
-  const route = window.location.hash.replace('#', '') || 'home';
-  app.innerHTML = `<${route}-page></${route}-page>`;
-  updateNav(route);
+    const [routeName] = window.location.hash.replace('#', '').split('?');
+    const route = routeName || 'home';
+    app.innerHTML = `<${route}-page></${route}-page>`;
+    updateNav(route);
 }
 
 function updateNav(activeRoute) {

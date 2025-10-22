@@ -14,6 +14,7 @@ export class RecentsPage extends LitElement {
         this.grams = 100;
         this.selectedProduct = {};
         this.showScanner = false;
+        this.group = null;
     }
 
     createRenderRoot() {
@@ -21,6 +22,9 @@ export class RecentsPage extends LitElement {
     }
 
     async firstUpdated() {
+        const query = window.location.hash.slice(1).split('?')[1];
+        this.group = new URLSearchParams(query).get('group');
+
         this.products = await this.dao.listProducts();
         this.modalElement = this.querySelector('#recentsModal');
         this.bsModal = new bootstrap.Modal(this.modalElement, {backdrop: 'static'});
@@ -52,6 +56,7 @@ export class RecentsPage extends LitElement {
 
     async addEntry() {
         const entry = {
+            group: this.group,
             name: this.selectedProduct.name,
             grams: this.grams,
             code: this.selectedProduct.code,
@@ -203,7 +208,7 @@ export class RecentsPage extends LitElement {
                         </div>
 
                         <div class="modal-footer">
-                            <button class="btn btn-success" @click=${() => this.addEntry()}>Añadir</button>
+                            <button class="btn btn-success" @click=${() => this.addEntry('Desayuno')}>Añadir</button>
                         </div>
                     </div>
                 </div>
