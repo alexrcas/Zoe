@@ -1,20 +1,14 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
 import {Dao} from '../components/Dao.js';
+import { SummaryComponent } from '../components/summary-component.js';
 import { JournalService } from "../components/JournalService.js";
 
 export class HomePage extends LitElement {
 
     constructor() {
         super();
-        this.entries = [];
         this.dao = new Dao();
         this.journalService = new JournalService();
-        this.total = {
-            kcals: 0,
-            proteins: 0,
-            carbs: 0,
-            fats: 0
-        }
         this.journal = [];
     }
 
@@ -23,17 +17,7 @@ export class HomePage extends LitElement {
     }
 
     async firstUpdated() {
-
-        this.entries = await this.dao.listEntries();
         this.journal = await this.journalService.getJournal();
-
-        this.entries.forEach(entry => {
-            this.total.kcals += Math.round(entry.nutriments.kcals);
-            this.total.proteins += Math.round(entry.nutriments.proteins);
-            this.total.carbs += Math.round(entry.nutriments.carbs);
-            this.total.fats += Math.round(entry.nutriments.fats);
-        });
-
         this.requestUpdate();
     }
 
@@ -41,29 +25,9 @@ export class HomePage extends LitElement {
         return html`
 
             <div class="container px-0">
-                <div class="list-group mt-2 mb-1">
-                    <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2"
-                       aria-current="true">
-                        <div class="d-flex w-100 justify-content-between align-items-start">
-                            <div>
-                                <h6 style="font-weight: 400; font-size: 0.80em">Total</h6>
-                            </div>
-                        </div>
-
-                        <table class="meal-values w-100">
-                            <tbody>
-                            <tr>
-                                <td><strong style="font-weight: 400">${this.total.kcals}</strong> kcals</td>
-                                <td><strong style="font-weight: 400">${this.total.proteins}</strong> Prot.</td>
-                                <td><strong style="font-weight: 400">${this.total.carbs}</strong> Carb.</td>
-                                <td><strong style="font-weight: 400">${this.total.fats}</strong> Grasas</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </a>
-                </div>
                 
-
+                <summary-component></summary-component>
+                
                     ${this.journal.map(
                             journalEntry => html`
                                 
