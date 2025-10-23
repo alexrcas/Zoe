@@ -52,7 +52,7 @@ export class Dao {
 
     async getUserGoals() {
         await this.init();
-        const goals = await this.db.get('goals', 'userGoals');
+        return await this.db.get('goals', 'userGoals');
     }
 
 }
