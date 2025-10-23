@@ -1,6 +1,6 @@
 import '../../pages/home-page.js';
 import '../../pages/recents-page.js';
-import '../../components/scan-component.js';
+import '../../pages/profile-page.js';
 
 
 if ('serviceWorker' in navigator) {
