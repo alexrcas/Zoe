@@ -68,15 +68,15 @@ export class HomePage extends LitElement {
                             journalEntry => html`
                                 
                                 <div>
-                                    <span class="badge rounded-pill text-bg-light">${journalEntry.group}</span>
+                                    <span class="badge rounded-pill text-bg-light text-secondary" style="font-weight: 600">${journalEntry.group}</span>
                                 </div>
-                                <div class="list-group list-group-flush my-2">
+                                <div class="list-group list-group-flush my-2 striped-list">
                                     
                                 
                                     ${journalEntry.entries.map(
                                         entry => html`
                                             
-                                    <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2"
+                                    <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-1"
                                        aria-current="true">
                                         <div class="d-flex w-100 justify-content-between align-items-start">
                                             <div>

@@ -138,3 +138,10 @@
     justify-content: center;
     z-index: 9999;
 }
+
+/*
+.striped-list .list-group-item:nth-child(odd) {
+    background-color: rgba(225, 243, 251, 0.56);
+}
+
+ */

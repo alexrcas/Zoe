@@ -99,11 +99,11 @@ export class RecentsPage extends LitElement {
 
             <div class="container px-0">
 
-                <div class="list-group mt-2">
+                <div class="list-group list-group-flush mt-2">
                     ${this.products.map(
                             product => html`
 
-                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2"
+                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-1"
                                    @click=${(e) => {
                                        e.preventDefault();
                                        this.selectProduct(product);
