@@ -79,6 +79,7 @@ export class RecentsPage extends LitElement {
     }
 
     handleProductScanned(event) {
+        console.log(event.detail)
         this.showScanner = false;
         this.selectProduct(event.detail);
         this.requestUpdate();

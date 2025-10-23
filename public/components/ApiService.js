@@ -18,10 +18,10 @@ export class ApiService {
             name: json.product.product_name,
             code: code,
             nutriments: {
-                kcals: json.product.nutriments['energy-kcal_100g'],
-                proteins: json.product.nutriments.proteins_100g,
-                carbs: json.product.nutriments.carbohydrates_100g,
-                fats: json.product.nutriments.fat_100g
+                kcals: json.product.nutriments['energy-kcal_100g'] || 0,
+                proteins: json.product.nutriments.proteins_100g || 0,
+                carbs: json.product.nutriments.carbohydrates_100g || 0,
+                fats: json.product.nutriments.fat_100g || 0
             }
         }
     }
