@@ -1,6 +1,7 @@
 import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
 import {Dao} from '../components/Dao.js';
 import '../components/product-search.js';
+import '../components/scan-component.js';
 
 
 export class RecentsPage extends LitElement {

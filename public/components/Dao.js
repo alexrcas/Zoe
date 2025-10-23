@@ -7,15 +7,27 @@ export class Dao {
     }
 
     async init() {
-        if (!this.db) {
-            this.db = await openDB('scanDB', 1, {
-                upgrade(db) {
-                  db.createObjectStore('entries', { keyPath: 'id', autoIncrement: true });
-                  db.createObjectStore('products', { keyPath: 'code' });
-                  db.createObjectStore('goals');
-                }
-              })
-        }
+        if (this.db) { return; }
+
+        this.db = await openDB('scanDB', 1, {
+            upgrade(db) {
+              db.createObjectStore('entries', { keyPath: 'id', autoIncrement: true });
+              db.createObjectStore('products', { keyPath: 'code' });
+              db.createObjectStore('goals');
+            }
+          });
+
+        const existingGoals = await this.getUserGoals();
+        if (existingGoals) { return; }
+
+        const goals = {
+            kcals: 1820,
+            carbs: 250,
+            fats: 60,
+            proteins: 70
+        };
+
+        await this.saveOrUpdateUserGoals(goals)
     }
 
     async saveEntry(entry) {
