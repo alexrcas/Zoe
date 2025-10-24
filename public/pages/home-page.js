@@ -10,6 +10,8 @@ export class HomePage extends LitElement {
         this.dao = new Dao();
         this.journalService = new JournalService();
         this.journal = [];
+        this.selectedEntry = null;
+        this.bsModal = null;
     }
 
     createRenderRoot() {
@@ -17,7 +19,22 @@ export class HomePage extends LitElement {
     }
 
     async firstUpdated() {
+        this.modalElement = this.querySelector('#entryModal');
+        this.bsModal = new bootstrap.Modal(this.modalElement, {backdrop: 'static'});
         this.journal = await this.journalService.getJournal();
+        this.requestUpdate();
+    }
+
+    selectEntry(entry) {
+        this.selectedEntry = entry;
+        this.bsModal.show();
+        this.requestUpdate();
+    }
+
+    async deleteEntry() {
+        await this.dao.deleteEntry(this.selectedEntry);
+        this.journal = await this.journalService.getJournal();
+        this.bsModal.hide();
         this.requestUpdate();
     }
 
@@ -41,7 +58,10 @@ export class HomePage extends LitElement {
                                         entry => html`
                                             
                                     <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-1"
-                                       aria-current="true">
+                                       aria-current="true" @click=${(e) => {
+                                        e.preventDefault();
+                                        this.selectEntry(entry);
+                                    }}>
                                         <div class="d-flex w-100 justify-content-between align-items-start">
                                             <div>
                                                 <h6 style="font-weight: 400; font-size: 0.80em">${entry.name}</h6>
@@ -82,6 +102,23 @@ export class HomePage extends LitElement {
 
             </div>
             </div>
+            
+
+            <div class="modal fade" id="entryModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar</h5>
+                            <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
+                        </div>
+                        <div class="modal-body px-3 pb-0 pt-2">
+                            <div class="alert alert-warning py-2 my-2" style="font-size: 0.8em">¿Eliminar ${this.selectedEntry?.name}?</div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-end">
+                            <button class="btn btn-outline-danger" @click=${this.deleteEntry}>Eliminar</button>
+                        </div>
+                    </div>
+                </div>
         `;
     }
 }

@@ -67,4 +67,11 @@ export class Dao {
         return await this.db.get('goals', 'userGoals');
     }
 
+    async deleteEntry(entry) {
+        await this.init();
+        const transaction = this.db.transaction(['entries'], 'readwrite');
+        const store = transaction.objectStore('entries');
+        store.delete(entry.id);
+    }
+
 }
