@@ -74,7 +74,7 @@ export class SummaryComponent extends LitElement {
                                         <small class="fw-semibold text-secondary">${this.kcals} / ${this.goals.kcals}</small>
                                     </div>
                                     <div class="progress rounded-pill" style="height: 0.3em; background-color: #f0f0f0;">
-                                        <div class="progress-bar bg-primary rounded-pill" style="width: ${Math.round((this.kcals / this.goals.kcals) * 100)}%; transition: width 0.4s ease;"></div>
+                                        <div class="progress-bar bg-primary rounded-pill opacity-75" style="width: ${Math.round((this.kcals / this.goals.kcals) * 100)}%; transition: width 0.4s ease;"></div>
                                     </div>
                                 </div>
 
@@ -85,7 +85,7 @@ export class SummaryComponent extends LitElement {
                                         <small class="fw-semibold text-secondary">${this.proteins} / ${this.goals.proteins} grs.</small>
                                     </div>
                                     <div class="progress rounded-pill" style="height: 0.3em; background-color: #f0f0f0;">
-                                        <div class="progress-bar bg-danger rounded-pill" style="width: ${Math.round((this.proteins / this.goals.proteins) * 100)}%; transition: width 0.4s ease;"></div>
+                                        <div class="progress-bar bg-danger rounded-pill opacity-75" style="width: ${Math.round((this.proteins / this.goals.proteins) * 100)}%; transition: width 0.4s ease;"></div>
                                     </div>
                                 </div>
 
@@ -96,7 +96,7 @@ export class SummaryComponent extends LitElement {
                                         <small class="fw-semibold text-secondary">${this.carbs} / ${this.goals.carbs} grs.</small>
                                     </div>
                                     <div class="progress rounded-pill" style="height: 0.3em; background-color: #f0f0f0;">
-                                        <div class="progress-bar bg-success rounded-pill" style="width: ${Math.round((this.carbs / this.goals.carbs) * 100)}%; transition: width 0.4s ease;"></div>
+                                        <div class="progress-bar bg-success rounded-pill opacity-75" style="width: ${Math.round((this.carbs / this.goals.carbs) * 100)}%; transition: width 0.4s ease;"></div>
                                     </div>
                                 </div>
 
@@ -107,7 +107,7 @@ export class SummaryComponent extends LitElement {
                                         <small class="fw-semibold text-secondary">${this.fats} / ${this.goals.fats} grs.</small>
                                     </div>
                                     <div class="progress rounded-pill" style="height: 0.3em; background-color: #f0f0f0;">
-                                        <div class="progress-bar bg-warning rounded-pill" style="width: ${Math.round((this.fats / this.goals.fats) * 100)}%; transition: width 0.4s ease;"></div>
+                                        <div class="progress-bar bg-warning rounded-pill opacity-75" style="width: ${Math.round((this.fats / this.goals.fats) * 100)}%; transition: width 0.4s ease;"></div>
                                     </div>
                                 </div>
                             </div>

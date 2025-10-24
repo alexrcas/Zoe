@@ -35,6 +35,22 @@ export class Dao {
         await this.db.add('entries', entry);
     }
 
+    async updateEntryValues(id, grams) {
+        await this.init();
+        const entry = await this.db.get('entries', id);
+        if (!entry) { return; }
+
+        const factor = grams / 100;
+        entry.grams = grams;
+        entry.nutriments = {
+            kcals: (entry.nutriments_per100g.kcals * factor).toFixed(1),
+            proteins: (entry.nutriments_per100g.proteins * factor).toFixed(1),
+            carbs: (entry.nutriments_per100g.carbs * factor).toFixed(1),
+            fats: (entry.nutriments_per100g.fats * factor).toFixed(1)
+        };
+        await this.db.put('entries', entry);
+    }
+
     async listEntries() {
         await this.init();
         return await this.db.getAll('entries');

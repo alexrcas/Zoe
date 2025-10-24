@@ -53,40 +53,50 @@ class ProfilePage extends LitElement {
             </div>
             
             <div class="container ">
-                <div class="d-flex justify-content-center flex-column align-items-center">
-                    
-                <div class="input-group input-group-sm pb-2" style="width: 40%">
-                    <input class="form-control" type="number" inputmode="numeric" pattern="[0-9]*"
-                           placeholder="Proteínas"
-                           value=${this.values.proteins} @input=${e => {
-                        this.updateValues(e.target.value, 'proteins');
-                    }}/>
-                    <span class="input-group-text">grs.</span>
-                </div>
 
-                <div class="input-group input-group-sm pb-2" style="width: 40%">
-                    <input class="form-control" type="number" inputmode="numeric" pattern="[0-9]*"
-                           placeholder="Carbohidratos"
-                           value=${this.values.carbs} @input=${e => {
-                        this.updateValues(e.target.value, 'carbs');
-                    }}/>
-                    <span class="input-group-text">grs.</span>
-                </div>
+                <div class="d-flex flex-column align-items-center px-3 py-2">
 
-                <div class="input-group input-group-sm pb-2" style="width: 40%">
-                    <input class="form-control" type="number" inputmode="numeric" pattern="[0-9]*"
-                           placeholder="Grasas"
-                           value=${this.values.fats} @input=${e => {
-                        this.updateValues(e.target.value, 'fats');
-                    }}/>
-                    <span class="input-group-text">grs.</span>
-                </div>
-                    
-                    <h4>${this.kcals} Kcals</h4>
-                    
-                    <button @click="${this.saveValues}" class="btn btn-primary mt-3">Guardar</button>
-                    
-                </div>
+<div class="d-flex flex-column align-items-center px-3 py-2">
+
+  <!-- Proteínas -->
+  <div class="form-floating mb-3 w-75">
+    <input id="proteins" class="form-control pe-5" type="number" inputmode="numeric" pattern="[0-9]*"
+           placeholder="Proteínas"
+           value=${this.values.proteins} 
+           @input=${e => this.updateValues(e.target.value, 'proteins')} />
+    <label for="proteins">Proteínas</label>
+    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">grs.</span>
+  </div>
+
+  <!-- Carbohidratos -->
+  <div class="form-floating mb-3 w-75">
+    <input id="carbs" class="form-control pe-5" type="number" inputmode="numeric" pattern="[0-9]*"
+           placeholder="Carbohidratos"
+           value=${this.values.carbs} 
+           @input=${e => this.updateValues(e.target.value, 'carbs')} />
+    <label for="carbs">Carbohidratos</label>
+    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">grs.</span>
+  </div>
+
+  <!-- Grasas -->
+  <div class="form-floating mb-3 w-75">
+    <input id="fats" class="form-control pe-5" type="number" inputmode="numeric" pattern="[0-9]*"
+           placeholder="Grasas"
+           value=${this.values.fats} 
+           @input=${e => this.updateValues(e.target.value, 'fats')} />
+    <label for="fats">Grasas</label>
+    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">grs.</span>
+  </div>
+
+  <!-- Calorías -->
+  <h4 class="mt-2">${this.kcals} Kcals</h4>
+
+  <!-- Botón -->
+  <button @click="${this.saveValues}" class="btn btn-primary mt-3 w-100 w-md-50">Guardar</button>
+
+</div>
+
+
             </div>
             
         `

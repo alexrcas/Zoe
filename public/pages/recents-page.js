@@ -68,6 +68,12 @@ export class RecentsPage extends LitElement {
                 proteins: this.displayValues.proteins,
                 carbs: this.displayValues.carbs,
                 fats: this.displayValues.fats
+            },
+            nutriments_per100g: {
+                kcals: this.selectedProduct.nutriments.kcals,
+                proteins: this.selectedProduct.nutriments.proteins,
+                carbs: this.selectedProduct.nutriments.carbs,
+                fats: this.selectedProduct.nutriments.fats
             }
         }
         await this.dao.saveEntry(entry);
