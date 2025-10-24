@@ -106,6 +106,13 @@ export class ScanComponent extends LitElement {
 
         const apiProduct = await this.apiService.findByBarcode(code);
         if (!apiProduct) {
+            this.dispatchEvent(
+                new CustomEvent('product-scanned', {
+                    detail: null,
+                    bubbles: true,
+                    composed: true
+                })
+            );
             return;
         }
 

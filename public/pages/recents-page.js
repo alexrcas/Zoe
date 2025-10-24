@@ -34,7 +34,9 @@ export class RecentsPage extends LitElement {
 
     selectProduct(product) {
         this.selectedProduct = product;
-        this.updateValues(this.grams);
+        if (this.selectedProduct) {
+            this.updateValues(this.grams);
+        }
         this.requestUpdate();
         this.bsModal.show();
     }
@@ -79,7 +81,6 @@ export class RecentsPage extends LitElement {
     }
 
     handleProductScanned(event) {
-        console.log(event.detail)
         this.showScanner = false;
         this.selectProduct(event.detail);
         this.requestUpdate();
@@ -98,6 +99,13 @@ export class RecentsPage extends LitElement {
 
                 <product-search @product-selected="${this.handleProductSelected}"></product-search>
             </div>
+
+            <div class="d-flex justify-content-center pt-1 pb-2">
+                <button @click=${this.enableScanner} class="btn btn-outline-secondary">
+                    Escanear <i class="fa-solid fa-barcode"></i>
+                </button>
+            </div>
+
 
             <div class="container px-0">
 
@@ -139,12 +147,6 @@ export class RecentsPage extends LitElement {
                             `
                     )}
                 </div>
-                <div class="d-flex justify-content-center pt-2 pb-2">
-                    <button @click=${this.enableScanner} class="btn btn-primary">
-                        Escanear <i class="fa-solid fa-barcode"></i>
-                    </button>
-                </div>
-
                 ${this.showScanner
                         ? html`
                             <div class="overlay">
@@ -165,53 +167,69 @@ export class RecentsPage extends LitElement {
                             <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
                         </div>
 
+
                         <div class="modal-body px-3 pb-0 pt-1">
 
-                            <a class="list-group-item list-group-item-action d-flex flex-column py-2" @click=${(e) => {
-                                e.preventDefault()
-                            }}
-                               aria-current="true">
-                                <div class="d-flex w-100 justify-content-between align-items-start">
-                                    <div>
-                                        <h6 style="font-weight: 400; font-size: 0.80em">
-                                            ${this.selectedProduct.name}</h6>
-                                    </div>
-                                </div>
+                            ${this.selectedProduct
+                                    ? html`
+                                        <a
+                                                class="list-group-item list-group-item-action d-flex flex-column py-2"
+                                                @click=${(e) => e.preventDefault()}
+                                                aria-current="true"
+                                        >
+                                            <div class="d-flex w-100 justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 style="font-weight: 400; font-size: 0.80em">
+                                                        ${this.selectedProduct.name}
+                                                    </h6>
+                                                </div>
+                                            </div>
 
-                                <table class="meal-values w-100">
-                                    <tbody>
-                                    <tr>
-                                        <td><strong style="font-weight: 400">${this.displayValues.kcals}</strong> kcals
-                                        </td>
-                                        <td><strong style="font-weight: 400">${this.displayValues.proteins}</strong>
-                                            Prot.
-                                        </td>
-                                        <td><strong style="font-weight: 400">${this.displayValues.carbs}</strong> Carb.
-                                        </td>
-                                        <td><strong style="font-weight: 400">${this.displayValues.fats}</strong> Grasas
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </a>
+                                            <table class="meal-values w-100">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <strong style="font-weight: 400">${this.displayValues.kcals}</strong>
+                                                        kcals
+                                                    </td>
+                                                    <td>
+                                                        <strong style="font-weight: 400">${this.displayValues.proteins}</strong>
+                                                        Prot.
+                                                    </td>
+                                                    <td>
+                                                        <strong style="font-weight: 400">${this.displayValues.carbs}</strong>
+                                                        Carb.
+                                                    </td>
+                                                    <td>
+                                                        <strong style="font-weight: 400">${this.displayValues.fats}</strong>
+                                                        Grasas
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </a>
 
-                            <div class="d-flex justify-content-center pt-1">
-                                <div class="input-group input-group-sm pb-2" style="width: 35%">
-                                    <input class="form-control" type="number" inputmode="numeric" pattern="[0-9]*"
-                                           placeholder="Cantidad en gramos"
-                                           value=${this.grams} @input=${e => {
-                                        this.updateValues(e.target.value)
-                                    }}/>
-                                    <span class="input-group-text" id="basic-addon2">grs.</span>
-                                </div>
-                            </div>
+                                        <div class="d-flex justify-content-center pt-1">
+                                            <div class="input-group input-group-sm pb-2" style="width: 35%">
+                                                <input class="form-control" type="number" inputmode="numeric" pattern="[0-9]*"
+                                                       placeholder="Cantidad en gramos"
+                                                       value=${this.grams} @input=${e => {
+                                                    this.updateValues(e.target.value)
+                                                }}/>
+                                                <span class="input-group-text" id="basic-addon2">grs.</span>
+                                            </div>
+                                        </div>
+                                        
 
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button class="btn btn-success" @click=${() => this.addEntry('Desayuno')}>Añadir</button>
-                        </div>
+                                        <div class="modal-footer d-flex justify-content-end">
+                                            <button class="btn btn-outline-primary" @click=${this.addEntry}>Añadir</button>
+                                        </div>
+                                        
+                                    `
+                                    : html`
+                                        <div class="alert alert-info py-2 my-2" style="font-size: 0.8em">No hemos encontrado información sobre este producto</div>
+                                    `}
+                            
                     </div>
                 </div>
             </div>

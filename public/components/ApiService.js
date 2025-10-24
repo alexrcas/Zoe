@@ -14,6 +14,10 @@ export class ApiService {
         const json = await response.json();
         if (json.status != 1) { return; }
 
+        if (!json.product.product_name) {
+            return null;
+        }
+
         return {
             name: json.product.product_name,
             code: code,

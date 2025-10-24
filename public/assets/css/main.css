@@ -126,6 +126,7 @@
 .modal-header {
     margin: 0;
     padding-bottom: 0;
+    padding-top: 0.5em;
     border: none;
 }
 
@@ -148,4 +149,9 @@
 
 .accordion-button:focus {
     box-shadow: none !important;
+}
+
+.btn {
+    border-radius: 0.2em;
+    padding: 0.3em;
 }

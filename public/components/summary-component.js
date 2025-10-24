@@ -41,7 +41,7 @@ export class SummaryComponent extends LitElement {
                         <button class="accordion-button collapsed px-2 py-0 pe-3" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
 
                                 <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2"
-                                   aria-current="true">
+                                   aria-current="true" @click=${(e) => e.preventDefault()}>
                                     <div class="d-flex w-100 justify-content-between align-items-start">
                                         <div>
                                             <h6 style="font-weight: 400; font-size: 0.80em">Total</h6>
