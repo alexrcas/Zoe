@@ -59,6 +59,7 @@ export class HomePage extends LitElement {
 
         this.bsModal.hide();
         this.requestUpdate();
+        window.location.reload();
     }
 
 
