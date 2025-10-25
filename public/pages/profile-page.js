@@ -159,10 +159,6 @@ class ProfilePage extends LitElement {
 
                                 <!-- Calorías -->
                                 <h5 class="mt-2 text-center fw-semibold">${this.kcals} Kcals</h5>
-
-                                <!-- Botón -->
-                                <button @click=${this.saveValues} class="btn btn-primary btn-sm mt-3 w-100">Guardar
-                                </button>
                             </div>
                         </div>
 
@@ -216,13 +212,14 @@ class ProfilePage extends LitElement {
                                     <label for="fatsPercent">Grasas</label>
                                     <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">%</span>
                                 </div>
-
-                                <!-- Botón -->
-                                <button @click=${this.saveValues} class="btn btn-primary btn-sm mt-3 w-100">Guardar
-                                </button>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Botón -->
+                    <button @click=${this.saveValues} class="btn btn-primary btn-sm mt-3 w-100">Guardar
+                    </button>
+                    
                 </div>
             </div>
         `;
