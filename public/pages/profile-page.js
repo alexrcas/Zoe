@@ -97,19 +97,19 @@ class ProfilePage extends LitElement {
 
             <div class="container mt-2">
                 <div class="d-flex flex-column align-items-center px-3 py-2" style="max-width: 420px;">
-
+                    
                     <!-- Selector tipo pills -->
                     <ul class="nav nav-pills nav-justified mb-3 w-100" id="formToggle" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active py-2 small" id="macros-tab" data-bs-toggle="pill"
+                            <button class="nav-link active py-2 small" id="macros-tab" data-bs-toggle="pill" style="font-size: 0.9em; font-weight: 500"
                                     data-bs-target="#macros" type="button" role="tab">
-                                Macronutrientes
+                                Usar gramos
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link py-2 small" id="kcals-tab" data-bs-toggle="pill"
+                            <button class="nav-link py-2 small" id="kcals-tab" data-bs-toggle="pill" style="font-size: 0.9em; font-weight: 500"
                                     data-bs-target="#kcals" type="button" role="tab">
-                                Calorías
+                                Usar porcentajes
                             </button>
                         </li>
                     </ul>
@@ -167,7 +167,7 @@ class ProfilePage extends LitElement {
                             <div class="d-flex flex-column align-items-center">
 
                                 <!-- Total kcal -->
-                                <div class="form-floating mb-3 w-100" style="font-size: 0.9rem;">
+                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
                                     <input id="kcalsInput" class="form-control form-control-sm pe-5" type="number"
                                            inputmode="numeric"
                                            placeholder="Calorías totales"
@@ -220,6 +220,9 @@ class ProfilePage extends LitElement {
                     <button @click=${this.saveValues} class="btn btn-primary btn-sm mt-3 w-100">Guardar
                     </button>
                     
+                    <div class="mt-2">
+                        <a href="#wizard" class="link">Asistente</a>
+                    </div>
                 </div>
             </div>
         `;
