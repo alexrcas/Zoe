@@ -14,6 +14,7 @@ export class Dao {
               db.createObjectStore('entries', { keyPath: 'id', autoIncrement: true });
               db.createObjectStore('products', { keyPath: 'code' });
               db.createObjectStore('goals');
+              db.createObjectStore('userData');
             }
           });
 
@@ -88,6 +89,16 @@ export class Dao {
         const transaction = this.db.transaction(['entries'], 'readwrite');
         const store = transaction.objectStore('entries');
         store.delete(entry.id);
+    }
+
+    async saveOrUpdateUserData(userData) {
+        await this.init();
+        await this.db.put('userData', userData, 'userData');
+    }
+
+    async getUserData() {
+        await this.init();
+        return await this.db.get('userData', 'userData');
     }
 
 }

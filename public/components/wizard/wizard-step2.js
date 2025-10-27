@@ -1,4 +1,5 @@
 import {LitElement, html} from 'https://unpkg.com/lit@3.2.0/index.js?module';
+import {Dao} from '../../components/Dao.js'
 
 export class WizardStep2 extends LitElement {
 
@@ -8,22 +9,69 @@ export class WizardStep2 extends LitElement {
 
     constructor() {
         super();
+        this.dao = new Dao();
         this.goal = '';
+
+        this.slightDeficit = 0;
+        this.deficit = 0;
+
+        this.mantain = 0;
+
+        this.slightSurplus = 0;
+        this.surplus = 0;
+
+        this.buttonDisabled = true;
     }
+
+
+    calculateCalories({ genre, age, height, weight, activity }) {
+        const activityMultipliers = [1.2, 1.375, 1.55, 1.725, 1.9];
+        let BMR;
+        if (genre === "male") {
+            BMR = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
+        } else {
+            BMR = 655 + (9.6 * weight) + (1.8 * height) - (4.7 * age);
+        }
+
+        const maintenance = BMR * activityMultipliers[activity];
+
+        this.mantain = Math.round(maintenance);
+        this.slightDeficit = Math.round(maintenance * 0.9);
+        this.deficit = Math.round(maintenance * 0.8);
+        this.slightSurplus = Math.round(maintenance * 1.1);
+        this.surplus = Math.round(maintenance * 1.2);
+    }
+
+
 
     createRenderRoot() {
         return this; // usar el DOM global (Bootstrap)
     }
 
-    updateGoal(e) {
-        this.goal = e.target.value;
-        console.log("Objetivo seleccionado:", this.goal);
+
+    async firstUpdated() {
+        const userData = await this.dao.getUserData();
+        this.calculateCalories(userData);
+        this.requestUpdate();
     }
 
-    goToStep3() {
+
+    updateGoal(e) {
+        this.goal = e.target.value;
+        this.buttonDisabled = !this.goal;
+    }
+
+    async goToStep3() {
+        const userData = await this.dao.getUserData();
+        userData.goal = {
+            goal: this.goal,
+            kcals: this[this.goal]
+        }
+        await this.dao.saveOrUpdateUserData(userData);
+
         this.dispatchEvent(
             new CustomEvent('next-step', {
-                detail: { step: 3 }, // ⚠️ "detail", no "details"
+                detail: { step: 3 },
                 bubbles: true,
                 composed: true
             })
@@ -48,16 +96,16 @@ export class WizardStep2 extends LitElement {
                         <div class="accordion-body pt-0">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="goal" id="deficitModerado"
-                                       value="deficit_moderado" @change=${this.updateGoal}>
+                                       value="slightDeficit" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="deficitModerado">
-                                    Déficit moderado (≈1800 kcal)
+                                    Déficit moderado ${this.slightDeficit} kcals
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="goal" id="deficitAgresivo"
-                                       value="deficit_agresivo" @change=${this.updateGoal}>
+                                       value="deficit" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="deficitAgresivo">
-                                    Déficit agresivo (≈1500 kcal)
+                                    Déficit agresivo ${this.deficit} kcals
                                 </label>
                             </div>
                         </div>
@@ -77,9 +125,9 @@ export class WizardStep2 extends LitElement {
                         <div class="accordion-body pt-0">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="goal" id="mantenerPeso"
-                                       value="mantener_peso" @change=${this.updateGoal}>
+                                       value="mantain" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="mantenerPeso">
-                                    Mantener peso (≈1800 kcal)
+                                    Alimentación normocalórica ${this.mantain} kcals
                                 </label>
                             </div>
                         </div>
@@ -99,16 +147,16 @@ export class WizardStep2 extends LitElement {
                         <div class="accordion-body pt-0">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="goal" id="superavitModerado"
-                                       value="superavit_moderado" @change=${this.updateGoal}>
+                                       value="slightSurplus" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="superavitModerado">
-                                    Superávit moderado
+                                    Superávit moderado ${this.slightSurplus} kcals
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="goal" id="superavitAgresivo"
-                                       value="superavit_agresivo" @change=${this.updateGoal}>
+                                       value="surplus" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="superavitAgresivo">
-                                    Superávit agresivo
+                                    Superávit agresivo ${this.surplus} kcals
                                 </label>
                             </div>
                         </div>
@@ -118,7 +166,7 @@ export class WizardStep2 extends LitElement {
             </div>
 
             <div class="d-flex justify-content-end mt-3 me-2">
-                <button class="btn btn-outline-primary" @click=${this.goToStep3}>Siguiente</button>
+                <button class="btn btn-outline-primary" @click=${this.goToStep3} ?disabled="${this.buttonDisabled}">Siguiente</button>
             </div>
         `;
     }

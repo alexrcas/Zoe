@@ -178,7 +178,7 @@
 
 .wizard-step.active {
     color: #222;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .wizard-step.active::after {
@@ -247,4 +247,39 @@
     box-shadow: none !important;
 }
 
+.form-range::-webkit-slider-runnable-track {
+    background: #ddd;
+    border-radius: 2px;
+    height: 2px;
+}
 
+.form-range::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    margin-top: -9px; /* <-- ajusta este valor hasta que quede visualmente centrado */
+    background-color: #0d6efd; /* opcional */
+    border: none;
+    border-radius: 50%;
+}
+
+.alert-info {
+    padding: 0.6em;
+    line-height: 1.4;
+    background: #8a80f012;
+    border: none;
+}
+
+.alert-wrapper {
+    overflow: hidden;
+    transition: all 0.4s ease; /* controla la suavidad */
+}
+.alert-wrapper.hidden {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+.alert-wrapper.visible {
+    max-height: 500px; /* lo bastante grande para contener el alert */
+    opacity: 1;
+}
