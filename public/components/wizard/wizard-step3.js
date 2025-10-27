@@ -109,7 +109,7 @@ export class WizardStep3 extends LitElement {
                 </p>
                 
                 <div class="d-flex justify-content-end">
-                <button class="btn btn-outline-secondary mb-2" @click="${this.toggleHelp}">${this.helpButtonText}</button>
+                <button class="btn btn-outline-secondary mb-2 mt-1 btn-borderless" @click="${this.toggleHelp}">${this.helpButtonText} <i class="fa-regular fa-lightbulb"></i></button>
                 </div>
                 
                 <div class="alert-wrapper ${this.showHelp ? 'visible' : 'hidden'}">

@@ -90,24 +90,24 @@ class ProfilePage extends LitElement {
 
     render() {
         return html`
-
-            <div class="container">
-                <h5 class="pt-2 pb-0 mb-0">Perfil</h5>
+            
+            <div class="container mt-3">
+            <h6 class="d-flex justify-content-center" style="font-weight: 600">Calculadora</h6>
             </div>
 
-            <div class="container mt-2">
-                <div class="d-flex flex-column align-items-center px-3 py-2" style="max-width: 420px;">
+            <div class="container">
+                <div class="d-flex flex-column align-items-center px-3" style="max-width: 420px;">
                     
                     <!-- Selector tipo pills -->
                     <ul class="nav nav-pills nav-justified mb-3 w-100" id="formToggle" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active py-2 small" id="macros-tab" data-bs-toggle="pill" style="font-size: 0.9em; font-weight: 500"
+                            <button class="nav-link active py-2 small" id="macros-tab" data-bs-toggle="pill" style="font-size: 0.88em; font-weight: 500"
                                     data-bs-target="#macros" type="button" role="tab">
                                 Usar gramos
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link py-2 small" id="kcals-tab" data-bs-toggle="pill" style="font-size: 0.9em; font-weight: 500"
+                            <button class="nav-link py-2 small" id="kcals-tab" data-bs-toggle="pill" style="font-size: 0.88em; font-weight: 500"
                                     data-bs-target="#kcals" type="button" role="tab">
                                 Usar porcentajes
                             </button>
@@ -158,7 +158,7 @@ class ProfilePage extends LitElement {
                                 </div>
 
                                 <!-- Calorías -->
-                                <h5 class="mt-2 text-center fw-semibold">${this.kcals} Kcals</h5>
+                                <h5 class="mt-1 text-center text-secondary" style="font-weight: 500">${this.kcals} Kcals</h5>
                             </div>
                         </div>
 
@@ -217,11 +217,11 @@ class ProfilePage extends LitElement {
                     </div>
 
                     <!-- Botón -->
-                    <button @click=${this.saveValues} class="btn btn-primary btn-sm mt-3 w-100">Guardar
-                    </button>
+
                     
-                    <div class="mt-2">
-                        <a href="#wizard" class="link">Asistente</a>
+                    <div class="mt-2 d-flex justify-content-between w-100 align-items-baseline">
+                        <button @click=${this.saveValues} class="btn btn-outline-primary btn-sm mt-2 w-25">Guardar</button>
+                        <button class="btn btn-outline-secondary mb-2 mt-1 btn-borderless" @click="${() => window.location = '#wizard'}">Usar el Asistente<i class=" ms-1 fa-regular fa-lightbulb"></i></button>
                     </div>
                 </div>
             </div>

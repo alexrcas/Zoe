@@ -283,3 +283,7 @@
     max-height: 500px; /* lo bastante grande para contener el alert */
     opacity: 1;
 }
+
+.btn-borderless {
+    border: none;
+}
