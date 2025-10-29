@@ -167,7 +167,10 @@ export class WizardStep3 extends LitElement {
       <div class="alert-wrapper ${this.showHelp ? 'visible' : 'hidden'}">
         <div class="alert alert-info animate__animated ${this.showHelp ? 'animate__fadeInDown' : 'animate__fadeOutUp'}"
              style="font-weight: 300; font-size: 0.8em;">
-          La OMS recomienda consumir al menos 0,8 g de proteína por kg de peso corporal, aunque la mayoría de especialistas aconsejan 1,2-2 g/kg según edad, actividad y objetivos.
+            La OMS recomienda consumir al menos 0,8 gramos de proteína por cada kilo de peso corporal al día, aunque la mayoría de especialistas aconsejan un rango un poco mayor, de entre 1,2 y 2 gramos por kilo,
+            según la edad, el nivel de actividad física y los objetivos personales.
+            Las proteínas ayudan a mantener y reparar los músculos y tejidos, forman parte de enzimas y hormonas, y son clave para que el cuerpo funcione correctamente.
+            Un déficit de proteínas puede provocar pérdida de masa muscular, cansancio o baja resistencia a las infecciones. En cambio, su consumo excesivo puede provocar estreñimiento y otras afecciones graves a largo plazo.
         </div>
       </div>
     </div>
@@ -189,7 +192,9 @@ export class WizardStep3 extends LitElement {
       <div class="alert-wrapper ${this.showHelp ? 'visible' : 'hidden'}">
         <div class="alert alert-info animate__animated ${this.showHelp ? 'animate__fadeInDown' : 'animate__fadeOutUp'}"
              style="font-weight: 300; font-size: 0.8em;">
-          Los carbohidratos son nuestra principal fuente de energía. Un déficit puede provocar cansancio y fatiga; un exceso, aumento de peso.
+            Los carbohidratos son un macronutriente muy flexible en la dieta, aunque la mayoría de expertos recomienda que aporten entre el 35% y el 65% de las calorías totales.
+            Algunas personas se acostumbran y se sienten bien con dietas bajas en carbohidratos, pero es importante hacerlo con cuidado y de forma progresiva.
+            Los carbohidratos son nuestra principal fuente de energía: un déficit puede provocar cansancio, fatiga, mareos e incluso desvanecimientos, sobre todo si se realiza actividad física intensa.
         </div>
       </div>
     </div>
@@ -212,7 +217,9 @@ export class WizardStep3 extends LitElement {
       <div class="alert-wrapper ${this.showHelp ? 'visible' : 'hidden'}">
         <div class="alert alert-info animate__animated ${this.showHelp ? 'animate__fadeInDown' : 'animate__fadeOutUp'}"
              style="font-weight: 300; font-size: 0.8em;">
-          Las grasas son esenciales para funciones vitales y hormonales. Se recomienda que aporten entre 20-30% de las calorías diarias, priorizando grasas saludables.
+            Las grasas son clave en muchas funciones vitales del cuerpo: nos proporcionan energía de reserva, ayudan a absorber algunas vitaminas y son necesarias para producir y mantener un entorno hormonal adecuado.
+            Los expertos recomiendan que las grasas aporten entre el 20% y el 30% de las calorías diarias, siempre priorizando grasas saludables.
+            Un déficit de grasas puede provocar desajustes hormonales y enfermedades a largo plazo
         </div>
       </div>
     </div>
