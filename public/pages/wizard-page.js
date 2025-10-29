@@ -1,4 +1,4 @@
-import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
+import {LitElement, html} from 'https://unpkg.com/lit@3.2.0/index.js?module';
 import { WizardStep1 } from '../components/wizard/wizard-step1.js';
 import { WizardStep2 } from '../components/wizard/wizard-step2.js';
 import { WizardStep3 } from '../components/wizard/wizard-step3.js';

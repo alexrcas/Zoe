@@ -90,141 +90,177 @@ class ProfilePage extends LitElement {
 
     render() {
         return html`
-            
-            <div class="container mt-3">
-            <h6 class="d-flex justify-content-center" style="font-weight: 600">Calculadora</h6>
+<div class="container py-3" style="max-width: 420px;">
+  <!-- Encabezado -->
+  <h6 class="text-center fw-semibold mb-3 text-secondary">Calculadora</h6>
+
+  <!-- Card principal -->
+  <div class="card shadow-sm border-0 rounded-4 p-3">
+    <div class="d-flex flex-column align-items-center">
+
+      <!-- Tabs -->
+      <ul class="nav nav-pills nav-fill mb-3 w-100 bg-light rounded-3 p-1" id="formToggle" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active rounded-3 py-2 small"
+            id="macros-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#macros"
+            type="button"
+            role="tab"
+            style="font-size: 0.88em; font-weight: 500"
+          >
+            Usar gramos
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link rounded-3 py-2 small"
+            id="kcals-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#kcals"
+            type="button"
+            role="tab"
+            style="font-size: 0.88em; font-weight: 500"
+          >
+            Usar porcentajes
+          </button>
+        </li>
+      </ul>
+
+      <!-- Contenido -->
+      <div class="tab-content w-100" id="formToggleContent">
+
+        <!-- Formulario 1 -->
+        <div class="tab-pane fade show active" id="macros" role="tabpanel">
+          <div class="d-flex flex-column align-items-center">
+
+            <!-- Proteínas -->
+            <div class="form-floating mb-3 w-100">
+              <input
+                id="proteins"
+                class="form-control form-control-sm"
+                type="number"
+                placeholder="Proteínas"
+                .value=${this.values.proteins}
+                @input=${e => this.updateValues(e.target.value, 'proteins')}
+              />
+              <label for="proteins">Proteínas (grs)</label>
             </div>
 
-            <div class="container">
-                <div class="d-flex flex-column align-items-center px-3" style="max-width: 420px;">
-                    
-                    <!-- Selector tipo pills -->
-                    <ul class="nav nav-pills nav-justified mb-3 w-100" id="formToggle" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active py-2 small" id="macros-tab" data-bs-toggle="pill" style="font-size: 0.88em; font-weight: 500"
-                                    data-bs-target="#macros" type="button" role="tab">
-                                Usar gramos
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link py-2 small" id="kcals-tab" data-bs-toggle="pill" style="font-size: 0.88em; font-weight: 500"
-                                    data-bs-target="#kcals" type="button" role="tab">
-                                Usar porcentajes
-                            </button>
-                        </li>
-                    </ul>
-
-                    <!-- Contenido dinámico -->
-                    <div class="tab-content w-100" id="formToggleContent">
-
-                        <!-- Formulario 1: Macronutrientes -->
-                        <div class="tab-pane fade show active" id="macros" role="tabpanel" aria-labelledby="macros-tab">
-                            <div class="d-flex flex-column align-items-center">
-
-                                <!-- Proteínas -->
-                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
-                                    <input id="proteins" class="form-control form-control-sm pe-5" type="number"
-                                           inputmode="numeric"
-                                           pattern="[0-9]*"
-                                           placeholder="Proteínas"
-                                           .value=${this.values.proteins}
-                                           @input=${e => this.updateValues(e.target.value, 'proteins')}/>
-                                    <label for="proteins">Proteínas</label>
-                                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">grs.</span>
-                                </div>
-
-                                <!-- Carbohidratos -->
-                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
-                                    <input id="carbs" class="form-control form-control-sm pe-5" type="number"
-                                           inputmode="numeric"
-                                           pattern="[0-9]*"
-                                           placeholder="Carbohidratos"
-                                           .value=${this.values.carbs}
-                                           @input=${e => this.updateValues(e.target.value, 'carbs')}/>
-                                    <label for="carbs">Carbohidratos</label>
-                                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">grs.</span>
-                                </div>
-
-                                <!-- Grasas -->
-                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
-                                    <input id="fats" class="form-control form-control-sm pe-5" type="number"
-                                           inputmode="numeric"
-                                           pattern="[0-9]*"
-                                           placeholder="Grasas"
-                                           .value=${this.values.fats}
-                                           @input=${e => this.updateValues(e.target.value, 'fats')}/>
-                                    <label for="fats">Grasas</label>
-                                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">grs.</span>
-                                </div>
-
-                                <!-- Calorías -->
-                                <h5 class="mt-1 text-center text-secondary" style="font-weight: 500">${this.kcals} Kcals</h5>
-                            </div>
-                        </div>
-
-                        <!-- Formulario 2: Calorías -->
-                        <div class="tab-pane fade" id="kcals" role="tabpanel" aria-labelledby="kcals-tab">
-                            <div class="d-flex flex-column align-items-center">
-
-                                <!-- Total kcal -->
-                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
-                                    <input id="kcalsInput" class="form-control form-control-sm pe-5" type="number"
-                                           inputmode="numeric"
-                                           placeholder="Calorías totales"
-                                           .value=${this.kcals}
-                                           @input=${e => {
-                                               this.kcals = Number(e.target.value) || 0;
-                                               this.updatePercentsValues(0, 'none');
-                                           }}/>
-                                    <label for="kcalsInput">Calorías totales</label>
-                                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">Kcals</span>
-                                </div>
-
-                                <!-- Proteínas -->
-                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
-                                    <input id="proteinsPercent" class="form-control form-control-sm pe-5" type="number"
-                                           inputmode="numeric"
-                                           placeholder="Proteínas"
-                                           .value=${this.percents.proteins}
-                                           @input=${e => this.updatePercentsValues(e.target.value, 'proteins')}/>
-                                    <label for="proteinsPercent">Proteínas</label>
-                                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">%</span>
-                                </div>
-
-                                <!-- Carbohidratos -->
-                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
-                                    <input id="carbsPercent" class="form-control form-control-sm pe-5" type="number"
-                                           inputmode="numeric"
-                                           placeholder="Carbohidratos"
-                                           .value=${this.percents.carbs}
-                                           @input=${e => this.updatePercentsValues(e.target.value, 'carbs')}/>
-                                    <label for="carbsPercent">Carbohidratos</label>
-                                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">%</span>
-                                </div>
-
-                                <!-- Grasas -->
-                                <div class="form-floating mb-2 w-100" style="font-size: 0.9rem;">
-                                    <input id="fatsPercent" class="form-control form-control-sm pe-5" type="number"
-                                           inputmode="numeric"
-                                           placeholder="Grasas"
-                                           .value=${this.percents.fats}
-                                           @input=${e => this.updatePercentsValues(e.target.value, 'fats')}/>
-                                    <label for="fatsPercent">Grasas</label>
-                                    <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted small">%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Botón -->
-
-                    
-                    <div class="mt-2 d-flex justify-content-between w-100 align-items-baseline">
-                        <button @click=${this.saveValues} class="btn btn-outline-primary btn-sm mt-2 w-25">Guardar</button>
-                        <button class="btn btn-outline-secondary mb-2 mt-1 btn-borderless" @click="${() => window.location = '#wizard'}">Usar el Asistente<i class=" ms-1 fa-regular fa-lightbulb"></i></button>
-                    </div>
-                </div>
+            <!-- Carbohidratos -->
+            <div class="form-floating mb-3 w-100">
+              <input
+                id="carbs"
+                class="form-control form-control-sm"
+                type="number"
+                placeholder="Carbohidratos"
+                .value=${this.values.carbs}
+                @input=${e => this.updateValues(e.target.value, 'carbs')}
+              />
+              <label for="carbs">Carbohidratos (grs)</label>
             </div>
+
+            <!-- Grasas -->
+            <div class="form-floating mb-3 w-100">
+              <input
+                id="fats"
+                class="form-control form-control-sm"
+                type="number"
+                placeholder="Grasas"
+                .value=${this.values.fats}
+                @input=${e => this.updateValues(e.target.value, 'fats')}
+              />
+              <label for="fats">Grasas (grs)</label>
+            </div>
+
+            <!-- Calorías -->
+            <h5 class="mt-1 text-secondary fw-semibold">${this.kcals} Kcals</h5>
+          </div>
+        </div>
+
+        <!-- Formulario 2 -->
+        <div class="tab-pane fade" id="kcals" role="tabpanel">
+          <div class="d-flex flex-column align-items-center">
+
+            <!-- Calorías totales -->
+            <div class="form-floating mb-3 w-100">
+              <input
+                id="kcalsInput"
+                class="form-control form-control-sm"
+                type="number"
+                placeholder="Calorías totales"
+                .value=${this.kcals}
+                @input=${e => {
+            this.kcals = Number(e.target.value) || 0;
+            this.updatePercentsValues(0, 'none');
+        }}
+              />
+              <label for="kcalsInput">Calorías totales (Kcals)</label>
+            </div>
+
+            <!-- Proteínas -->
+            <div class="form-floating mb-3 w-100">
+              <input
+                id="proteinsPercent"
+                class="form-control form-control-sm"
+                type="number"
+                placeholder="Proteínas"
+                .value=${this.percents.proteins}
+                @input=${e => this.updatePercentsValues(e.target.value, 'proteins')}
+              />
+              <label for="proteinsPercent">Proteínas (%)</label>
+            </div>
+
+            <!-- Carbohidratos -->
+            <div class="form-floating mb-3 w-100">
+              <input
+                id="carbsPercent"
+                class="form-control form-control-sm"
+                type="number"
+                placeholder="Carbohidratos"
+                .value=${this.percents.carbs}
+                @input=${e => this.updatePercentsValues(e.target.value, 'carbs')}
+              />
+              <label for="carbsPercent">Carbohidratos (%)</label>
+            </div>
+
+            <!-- Grasas -->
+            <div class="form-floating mb-3 w-100">
+              <input
+                id="fatsPercent"
+                class="form-control form-control-sm"
+                type="number"
+                placeholder="Grasas"
+                .value=${this.percents.fats}
+                @input=${e => this.updatePercentsValues(e.target.value, 'fats')}
+              />
+              <label for="fatsPercent">Grasas (%)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="mt-3 d-flex justify-content-between w-100">
+          <button
+                  class="btn btn-outline-secondary btn-borderless btn-sm w-50 rounded-3"
+                  @click="${() => window.location = '#wizard'}"
+          >
+              Asistente <i class="fa-regular fa-lightbulb me-2"></i>
+          </button>
+        <button
+          @click=${this.saveValues}
+          class="btn btn-primary btn-sm w-25 ms-1 rounded-3 shadow-sm"
+        >
+          Guardar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
         `;
     }
 }

@@ -99,146 +99,148 @@ export class RecentsPage extends LitElement {
 
     render() {
         return html`
-            <div class="container">
-                <h5 class="pt-2 pb-0 mb-0">Alimentos recientes</h5>
-                <em style="font-weight: 300; font-size: 0.85em">Valores nutricionales por 100 grs. / ml.</em>
+            <div class="container px-3">
 
+                <!-- Búsqueda -->
                 <product-search @product-selected="${this.handleProductSelected}"></product-search>
-            </div>
 
-            <div class="d-flex justify-content-center pt-1 pb-2">
-                <button @click=${this.enableScanner} class="btn btn-outline-secondary">
-                    Escanear <i class="fa-solid fa-barcode"></i>
-                </button>
-            </div>
-
-
-            <div class="container px-0">
-
-                <div class="list-group list-group-flush mt-2">
-                    ${this.products.map(
-                            product => html`
-
-                                <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-1"
-                                   @click=${(e) => {
-                                       e.preventDefault();
-                                       this.selectProduct(product);
-                                   }}
-                                   aria-current="true">
-                                    <div class="d-flex w-100 justify-content-between align-items-start">
-                                        <div>
-                                            <h6 style="font-weight: 400; font-size: 0.80em">${product.name}</h6>
-                                        </div>
-                                    </div>
-
-                                    <table class="meal-values w-100">
-                                        <tbody>
-                                        <tr>
-                                            <td><strong style="font-weight: 400">${product.nutriments.kcals}</strong>
-                                                kcals
-                                            </td>
-                                            <td><strong style="font-weight: 400">${product.nutriments.proteins}</strong>
-                                                Prot.
-                                            </td>
-                                            <td><strong style="font-weight: 400">${product.nutriments.carbs}</strong>
-                                                Carb.
-                                            </td>
-                                            <td><strong style="font-weight: 400">${product.nutriments.fats}</strong>
-                                                Grasas
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </a>
-                            `
-                    )}
+                <!-- Botón escáner -->
+                <div class="d-flex justify-content-center pt-1 pb-2">
+                    <button @click=${this.enableScanner} class="btn btn-outline-primary rounded-pill btn-borderless">
+                        Escanea un código de barras <i class="fa-solid fa-barcode"></i>
+                    </button>
                 </div>
-                ${this.showScanner
-                        ? html`
-                            <div class="overlay">
-                                <scan-component @product-scanned=${this.handleProductScanned}></scan-component>
+            </div>
+
+            <div class="px-3">
+                <h5 class="pt-2 pb-0 mb-0" style="font-weight: 500; font-size: 0.9em">Alimentos recientes</h5>
+                <em class="d-block mb-2" style="font-weight: 300; font-size: 0.85em;">Valores nutricionales por 100 grs. / ml.</em>
+            </div>
+                <!-- Lista de productos -->
+                <div class="list-group list-group-flush">
+                    ${this.products.map(product => html`
+                        <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
+                           @click=${(e) => {
+                               e.preventDefault();
+                               this.selectProduct(product);
+                           }}>
+
+                            <!-- Nombre del producto -->
+                            <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${product.name}</h6>
+
+                            <!-- Valores nutricionales -->
+                            <div class="d-flex justify-content-between text-center"
+                                 style="font-weight: 500; font-size: 0.85em;">
+                                <div>
+                                    <div>${product.nutriments.kcals}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
+                                </div>
+                                <div>
+                                    <div>${product.nutriments.proteins}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
+                                </div>
+                                <div>
+                                    <div>${product.nutriments.carbs}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
+                                </div>
+                                <div>
+                                    <div>${product.nutriments.fats}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas</div>
+                                </div>
                             </div>
-                        `
-                        : ''
-                }
+                        </a>
+                    `)}
+                </div>
+
+                <!-- Scanner overlay -->
+                ${this.showScanner ? html`
+                    <div class="overlay">
+                        <scan-component @product-scanned=${this.handleProductScanned}></scan-component>
+                    </div>
+                ` : ''}
 
             </div>
 
-
+            <!-- Modal de añadir producto -->
             <div class="modal fade" id="recentsModal" tabindex="-1">
                 <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Añadir</h5>
+                    <div class="modal-content rounded-4 shadow-sm">
+
+                        <div class="modal-header border-0 pb-2">
+                            <h5 class="modal-title fw-semibold">Añadir</h5>
                             <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
                         </div>
 
+                        <div class="modal-body px-0 pt-2 pb-0">
 
-                        <div class="modal-body px-3 pb-0 pt-1">
+                            ${this.selectedProduct ? html`
+                                <div class="list-group list-group-flush">
+                                    <a class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
+                                       @click=${(e) => e.preventDefault()}>
 
-                            ${this.selectedProduct
-                                    ? html`
-                                        <a
-                                                class="list-group-item list-group-item-action d-flex flex-column py-2"
-                                                @click=${(e) => e.preventDefault()}
-                                                aria-current="true"
-                                        >
-                                            <div class="d-flex w-100 justify-content-between align-items-start">
-                                                <div>
-                                                    <h6 style="font-weight: 400; font-size: 0.80em">
-                                                        ${this.selectedProduct.name}
-                                                    </h6>
+                                        <h6 class="fw-normal mb-1" style="font-size: 0.85em;">
+                                            ${this.selectedProduct.name}</h6>
+
+                                        <div class="d-flex justify-content-between text-center"
+                                             style="font-weight: 500; font-size: 0.85em;">
+                                            <div>
+                                                <div>${this.displayValues.kcals}</div>
+                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
+                                                    kcals
                                                 </div>
                                             </div>
-
-                                            <table class="meal-values w-100">
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <strong style="font-weight: 400">${this.displayValues.kcals}</strong>
-                                                        kcals
-                                                    </td>
-                                                    <td>
-                                                        <strong style="font-weight: 400">${this.displayValues.proteins}</strong>
-                                                        Prot.
-                                                    </td>
-                                                    <td>
-                                                        <strong style="font-weight: 400">${this.displayValues.carbs}</strong>
-                                                        Carb.
-                                                    </td>
-                                                    <td>
-                                                        <strong style="font-weight: 400">${this.displayValues.fats}</strong>
-                                                        Grasas
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </a>
-
-                                        <div class="d-flex justify-content-center pt-1">
-                                            <div class="input-group input-group-sm pb-2" style="width: 35%">
-                                                <input class="form-control" type="number" inputmode="numeric" pattern="[0-9]*"
-                                                       placeholder="Cantidad en gramos"
-                                                       value=${this.grams} @input=${e => {
-                                                    this.updateValues(e.target.value)
-                                                }}/>
-                                                <span class="input-group-text" id="basic-addon2">grs.</span>
+                                            <div>
+                                                <div>${this.displayValues.proteins}</div>
+                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
+                                                    Prot.
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>${this.displayValues.carbs}</div>
+                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
+                                                    Carb.
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>${this.displayValues.fats}</div>
+                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
+                                                    Grasas
+                                                </div>
                                             </div>
                                         </div>
-                                        
+                                    </a>
+                                </div>
 
-                                        <div class="modal-footer d-flex justify-content-end">
-                                            <button class="btn btn-outline-primary" @click=${this.addEntry}>Añadir</button>
-                                        </div>
-                                        
-                                    `
-                                    : html`
-                                        <div class="alert alert-info py-2 my-2" style="font-size: 0.8em">No hemos encontrado información sobre este producto</div>
-                                    `}
-                            
+                                <!-- Input gramos -->
+                                <div class="d-flex justify-content-center pt-2 pb-2">
+                                    <div class="input-group input-group-sm" style="width: 40%">
+                                        <input class="form-control rounded-start" type="number" inputmode="numeric"
+                                               pattern="[0-9]*"
+                                               placeholder="Cantidad en gramos" value=${this.grams}
+                                               @input=${e => this.updateValues(e.target.value)}>
+                                        <span class="input-group-text rounded-end">grs.</span>
+                                    </div>
+                                </div>
+
+                                <!-- Botón añadir -->
+                                <div class="modal-footer d-flex justify-content-end border-0 pt-0">
+                                    <button class="btn btn-outline-primary rounded-pill" @click=${this.addEntry}>
+                                        Añadir
+                                    </button>
+                                </div>
+
+                            ` : html`
+                                <div class="alert alert-info py-2 my-2 mx-3" style="font-size: 0.8em;">No hemos
+                                    encontrado información sobre este producto
+                                </div>
+                            `}
+
+                        </div>
                     </div>
                 </div>
             </div>
+
+
         `;
     }
 

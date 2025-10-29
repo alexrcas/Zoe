@@ -80,94 +80,110 @@ export class WizardStep2 extends LitElement {
 
     render() {
         return html`
-            
-            <div class="accordion" id="goalAccordion">
+<div class="container py-3" style="max-width: 420px;">
+  <!-- Card principal -->
+  <div class="card shadow-sm border-0 rounded-4 p-3">
 
-                <!-- Perder grasa -->
-                <div class="accordion-item border-0 border-bottom">
-                    <h3 class="accordion-header" id="headingLose">
-                        <button class="accordion-button show bg-transparent fw-semibold py-2 no-button" style="font-size: 0.9rem; font-weight: 400 !important" type="button" 
-                                data-bs-toggle="collapse" data-bs-target="#collapseLose" 
-                                aria-expanded="false" aria-controls="collapseLose">
-                            Perder grasa
-                        </button>
-                    </h3>
-                    <div id="collapseLose" class="accordion-collapse show" aria-labelledby="headingLose">
-                        <div class="accordion-body pt-0">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="goal" id="deficitModerado"
-                                       value="slightDeficit" @change=${this.updateGoal}>
-                                <label class="form-check-label" for="deficitModerado">
-                                    Déficit ligero ${this.slightDeficit} kcals
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="goal" id="deficitAgresivo"
-                                       value="deficit" @change=${this.updateGoal}>
-                                <label class="form-check-label" for="deficitAgresivo">
-                                    Déficit ${this.deficit} kcals
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <h6 class="text-center fw-semibold text-secondary mb-3">Selecciona tu objetivo</h6>
 
-                <!-- Mantener peso -->
-                <div class="accordion-item border-0 border-bottom">
-                    <h3 class="accordion-header" id="headingMaintain">
-                        <button class="accordion-button show bg-transparent fw-semibold py-2 no-button" style="font-size: 0.9rem; font-weight: 400 !important" type="button" 
-                                data-bs-toggle="collapse" data-bs-target="#collapseMaintain" 
-                                aria-expanded="false" aria-controls="collapseMaintain">
-                            Mantener peso / Tonificar
-                        </button>
-                    </h3>
-                    <div id="collapseMaintain" class="accordion-collapse show" aria-labelledby="headingMaintain">
-                        <div class="accordion-body pt-0">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="goal" id="mantenerPeso"
-                                       value="mantain" @change=${this.updateGoal}>
-                                <label class="form-check-label" for="mantenerPeso">
-                                    Alimentación normocalórica ${this.mantain} kcals
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="accordion" id="goalAccordion">
 
-                <!-- Aumentar masa muscular -->
-                <div class="accordion-item border-0">
-                    <h3 class="accordion-header" id="headingGain">
-                        <button class="accordion-button show bg-transparent fw-semibold py-2 no-button" style="font-size: 0.9rem; font-weight: 400 !important" type="button" 
-                                data-bs-toggle="collapse" data-bs-target="#collapseGain" 
-                                aria-expanded="false" aria-controls="collapseGain">
-                            Aumentar masa muscular
-                        </button>
-                    </h3>
-                    <div id="collapseGain" class="accordion-collapse show" aria-labelledby="headingGain">
-                        <div class="accordion-body pt-0">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="goal" id="superavitModerado"
-                                       value="slightSurplus" @change=${this.updateGoal}>
-                                <label class="form-check-label" for="superavitModerado">
-                                    Superávit ligero ${this.slightSurplus} kcals
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="goal" id="superavitAgresivo"
-                                       value="surplus" @change=${this.updateGoal}>
-                                <label class="form-check-label" for="superavitAgresivo">
-                                    Superávit ${this.surplus} kcals
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+      <!-- Perder grasa -->
+      <div class="accordion-item border-0 border-bottom">
+        <h3 class="accordion-header" id="headingLose">
+          <button class="accordion-button bg-transparent fw-semibold py-2 px-0" 
+                  type="button" data-bs-toggle="collapse" 
+                  data-bs-target="#collapseLose" aria-expanded="true" 
+                  aria-controls="collapseLose" style="font-size: 0.95rem;">
+            Perder grasa
+          </button>
+        </h3>
+        <div id="collapseLose" class="accordion-collapse collapse show" aria-labelledby="headingLose">
+          <div class="accordion-body pt-2 px-0">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="goal" id="deficitModerado"
+                     value="slightDeficit" @change=${this.updateGoal}>
+              <label class="form-check-label" for="deficitModerado">
+                Déficit ligero ${this.slightDeficit} Kcals
+              </label>
             </div>
-
-            <div class="d-flex justify-content-end mt-3 me-2">
-                <button class="btn btn-outline-primary" @click=${this.goToStep3} ?disabled="${this.buttonDisabled}">Siguiente</button>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="goal" id="deficitAgresivo"
+                     value="deficit" @change=${this.updateGoal}>
+              <label class="form-check-label" for="deficitAgresivo">
+                Déficit ${this.deficit} Kcals
+              </label>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mantener peso -->
+      <div class="accordion-item border-0 border-bottom">
+        <h3 class="accordion-header" id="headingMaintain">
+          <button class="accordion-button bg-transparent fw-semibold py-2 px-0" 
+                  type="button" data-bs-toggle="collapse" 
+                  data-bs-target="#collapseMaintain" aria-expanded="true" 
+                  aria-controls="collapseMaintain" style="font-size: 0.95rem;">
+            Mantener peso / Tonificar
+          </button>
+        </h3>
+        <div id="collapseMaintain" class="accordion-collapse collapse show" aria-labelledby="headingMaintain">
+          <div class="accordion-body pt-2 px-0">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="goal" id="mantenerPeso"
+                     value="mantain" @change=${this.updateGoal}>
+              <label class="form-check-label" for="mantenerPeso">
+                Alimentación normocalórica ${this.mantain} Kcals
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aumentar masa muscular -->
+      <div class="accordion-item border-0">
+        <h3 class="accordion-header" id="headingGain">
+          <button class="accordion-button bg-transparent fw-semibold py-2 px-0" 
+                  type="button" data-bs-toggle="collapse" 
+                  data-bs-target="#collapseGain" aria-expanded="true" 
+                  aria-controls="collapseGain" style="font-size: 0.95rem;">
+            Aumentar masa muscular
+          </button>
+        </h3>
+        <div id="collapseGain" class="accordion-collapse collapse show" aria-labelledby="headingGain">
+          <div class="accordion-body pt-2 px-0">
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="goal" id="superavitModerado"
+                     value="slightSurplus" @change=${this.updateGoal}>
+              <label class="form-check-label" for="superavitModerado">
+                Superávit ligero ${this.slightSurplus} Kcals
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="goal" id="superavitAgresivo"
+                     value="surplus" @change=${this.updateGoal}>
+              <label class="form-check-label" for="superavitAgresivo">
+                Superávit ${this.surplus} Kcals
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Botón siguiente -->
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-primary rounded-3 shadow-sm px-4"
+              @click=${this.goToStep3} ?disabled="${this.buttonDisabled}">
+        Siguiente
+      </button>
+    </div>
+
+  </div>
+</div>
+
         `;
     }
 }

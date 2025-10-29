@@ -33,83 +33,95 @@ export class ProductSearch extends LitElement {
 
     render() {
         return html`
+            <!-- Barra de búsqueda -->
             <div class="row justify-content-center my-2">
-                <div class="col-md-6">
-                    <div class="search-container">
-                        <input type="text" @keydown=${this.handleSearch} class="form-control search-input"
-                               value=${this.searchValue} @input="${e => this.searchValue = e.target.value}"
+                <div class="col-12 px-3">
+                    <div class="position-relative">
+                        <input type="text"
+                               @keydown=${this.handleSearch}
+                               class="form-control rounded-pill px-4"
+                               value=${this.searchValue}
+                               @input="${e => this.searchValue = e.target.value}"
                                placeholder="Busca un alimento...">
-                        <i style="font-size: 0.75em" class="fas fa-search search-icon"></i>
+                        <i class="fas fa-search position-absolute end-3 top-50 translate-middle-y text-muted"
+                           style="font-size: 0.75em; padding-left: 0.75em"></i>
                     </div>
                 </div>
             </div>
 
-
+            <!-- Modal de resultados -->
             <div class="modal fade" id="searchModal" tabindex="-1">
                 <div class="modal-dialog modal-fullscreen-sm-down">
-                    <div class="modal-content">
-                        <div class="modal-header pb-2">
-                            <h5 class="modal-title">Resultados para "${this.searchValue}"</h5>
+                    <div class="modal-content rounded-4 shadow-sm">
+
+                        <!-- Header -->
+                        <div class="modal-header pb-2 border-0">
+                            <h5 class="modal-title fw-semibold" style="font-size: 1em;">Resultados para
+                                    "${this.searchValue}"</h5>
                             <button type="button" class="btn-close" @click=${() => this.bsSearchModal.hide()}></button>
                         </div>
 
+                        <!-- Body -->
                         <div class="modal-body px-0 pt-0">
+
                             <div class="list-group">
 
                                 ${this.searchResult
                                         ? html`
-                                            ${this.searchResult.map(
-                                                    product => html`
-                                                        <a
-                                                                href="#"
-                                                                class="list-group-item list-group-item-action d-flex flex-column py-2"
-                                                                @click=${e => {
-                                                                    e.preventDefault();
-                                                                    this.dispatchEvent(
-                                                                            new CustomEvent('product-selected', {
-                                                                                detail: product,
-                                                                                bubbles: true,
-                                                                                composed: true
-                                                                            })
-                                                                    );
-                                                                    this.bsSearchModal.hide();
-                                                                }}
-                                                                aria-current="true"
-                                                        >
-                                                            <div class="d-flex w-100 justify-content-between align-items-start">
-                                                                <div>
-                                                                    <h6 style="font-weight: 400; font-size: 0.80em">
-                                                                        ${product.name}</h6>
-                                                                    <h6 style="font-weight: 300; font-size: 0.75em">
-                                                                        ${product.brands}</h6>
-                                                                </div>
-                                                            </div>
+                                            ${this.searchResult.map(product => html`
+                                                <a href="#"
+                                                   class="list-group-item list-group-item-action d-flex flex-column py-2"
+                                                   @click=${e => {
+                                                       e.preventDefault();
+                                                       this.dispatchEvent(new CustomEvent('product-selected', {
+                                                           detail: product,
+                                                           bubbles: true,
+                                                           composed: true
+                                                       }));
+                                                       this.bsSearchModal.hide();
+                                                   }}>
 
-                                                            <table class="meal-values w-100">
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td><strong
-                                                                            style="font-weight: 400">${product.nutriments.kcals}</strong>
-                                                                        kcals
-                                                                    </td>
-                                                                    <td><strong
-                                                                            style="font-weight: 400">${product.nutriments.proteins}</strong>
-                                                                        Prot.
-                                                                    </td>
-                                                                    <td><strong
-                                                                            style="font-weight: 400">${product.nutriments.carbs}</strong>
-                                                                        Carb.
-                                                                    </td>
-                                                                    <td><strong
-                                                                            style="font-weight: 400">${product.nutriments.fats}</strong>
-                                                                        Grasas
-                                                                    </td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </a>
-                                                    `
-                                            )}
+                                                    <!-- Nombre y marca -->
+                                                    <div class="d-flex w-100 justify-content-between align-items-start mb-1">
+                                                        <div>
+                                                            <h6 class="fw-normal mb-0" style="font-size: 0.85em;">
+                                                                ${product.name}</h6>
+                                                            <h6 class="fw-light text-muted mb-0"
+                                                                style="font-size: 0.75em;">${product.brands}</h6>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Valores y labels en columnas, labels debajo de números -->
+                                                    <div class="d-flex justify-content-between text-center"
+                                                         style="font-weight: 500; font-size: 0.85em;">
+                                                        <div>
+                                                            <div>${product.nutriments.kcals}</div>
+                                                            <div class="text-muted"
+                                                                 style="font-weight: 400; font-size: 0.75em;">kcals
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div>${product.nutriments.proteins}</div>
+                                                            <div class="text-muted"
+                                                                 style="font-weight: 400; font-size: 0.75em;">Prot.
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div>${product.nutriments.carbs}</div>
+                                                            <div class="text-muted"
+                                                                 style="font-weight: 400; font-size: 0.75em;">Carb.
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div>${product.nutriments.fats}</div>
+                                                            <div class="text-muted"
+                                                                 style="font-weight: 400; font-size: 0.75em;">Grasas
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </a>
+                                            `)}
                                         `
                                         : html`
                                             <div class="d-flex justify-content-center align-items-center py-5">
@@ -119,10 +131,13 @@ export class ProductSearch extends LitElement {
                                             </div>
                                         `}
                             </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>
+
         `;
     }
 
