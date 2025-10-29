@@ -98,14 +98,14 @@ export class WizardStep2 extends LitElement {
                                 <input class="form-check-input" type="radio" name="goal" id="deficitModerado"
                                        value="slightDeficit" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="deficitModerado">
-                                    Déficit moderado ${this.slightDeficit} kcals
+                                    Déficit ligero ${this.slightDeficit} kcals
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="goal" id="deficitAgresivo"
                                        value="deficit" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="deficitAgresivo">
-                                    Déficit agresivo ${this.deficit} kcals
+                                    Déficit ${this.deficit} kcals
                                 </label>
                             </div>
                         </div>
@@ -149,14 +149,14 @@ export class WizardStep2 extends LitElement {
                                 <input class="form-check-input" type="radio" name="goal" id="superavitModerado"
                                        value="slightSurplus" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="superavitModerado">
-                                    Superávit moderado ${this.slightSurplus} kcals
+                                    Superávit ligero ${this.slightSurplus} kcals
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="goal" id="superavitAgresivo"
                                        value="surplus" @change=${this.updateGoal}>
                                 <label class="form-check-label" for="superavitAgresivo">
-                                    Superávit agresivo ${this.surplus} kcals
+                                    Superávit ${this.surplus} kcals
                                 </label>
                             </div>
                         </div>

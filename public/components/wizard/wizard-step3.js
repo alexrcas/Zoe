@@ -82,7 +82,7 @@ export class WizardStep3 extends LitElement {
         const proteinKcals = this.proteins * 4;
         const carbKcals = this.carbs * 4;
         const remainingKcals = this.kcals - (proteinKcals + carbKcals);
-        this.fats = remainingKcals > 0 ? (remainingKcals / 9).toFixed(1) : 0;
+        this.fats = parseInt(remainingKcals > 0 ? (remainingKcals / 9).toFixed(1) : 0);
 
         // Porcentajes
         this.proteinPercent = ((proteinKcals / this.kcals) * 100).toFixed(1);
@@ -98,6 +98,30 @@ export class WizardStep3 extends LitElement {
         if (this.carbPercent <= 10) return html`<span class="badge bg-dark ms-2">keto</span>`;
         if (this.carbPercent <= 20) return html`<span class="badge bg-secondary ms-2">low carb</span>`;
         return null;
+    }
+
+    renderFatsLabel() {
+        if (this.fatPercent < 15) return html`<span class="badge bg-danger ms-2"><i class="fa-solid fa-triangle-exclamation"></i> El aporte de grasas debería ser mayor</span>`
+        return null;
+    }
+
+    async goToStep4() {
+        const userData = await this.dao.getUserData();
+        userData.goal = {...userData.goal, ...{
+                proteins: this.proteins,
+                carbs: this.carbs,
+                fats: this.fats
+        }}
+
+        await this.dao.saveOrUpdateUserData(userData);
+
+        this.dispatchEvent(
+            new CustomEvent('next-step', {
+                detail: { step: 4 },
+                bubbles: true,
+                composed: true
+            })
+        );
     }
 
     render() {
@@ -178,7 +202,11 @@ export class WizardStep3 extends LitElement {
                 <div class="mt-2">
                     
                     <div style="font-weight: 300; font-size: 0.9em">
-                    Grasas: <label class="form-label" style="font-weight: 600;">${this.fats} g</label>
+                    Grasas:
+                        <label class="form-label" style="font-weight: 600; font-size: 0.9em">
+                            ${this.fats} g
+                            ${this.renderFatsLabel()}
+                        </label>
                     </div>
                     <div class="alert-wrapper ${this.showHelp ? 'visible' : 'hidden'}">
                         <div class="alert alert-info animate__animated ${this.showHelp ? 'animate__fadeInDown' : 'animate__fadeOutUp'}"
@@ -191,8 +219,8 @@ export class WizardStep3 extends LitElement {
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end mt-3 me-2">
-                <button class="btn btn-primary" @click=${this.goToStep2} ?disabled="${this.buttonDisabled}" >Siguiente</button>
+            <div class="d-flex justify-content-end mt-3 mb-2 me-2">
+                <button class="btn btn-primary" @click=${this.goToStep4} ?disabled="${this.buttonDisabled}" >Siguiente</button>
             </div>
         `;
     }
