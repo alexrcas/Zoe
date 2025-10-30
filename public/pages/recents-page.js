@@ -97,6 +97,11 @@ export class RecentsPage extends LitElement {
         this.requestUpdate();
     }
 
+    handleCloseScanner() {
+        this.showScanner = false;
+        this.requestUpdate();
+    }
+
     render() {
         return html`
             <div class="container px-3">
@@ -155,7 +160,7 @@ export class RecentsPage extends LitElement {
                 <!-- Scanner overlay -->
                 ${this.showScanner ? html`
                     <div class="overlay">
-                        <scan-component @product-scanned=${this.handleProductScanned}></scan-component>
+                        <scan-component @close-scanner="${this.handleCloseScanner}" @product-scanned=${this.handleProductScanned}></scan-component>
                     </div>
                 ` : ''}
 

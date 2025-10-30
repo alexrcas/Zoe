@@ -8,6 +8,7 @@ export class ScanComponent extends LitElement {
     constructor() {
         super();
         this.lecturas = 0;
+        this.stream = null;
         this.codeReader = new BrowserMultiFormatReader();
         this.scannedCode = '';
         this.grams = 100;
@@ -26,11 +27,14 @@ export class ScanComponent extends LitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.codeReader.reset();
     }
 
 
     async startScanner() {
+
+        if (this.stream) {
+            this.stopScanner();
+        }
 
         const constraints = {
             video: {
@@ -42,11 +46,11 @@ export class ScanComponent extends LitElement {
         };
 
         const videoElement = this.querySelector('video');
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        videoElement.srcObject = stream;
+        this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+        videoElement.srcObject = this.stream;
         await videoElement.play();
 
-        const [videoTrack] = stream.getVideoTracks();
+        const [videoTrack] = this.stream.getVideoTracks();
 
         // Aplicamos zoom si el dispositivo lo soporta
         if (videoTrack.getCapabilities().zoom) {
@@ -91,7 +95,7 @@ export class ScanComponent extends LitElement {
 
 
     async fetchInfo(code) {
-
+        this.stopScanner();
         const localProduct = await this.dao.findProductByBarcode(code);
         if (localProduct) {
             this.dispatchEvent(
@@ -126,13 +130,41 @@ export class ScanComponent extends LitElement {
     }
 
 
+    stopScanner() {
+        if (this.codeReader) {
+            this.codeReader.reset();
+            this.codeReader = null;
+        }
+
+        if (this.stream) {
+            this.stream.getTracks().forEach(track => track.stop());
+            this.stream = null;
+        }
+
+        const videoElement = this.querySelector('video');
+        if (videoElement) {
+            videoElement.srcObject = null;
+        }
+    }
+
 
     render() {
         return html`
-            
-        <div class="scanner-container">
-            <video autoplay muted playsinline style="border-radius: 5px"></video>
-        </div>
+
+            <div class="scanner-overlay">
+                <div class="scanner-box">
+                    <!-- Botón cerrar -->
+                    <button class="close-btn" @click=${() => {this.stopScanner(); this.dispatchEvent(new CustomEvent('close-scanner'))}}>✕</button>
+
+                    <!-- Mensaje -->
+                    <div class="scanner-message">Acerca un código de barras</div>
+
+                    <!-- Video del scanner -->
+                    <div class="scanner-container">
+                        <video autoplay muted playsinline></video>
+                    </div>
+                </div>
+            </div>
         `;
     }
 }
