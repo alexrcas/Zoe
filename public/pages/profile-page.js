@@ -10,6 +10,9 @@ class ProfilePage extends LitElement {
     constructor() {
         super();
         this.dao = new Dao();
+        this.toastEl = null;
+        this.toast = null;
+        this.saveButtonDisabled = true;
 
         this.values = {
             proteins: 0,
@@ -27,6 +30,11 @@ class ProfilePage extends LitElement {
     }
 
     async firstUpdated() {
+        this.toastEl = this.querySelector('#liveToast');
+        this.toast = new bootstrap.Toast(this.toastEl, {
+            autohide: true,   // se oculta automáticamente
+            delay: 1500       // tiempo en ms antes de ocultarse
+        });
         const goals = await this.dao.getUserGoals();
         this.values.proteins = goals.proteins || 0;
         this.values.carbs = goals.carbs || 0;
@@ -42,6 +50,7 @@ class ProfilePage extends LitElement {
         this.values[key] = Number(value) || 0;
         this.kcals = (this.values.proteins * 4) + (this.values.carbs * 4) + (this.values.fats * 9);
         this.updatePercents();
+        this.saveButtonDisabled = false;
         this.requestUpdate();
     }
 
@@ -56,7 +65,7 @@ class ProfilePage extends LitElement {
         this.values.proteins = Math.round((this.kcals * (this.percents.proteins / 100)) / 4);
         this.values.carbs = Math.round((this.kcals * (this.percents.carbs / 100)) / 4);
         this.values.fats = Math.round((this.kcals * (this.percents.fats / 100)) / 9);
-
+        this.saveButtonDisabled = false;
         this.requestUpdate();
     }
 
@@ -85,7 +94,12 @@ class ProfilePage extends LitElement {
             fats: this.values.fats,
             proteins: this.values.proteins
         };
+
         await this.dao.saveOrUpdateUserGoals(goals);
+        this.toast.show();
+        this.toastEl.addEventListener('click', () => this.toast.hide());
+        this.saveButtonDisabled = true;
+        this.requestUpdate();
     }
 
     render() {
@@ -141,6 +155,8 @@ class ProfilePage extends LitElement {
                 id="proteins"
                 class="form-control form-control-sm"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 placeholder="Proteínas"
                 .value=${this.values.proteins}
                 @input=${e => this.updateValues(e.target.value, 'proteins')}
@@ -154,6 +170,8 @@ class ProfilePage extends LitElement {
                 id="carbs"
                 class="form-control form-control-sm"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 placeholder="Carbohidratos"
                 .value=${this.values.carbs}
                 @input=${e => this.updateValues(e.target.value, 'carbs')}
@@ -167,6 +185,8 @@ class ProfilePage extends LitElement {
                 id="fats"
                 class="form-control form-control-sm"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 placeholder="Grasas"
                 .value=${this.values.fats}
                 @input=${e => this.updateValues(e.target.value, 'fats')}
@@ -189,6 +209,8 @@ class ProfilePage extends LitElement {
                 id="kcalsInput"
                 class="form-control form-control-sm"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 placeholder="Calorías totales"
                 .value=${this.kcals}
                 @input=${e => {
@@ -205,6 +227,8 @@ class ProfilePage extends LitElement {
                 id="proteinsPercent"
                 class="form-control form-control-sm"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 placeholder="Proteínas"
                 .value=${this.percents.proteins}
                 @input=${e => this.updatePercentsValues(e.target.value, 'proteins')}
@@ -218,6 +242,8 @@ class ProfilePage extends LitElement {
                 id="carbsPercent"
                 class="form-control form-control-sm"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 placeholder="Carbohidratos"
                 .value=${this.percents.carbs}
                 @input=${e => this.updatePercentsValues(e.target.value, 'carbs')}
@@ -231,6 +257,8 @@ class ProfilePage extends LitElement {
                 id="fatsPercent"
                 class="form-control form-control-sm"
                 type="number"
+                inputmode="numeric"
+                pattern="[0-9]*"
                 placeholder="Grasas"
                 .value=${this.percents.fats}
                 @input=${e => this.updatePercentsValues(e.target.value, 'fats')}
@@ -252,6 +280,7 @@ class ProfilePage extends LitElement {
         <button
           @click=${this.saveValues}
           class="btn btn-primary btn-sm w-25 ms-1 rounded-3 shadow-sm"
+          ?disabled="${this.saveButtonDisabled}"
         >
           Guardar
         </button>
@@ -259,6 +288,16 @@ class ProfilePage extends LitElement {
 
     </div>
   </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body text-center">
+                ¡Guardado!
+            </div>
+        </div>
+    </div>
 </div>
 
         `;

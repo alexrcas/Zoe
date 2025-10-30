@@ -147,8 +147,8 @@ export class WizardStep3 extends LitElement {
     <div class="alert-wrapper ${this.showHelp ? 'visible' : 'hidden'}">
       <div class="alert alert-info animate__animated ${this.showHelp ? 'animate__fadeInDown' : 'animate__fadeOutUp'}"
            style="font-weight: 300; font-size: 0.8em;">
-        En esta pantalla puedes terminar de afinar las cantidades de macronutrientes según tus gustos y necesidades.
-        <strong style="font-weight: 600">Ya hemos calculado unos valores adecuados para ti</strong>, así que si no sabes qué hacer, simplemente presiona continuar.
+        En esta pantalla puedes terminar de ajustar los macronutrientes según tus gustos y necesidades.
+        <strong style="font-weight: 600">Ya hemos calculado unos valores adecuados para ti</strong>, así que si no sabes qué hacer, simplemente pulsa continuar.
       </div>
     </div>
 

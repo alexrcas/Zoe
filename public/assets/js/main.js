@@ -33,20 +33,25 @@ function updateNav(activeRoute) {
 window.addEventListener('load', renderPage);
 window.addEventListener('hashchange', renderPage);
 
-/*
+
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches
                      || window.navigator.standalone  // iOS
                      || document.referrer.startsWith('android-app://'); // Android WebAPK
 
+
+
+/*
 if (!isStandalone) {
   document.body.innerHTML = `
     <div class="landing-overlay">
-      <h2>Instala la app para continuar</h2>
-      <p>Ve al menú del navegador y selecciona "Añadir a pantalla de inicio".</p>
+        <div class="alert-info mx-4 mt-4">
+            <h2>Instala la app para continuar</h2>
+            <p>En el menú de tu navegador, selecciona 'Añadir a pantalla de inicio'.</p>
+        </div>
     </div>
+    
   `;
 }
-
 */
 
 

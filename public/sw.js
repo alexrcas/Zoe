@@ -1,4 +1,5 @@
-const CACHE_NAME = 'pwa-cache-v1';
+const VERSION = 'v' + new Date().getTime();
+const CACHE_NAME = `pwa-cache-${VERSION}`;
 const urlsToCache = [
     '/', // raíz
     '/index.html',
@@ -18,6 +19,7 @@ const urlsToCache = [
     '/components/wizard/wizard-step1.js',
     '/components/wizard/wizard-step2.js',
     '/components/wizard/wizard-step3.js',
+    '/components/wizard/wizard-step4.js',
 
     // Páginas
     '/pages/home-page.js',
@@ -28,7 +30,11 @@ const urlsToCache = [
     // Iconos
     '/icons/icon-192x192.png',
     '/icons/icon-512x512.png',
+
+    // Service Worker
+    '/sw.js'
 ];
+
 
 // -------------------- INSTALACIÓN --------------------
 self.addEventListener('install', (event) => {
@@ -45,6 +51,8 @@ self.addEventListener('install', (event) => {
 // -------------------- ACTIVACIÓN --------------------
 self.addEventListener('activate', (event) => {
     console.log('[ServiceWorker] Activando...');
+
+
     event.waitUntil(
         caches.keys().then((keys) =>
             Promise.all(

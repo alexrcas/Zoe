@@ -15,7 +15,7 @@ export class WizardStep1 extends LitElement {
     }
 
     createRenderRoot() {
-        return this; // usar el DOM global (Bootstrap)
+        return this;
     }
 
     handleInput(e, field) {
@@ -72,11 +72,13 @@ export class WizardStep1 extends LitElement {
       <div class="form-floating mb-3">
         <input
           type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
           id="edad"
           class="form-control"
           placeholder="Edad"
           min="0"
-          .value=${this.age}
+          value=${this.age ?? ''}
           @input=${e => this.handleInput(e, 'age')}
         />
         <label for="edad">Edad</label>
@@ -86,6 +88,8 @@ export class WizardStep1 extends LitElement {
       <div class="form-floating mb-3">
         <input
           type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
           id="altura"
           class="form-control"
           placeholder="Altura (cm)"
@@ -100,6 +104,8 @@ export class WizardStep1 extends LitElement {
       <div class="form-floating mb-3">
         <input
           type="number"
+          inputmode="numeric"
+          pattern="[0-9]*"
           id="peso"
           class="form-control"
           placeholder="Peso (kg)"
@@ -130,6 +136,7 @@ export class WizardStep1 extends LitElement {
       <!-- Botón siguiente -->
       <div class="d-flex justify-content-end mt-3">
         <button
+        type="button"
           class="btn btn-primary rounded-3 shadow-sm px-4"
           @click=${this.goToStep2}
           ?disabled="${this.buttonDisabled}"

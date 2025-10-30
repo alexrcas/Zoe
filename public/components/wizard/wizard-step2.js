@@ -42,8 +42,6 @@ export class WizardStep2 extends LitElement {
         this.surplus = Math.round(maintenance * 1.2);
     }
 
-
-
     createRenderRoot() {
         return this; // usar el DOM global (Bootstrap)
     }
@@ -85,89 +83,62 @@ export class WizardStep2 extends LitElement {
   <div class="card shadow-sm border-0 rounded-4 p-3">
 
     <h6 class="text-center fw-semibold text-secondary mb-3">Selecciona tu objetivo</h6>
+      
+      <div class="alert alert-info" style="font-size: 0.8em; font-weight: 300">
+          Tanto si tu objetivo es perder grasa o ganar masa muscular, lo ideal es empezar con un déficit o superávit ligero: 
+          podrás irlo ajustando poco a poco, mientras que un cambio de alimentación demasiado brusco puede ser contraproducente o podría provocar un efecto rebote.
+      </div>
 
-    <div class="accordion" id="goalAccordion">
+    <!-- Objetivos siempre desplegados -->
+    <div class="mb-3">
 
       <!-- Perder grasa -->
-      <div class="accordion-item border-0 border-bottom">
-        <h3 class="accordion-header" id="headingLose">
-          <button class="accordion-button bg-transparent fw-semibold py-2 px-0" 
-                  type="button" data-bs-toggle="collapse" 
-                  data-bs-target="#collapseLose" aria-expanded="true" 
-                  aria-controls="collapseLose" style="font-size: 0.95rem;">
-            Perder grasa
-          </button>
-        </h3>
-        <div id="collapseLose" class="accordion-collapse collapse show" aria-labelledby="headingLose">
-          <div class="accordion-body pt-2 px-0">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="goal" id="deficitModerado"
-                     value="slightDeficit" @change=${this.updateGoal}>
-              <label class="form-check-label" for="deficitModerado">
-                Déficit ligero ${this.slightDeficit} Kcals
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="goal" id="deficitAgresivo"
-                     value="deficit" @change=${this.updateGoal}>
-              <label class="form-check-label" for="deficitAgresivo">
-                Déficit ${this.deficit} Kcals
-              </label>
-            </div>
-          </div>
+      <div class="mb-3">
+        <h6 class="text-secondary mb-2" style="font-weight: 400; font-size: 0.9em">Perder grasa</h6>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="goal" id="deficitModerado"
+                 value="slightDeficit" @change=${this.updateGoal}>
+          <label class="form-check-label" for="deficitModerado">
+            Déficit ligero &nbsp; <span class="text-muted small">${this.slightDeficit} Kcals</span>
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="goal" id="deficitAgresivo"
+                 value="deficit" @change=${this.updateGoal}>
+          <label class="form-check-label" for="deficitAgresivo">
+            Déficit &nbsp; <span class="text-muted small">${this.deficit} Kcals</span>
+          </label>
         </div>
       </div>
 
       <!-- Mantener peso -->
-      <div class="accordion-item border-0 border-bottom">
-        <h3 class="accordion-header" id="headingMaintain">
-          <button class="accordion-button bg-transparent fw-semibold py-2 px-0" 
-                  type="button" data-bs-toggle="collapse" 
-                  data-bs-target="#collapseMaintain" aria-expanded="true" 
-                  aria-controls="collapseMaintain" style="font-size: 0.95rem;">
-            Mantener peso / Tonificar
-          </button>
-        </h3>
-        <div id="collapseMaintain" class="accordion-collapse collapse show" aria-labelledby="headingMaintain">
-          <div class="accordion-body pt-2 px-0">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="goal" id="mantenerPeso"
-                     value="mantain" @change=${this.updateGoal}>
-              <label class="form-check-label" for="mantenerPeso">
-                Alimentación normocalórica ${this.mantain} Kcals
-              </label>
-            </div>
-          </div>
+      <div class="mb-3">
+        <h6 class="text-secondary mb-2" style="font-weight: 400; font-size: 0.9em">Mantener peso / Tonificar</h6>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="goal" id="mantenerPeso"
+                 value="mantain" @change=${this.updateGoal}>
+          <label class="form-check-label" for="mantenerPeso">
+            Alimentación normocalórica &nbsp; <span class="text-muted small">${this.mantain} Kcals</span>
+          </label>
         </div>
       </div>
 
       <!-- Aumentar masa muscular -->
-      <div class="accordion-item border-0">
-        <h3 class="accordion-header" id="headingGain">
-          <button class="accordion-button bg-transparent fw-semibold py-2 px-0" 
-                  type="button" data-bs-toggle="collapse" 
-                  data-bs-target="#collapseGain" aria-expanded="true" 
-                  aria-controls="collapseGain" style="font-size: 0.95rem;">
-            Aumentar masa muscular
-          </button>
-        </h3>
-        <div id="collapseGain" class="accordion-collapse collapse show" aria-labelledby="headingGain">
-          <div class="accordion-body pt-2 px-0">
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="goal" id="superavitModerado"
-                     value="slightSurplus" @change=${this.updateGoal}>
-              <label class="form-check-label" for="superavitModerado">
-                Superávit ligero ${this.slightSurplus} Kcals
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="goal" id="superavitAgresivo"
-                     value="surplus" @change=${this.updateGoal}>
-              <label class="form-check-label" for="superavitAgresivo">
-                Superávit ${this.surplus} Kcals
-              </label>
-            </div>
-          </div>
+      <div>
+        <h6 class="text-secondary mb-2" style="font-weight: 400; font-size: 0.9em">Aumentar masa muscular</h6>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="goal" id="superavitModerado"
+                 value="slightSurplus" @change=${this.updateGoal}>
+          <label class="form-check-label" for="superavitModerado">
+            Superávit ligero &nbsp; <span class="text-muted small">${this.slightSurplus} Kcals</span>
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="goal" id="superavitAgresivo"
+                 value="surplus" @change=${this.updateGoal}>
+          <label class="form-check-label" for="superavitAgresivo">
+            Superávit &nbsp; <span class="text-muted small">${this.surplus} Kcals</span>
+          </label>
         </div>
       </div>
 
@@ -183,6 +154,8 @@ export class WizardStep2 extends LitElement {
 
   </div>
 </div>
+
+
 
         `;
     }

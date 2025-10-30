@@ -12,7 +12,7 @@ export class WizardPage extends LitElement {
 
     constructor() {
         super();
-        this.step = 1;
+        this.step = 2;
     }
 
     createRenderRoot() {

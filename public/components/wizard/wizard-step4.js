@@ -91,7 +91,7 @@ export class WizardStep4 extends LitElement {
 
   <!-- Botón Terminar -->
   <div class="d-flex justify-content-end mb-3">
-    <button @click="${() => window.location = '#profile'}" class="btn btn-primary rounded-3 shadow-sm px-4">Terminar</button>
+    <button @click="${() => window.location = '#home'}" class="btn btn-primary rounded-3 shadow-sm px-4">Terminar</button>
   </div>
 
   <!-- Alerta de advertencia -->
