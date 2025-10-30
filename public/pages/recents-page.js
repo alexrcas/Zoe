@@ -114,7 +114,7 @@ export class RecentsPage extends LitElement {
 
             <div class="px-3">
                 <h5 class="pt-2 pb-0 mb-0" style="font-weight: 500; font-size: 0.9em">Alimentos recientes</h5>
-                <em class="d-block mb-2" style="font-weight: 300; font-size: 0.85em;">Valores nutricionales por 100 grs. / ml.</em>
+                <em class="d-block mb-2" style="font-weight: 300; font-size: 0.85em;">Valores nutricionales por 100 g. / ml.</em>
             </div>
                 <!-- Lista de productos -->
                 <div class="list-group list-group-flush">
@@ -218,7 +218,7 @@ export class RecentsPage extends LitElement {
                                                pattern="[0-9]*"
                                                placeholder="Cantidad en gramos" value=${this.grams}
                                                @input=${e => this.updateValues(e.target.value)}>
-                                        <span class="input-group-text rounded-end">grs.</span>
+                                        <span class="input-group-text rounded-end">g.</span>
                                     </div>
                                 </div>
 

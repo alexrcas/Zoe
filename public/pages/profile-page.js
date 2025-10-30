@@ -106,7 +106,7 @@ class ProfilePage extends LitElement {
         return html`
 <div class="container py-3" style="max-width: 420px;">
   <!-- Encabezado -->
-  <h6 class="text-center fw-semibold mb-3 text-secondary">Calculadora</h6>
+  <h6 class="text-center fw-semibold mb-3 text-secondary">Tu plan</h6>
 
   <!-- Card principal -->
   <div class="card shadow-sm border-0 rounded-4 p-3">
@@ -161,7 +161,7 @@ class ProfilePage extends LitElement {
                 .value=${this.values.proteins}
                 @input=${e => this.updateValues(e.target.value, 'proteins')}
               />
-              <label for="proteins">Proteínas (grs)</label>
+              <label for="proteins">Proteínas (g)</label>
             </div>
 
             <!-- Carbohidratos -->
@@ -176,7 +176,7 @@ class ProfilePage extends LitElement {
                 .value=${this.values.carbs}
                 @input=${e => this.updateValues(e.target.value, 'carbs')}
               />
-              <label for="carbs">Carbohidratos (grs)</label>
+              <label for="carbs">Carbohidratos (g)</label>
             </div>
 
             <!-- Grasas -->
@@ -191,7 +191,7 @@ class ProfilePage extends LitElement {
                 .value=${this.values.fats}
                 @input=${e => this.updateValues(e.target.value, 'fats')}
               />
-              <label for="fats">Grasas (grs)</label>
+              <label for="fats">Grasas (g)</label>
             </div>
 
             <!-- Calorías -->
@@ -270,21 +270,22 @@ class ProfilePage extends LitElement {
       </div>
 
       <!-- Botones -->
-      <div class="mt-3 d-flex justify-content-between w-100">
-          <button
-                  class="btn btn-outline-secondary btn-borderless btn-sm w-50 rounded-3"
-                  @click="${() => window.location = '#wizard'}"
-          >
-              Asistente <i class="fa-regular fa-lightbulb me-2"></i>
-          </button>
+      <div class="mt-1 mb-3 d-flex justify-content-center w-100">
         <button
           @click=${this.saveValues}
-          class="btn btn-primary btn-sm w-25 ms-1 rounded-3 shadow-sm"
+          class="btn btn-primary btn-sm w-50 ms-1 rounded-3 shadow-sm"
           ?disabled="${this.saveButtonDisabled}"
         >
           Guardar
         </button>
       </div>
+
+        <button
+                class="btn btn-outline-secondary btn-borderless btn-sm w-100 rounded-3"
+                @click="${() => window.location = '#wizard'}"
+        >
+            ¿No sabes qué poner? <strong>Usa el Asistente</strong> <i class="fa-regular fa-lightbulb me-2"></i>
+        </button>
 
     </div>
   </div>

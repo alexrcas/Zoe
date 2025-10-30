@@ -101,7 +101,7 @@ export class HomePage extends LitElement {
 
             <div class="d-flex w-100 justify-content-between align-items-center mb-1">
               <h6 style="font-weight: 400; font-size: 0.85em;">${entry.name}</h6>
-              <small class="opacity-50 text-nowrap">${entry.grams} grs.</small>
+              <small class="opacity-50 text-nowrap">${entry.grams} g.</small>
             </div>
 
             <!-- Valores y labels alineados en columnas -->
@@ -182,7 +182,7 @@ export class HomePage extends LitElement {
             <input class="form-control text-center" type="number" inputmode="numeric" pattern="[0-9]*"
                    placeholder="Cantidad en gramos"
                    value=${this.grams} @input=${e => this.updateValues(e.target.value)}/>
-            <span class="input-group-text">grs.</span>
+            <span class="input-group-text">g.</span>
           </div>
         </div>
       </div>

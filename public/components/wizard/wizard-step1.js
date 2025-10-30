@@ -50,7 +50,7 @@ export class WizardStep1 extends LitElement {
             
 <div class="container py-3" style="max-width: 420px;">
   <!-- Card principal -->
-  <div class="card shadow-sm border-0 rounded-4 p-3">
+  <div class="p-3">
     <form class="d-flex flex-column px-2">
 
       <!-- Sexo -->

@@ -126,13 +126,13 @@ export class WizardStep3 extends LitElement {
 
     render() {
         return html`
-<div class="container py-3" style="max-width: 420px;">
+<div class="container px-3 pb-3" style="max-width: 420px;">
   <!-- Card principal -->
-  <div class="card shadow-sm border-0 rounded-4 p-3">
+  <div class="p-3">
 
     <h6 class="text-center fw-semibold text-secondary mb-1">Ajusta tus macronutrientes</h6>
     <p class="text-center text-muted mb-2">
-      <strong>${this.kcals} Kcal</strong>
+      <strong>${this.kcals} Kcals</strong>
     </p>
 
     <!-- Botón ayuda -->

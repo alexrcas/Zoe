@@ -80,7 +80,7 @@ export class WizardStep2 extends LitElement {
         return html`
 <div class="container py-3" style="max-width: 420px;">
   <!-- Card principal -->
-  <div class="card shadow-sm border-0 rounded-4 p-3">
+  <div class="px-3 pb-3">
 
     <h6 class="text-center fw-semibold text-secondary mb-3">Selecciona tu objetivo</h6>
       

@@ -89,11 +89,6 @@ export class WizardStep4 extends LitElement {
     No hace falta que apuntes estos valores. ¡Ya los tienes actualizados en tu calculadora!
   </p>
 
-  <!-- Botón Terminar -->
-  <div class="d-flex justify-content-end mb-3">
-    <button @click="${() => window.location = '#home'}" class="btn btn-primary rounded-3 shadow-sm px-4">Terminar</button>
-  </div>
-
   <!-- Alerta de advertencia -->
   <div class="alert alert-warning" style="font-weight: 300; font-size: 0.85em; line-height: 1.4;">
     Estos valores se han obtenido a partir de fórmulas y tablas de referencia generales, por lo que tienen un carácter orientativo. 
@@ -101,6 +96,11 @@ export class WizardStep4 extends LitElement {
     Consulta siempre con un especialista, especialmente si tienes alguna condición médica o requerimientos nutricionales específicos. 
     Escucha a tu cuerpo y mantén una alimentación equilibrada y saludable.
   </div>
+
+    <!-- Botón Terminar -->
+    <div class="d-flex justify-content-end mb-3">
+        <button @click="${() => window.location = '#home'}" class="btn btn-primary rounded-3 shadow-sm px-4">Terminar</button>
+    </div>
 
 </div>
 
