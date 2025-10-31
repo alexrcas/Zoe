@@ -7,6 +7,7 @@ export class ProductSearch extends LitElement {
         super();
         this.bsSearchModal = null;
         this.searchValue = '';
+        this.searchText = '';
         this.searchResult = null;
         this.apiService = new ApiService();
     }
@@ -25,9 +26,12 @@ export class ProductSearch extends LitElement {
         if (e.key != 'Enter') {
             return;
         }
+        this.searchText = this.searchValue;
+        this.searchValue = '';
+        document.querySelector('#search-input').value = '';
         this.bsSearchModal.show();
         this.requestUpdate();
-        this.searchResult = await this.apiService.search(this.searchValue);
+        this.searchResult = await this.apiService.search(this.searchText);
         this.requestUpdate();
     }
 
@@ -38,9 +42,10 @@ export class ProductSearch extends LitElement {
                 <div class="col-12 px-3">
                     <div class="position-relative">
                         <input type="text"
-                               @keydown=${this.handleSearch}
+                               id="search-input"
+                               @keyup=${this.handleSearch}
                                class="form-control rounded-pill px-4"
-                               value=${this.searchValue}
+                               .value=${this.searchValue}
                                @input="${e => this.searchValue = e.target.value}"
                                placeholder="Busca un alimento...">
                         <i class="fas fa-search position-absolute end-3 top-50 translate-middle-y text-muted"
@@ -57,7 +62,7 @@ export class ProductSearch extends LitElement {
                         <!-- Header -->
                         <div class="modal-header pb-2 border-0">
                             <h5 class="modal-title fw-semibold" style="font-size: 1em;">Resultados para
-                                    "${this.searchValue}"</h5>
+                                    "${this.searchText}"</h5>
                             <button type="button" class="btn-close" @click=${() => this.bsSearchModal.hide()}></button>
                         </div>
 

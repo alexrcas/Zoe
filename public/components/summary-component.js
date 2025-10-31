@@ -45,7 +45,7 @@ export class SummaryComponent extends LitElement {
 
         <div class="w-100 d-flex flex-column">
           <!-- Título Total -->
-          <h6 class="mb-1 fw-normal" style="font-size: 0.85em;">Total</h6>
+          <h6 class="mb-1 fw-normal" style="font-size: 0.9em;">Total</h6>
 
           <!-- Valores y labels en columnas -->
           <div class="d-flex justify-content-between text-center" style="font-weight: 500; font-size: 0.85em;">
@@ -91,7 +91,7 @@ export class SummaryComponent extends LitElement {
         <div class="mb-3">
           <div class="d-flex justify-content-between align-items-center mb-1">
             <small class="fw-semibold text-secondary">Prot.</small>
-            <small class="fw-semibold text-secondary">${this.proteins} / ${this.goals.proteins} g.</small>
+            <small class="fw-semibold text-secondary">${this.proteins} / ${this.goals.proteins} g</small>
           </div>
           <div class="progress rounded-pill" style="height: 0.35em; background-color: #f0f0f0;">
             <div class="progress-bar bg-danger rounded-pill opacity-75" 
@@ -103,7 +103,7 @@ export class SummaryComponent extends LitElement {
         <div class="mb-3">
           <div class="d-flex justify-content-between align-items-center mb-1">
             <small class="fw-semibold text-secondary">Carb.</small>
-            <small class="fw-semibold text-secondary">${this.carbs} / ${this.goals.carbs} g.</small>
+            <small class="fw-semibold text-secondary">${this.carbs} / ${this.goals.carbs} g</small>
           </div>
           <div class="progress rounded-pill" style="height: 0.35em; background-color: #f0f0f0;">
             <div class="progress-bar bg-success rounded-pill opacity-75" 
@@ -115,7 +115,7 @@ export class SummaryComponent extends LitElement {
         <div>
           <div class="d-flex justify-content-between align-items-center mb-1">
             <small class="fw-semibold text-secondary">Grasas</small>
-            <small class="fw-semibold text-secondary">${this.fats} / ${this.goals.fats} g.</small>
+            <small class="fw-semibold text-secondary">${this.fats} / ${this.goals.fats} g</small>
           </div>
           <div class="progress rounded-pill" style="height: 0.35em; background-color: #f0f0f0;">
             <div class="progress-bar bg-warning rounded-pill opacity-75" 

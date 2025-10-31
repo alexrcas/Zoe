@@ -4,12 +4,10 @@ import '../../pages/profile-page.js';
 import '../../pages/wizard-page.js';
 
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .catch(err => console.error('Error registrando SW', err));
-  });
-}
+navigator.serviceWorker.register('/sw.js', { scope: '/' })
+    .then(() => console.log('Service Worker registrado correctamente'))
+    .catch(err => console.error('Error registrando SW:', err));
+
 
 
 const app = document.getElementById('app');
@@ -54,11 +52,11 @@ if (!isStandalone) {
 }
 */
 
-
 /*
 navigator.serviceWorker.getRegistrations().then(registrations => {
     for (const registration of registrations) {
         registration.unregister();
     }
 });
-*/
+
+ */

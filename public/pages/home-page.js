@@ -146,7 +146,7 @@ export class HomePage extends LitElement {
     <div class="modal-content rounded-4 shadow-sm">
 
       <div class="modal-header border-0">
-        <h5 class="modal-title fw-semibold">Editar alimento</h5>
+        <h5 class="modal-title fw-semibold">Editar</h5>
         <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
       </div>
 
@@ -187,9 +187,9 @@ export class HomePage extends LitElement {
         </div>
       </div>
 
-      <div class="modal-footer d-flex justify-content-between border-0 pt-0">
-        <button class="btn btn-outline-danger rounded-3" @click=${this.deleteEntry}>Eliminar</button>
-        <button class="btn btn-outline-primary rounded-3" @click=${this.updateEntry}>Aceptar</button>
+      <div class="modal-footer d-flex justify-content-between border-0 pt-0 pb-1 px-1">
+        <button class="btn btn-outline-danger rounded-pill" @click=${this.deleteEntry}>Eliminar</button>
+        <button class="btn btn-outline-primary rounded-pill" @click=${this.updateEntry}>Aceptar</button>
       </div>
 
     </div>

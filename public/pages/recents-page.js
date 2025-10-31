@@ -121,41 +121,48 @@ export class RecentsPage extends LitElement {
                 <h5 class="pt-2 pb-0 mb-0" style="font-weight: 500; font-size: 0.9em">Alimentos recientes</h5>
                 <em class="d-block mb-2" style="font-weight: 300; font-size: 0.85em;">Valores nutricionales por 100 g. / ml.</em>
             </div>
-                <!-- Lista de productos -->
-                <div class="list-group list-group-flush">
-                    ${this.products.map(product => html`
-                        <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
-                           @click=${(e) => {
-                               e.preventDefault();
-                               this.selectProduct(product);
-                           }}>
+            
+                ${(this.products && this.products.length > 0) ? html`
+                    <!-- Lista de productos -->
+                    <div class="list-group list-group-flush">
+                        ${this.products.map(product => html`
+                            <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
+                               @click=${(e) => {
+                                   e.preventDefault();
+                                   this.selectProduct(product);
+                               }}>
 
-                            <!-- Nombre del producto -->
-                            <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${product.name}</h6>
+                                <!-- Nombre del producto -->
+                                <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${product.name}</h6>
 
-                            <!-- Valores nutricionales -->
-                            <div class="d-flex justify-content-between text-center"
-                                 style="font-weight: 500; font-size: 0.85em;">
-                                <div>
-                                    <div>${product.nutriments.kcals}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
+                                <!-- Valores nutricionales -->
+                                <div class="d-flex justify-content-between text-center"
+                                     style="font-weight: 500; font-size: 0.85em;">
+                                    <div>
+                                        <div>${product.nutriments.kcals}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
+                                    </div>
+                                    <div>
+                                        <div>${product.nutriments.proteins}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
+                                    </div>
+                                    <div>
+                                        <div>${product.nutriments.carbs}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
+                                    </div>
+                                    <div>
+                                        <div>${product.nutriments.fats}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div>${product.nutriments.proteins}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
-                                </div>
-                                <div>
-                                    <div>${product.nutriments.carbs}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
-                                </div>
-                                <div>
-                                    <div>${product.nutriments.fats}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas</div>
-                                </div>
-                            </div>
-                        </a>
-                    `)}
-                </div>
+                            </a>
+                        `)}
+                    </div>
+                ` : html`
+                    <div class="alert alert-info mx-4">No hay alimentos recientes para mostrar</div>
+                `
+                }
 
                 <!-- Scanner overlay -->
                 ${this.showScanner ? html`

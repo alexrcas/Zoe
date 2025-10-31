@@ -157,7 +157,7 @@ export class ScanComponent extends LitElement {
                     <button class="close-btn" @click=${() => {this.stopScanner(); this.dispatchEvent(new CustomEvent('close-scanner'))}}>✕</button>
 
                     <!-- Mensaje -->
-                    <div class="scanner-message">Acerca un código de barras</div>
+                    <div class="text-secondary mb-1" style="font-weight: 300; font-size: 0.9em">Acerca un código de barras</div>
 
                     <!-- Video del scanner -->
                     <div class="scanner-container">
