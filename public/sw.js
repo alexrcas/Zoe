@@ -5,34 +5,12 @@ const urlsToCache = [
     '/index.html',
     '/manifest.json',
 
-    // Estilos y scripts principales
+    // Estilos
     '/assets/css/main.css',
-    '/assets/js/main.js',
-
-    // Componentes
-    '/components/ApiService.js',
-    '/components/Dao.js',
-    '/components/JournalService.js',
-    '/components/product-search.js',
-    '/components/scan-component.js',
-    '/components/summary-component.js',
-    '/components/wizard/wizard-step1.js',
-    '/components/wizard/wizard-step2.js',
-    '/components/wizard/wizard-step3.js',
-    '/components/wizard/wizard-step4.js',
-
-    // Páginas
-    '/pages/home-page.js',
-    '/pages/profile-page.js',
-    '/pages/recents-page.js',
-    '/pages/wizard-page.js',
 
     // Iconos
     '/icons/icon-192x192.png',
-    '/icons/icon-512x512.png',
-
-    // Service Worker
-    '/sw.js'
+    '/icons/icon-512x512.png'
 ];
 
 

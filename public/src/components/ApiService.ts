@@ -1,3 +1,4 @@
+import { Product } from './Dao';
 
 export class ApiService {
 
@@ -5,7 +6,7 @@ export class ApiService {
 
     }
 
-    async findByBarcode(code) {
+    async findByBarcode(code: string): Promise<Product | null | undefined> {
 
         const response = await fetch(`https://world.openfoodfacts.net/api/v2/product/${code}.json`, {
             method: "GET"
@@ -30,7 +31,7 @@ export class ApiService {
         }
     }
 
-    async search(terms) {
+    async search(terms: string): Promise<any[]> {
         terms = terms.replaceAll(' ', '+');
 
         const response = await fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${terms}&search_simple=1&fields=code,product_name,brands,nutriments&page_size=10&page=1&json=1`, {
@@ -41,18 +42,18 @@ export class ApiService {
 
         const json = await response.json();
 
-        return json.products.map(p =>
-            ({
-                name: p.product_name,
-                brands: p.brands,
-                code: p.code,
-                nutriments: {
-                    kcals: p.nutriments['energy-kcal_100g'],
-                    proteins: p.nutriments.proteins_100g,
-                    carbs: p.nutriments.carbohydrates_100g,
-                    fats: p.nutriments.fat_100g
-                }
-            })
+        return json.products.map((p: any) =>
+        ({
+            name: p.product_name,
+            brands: p.brands,
+            code: p.code,
+            nutriments: {
+                kcals: p.nutriments['energy-kcal_100g'],
+                proteins: p.nutriments.proteins_100g,
+                carbs: p.nutriments.carbohydrates_100g,
+                fats: p.nutriments.fat_100g
+            }
+        })
         );
     }
 }

@@ -1,37 +1,54 @@
-import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {Dao} from './Dao.js';
+import { LitElement, html } from 'lit';
+import { Dao, Entry, Goals } from './Dao';
 
 export class SummaryComponent extends LitElement {
+  dao: Dao;
+  kcals: number;
+  proteins: number;
+  carbs: number;
+  fats: number;
+  goals: Goals | Record<string, never>;
+  entries: Entry[] = [];
 
-    constructor() {
-        super();
-        this.dao = new Dao();
-        this.kcals = 0;
-        this.proteins = 0;
-        this.carbs = 0;
-        this.fats = 0;
-        this.goals = {};
-    }
+  static properties = {
+    kcals: { type: Number },
+    proteins: { type: Number },
+    carbs: { type: Number },
+    fats: { type: Number },
+    goals: { type: Object }
+  };
 
-    createRenderRoot() {
-        return this;
-    }
+  constructor() {
+    super();
+    this.dao = new Dao();
+    this.kcals = 0;
+    this.proteins = 0;
+    this.carbs = 0;
+    this.fats = 0;
+    this.goals = {};
+  }
 
-    async firstUpdated() {
-        this.entries = await this.dao.listEntries();
-        this.entries.forEach(entry => {
-            this.kcals += Math.round(entry.nutriments.kcals);
-            this.proteins += Math.round(entry.nutriments.proteins);
-            this.carbs += Math.round(entry.nutriments.carbs);
-            this.fats += Math.round(entry.nutriments.fats);
-        });
-        this.goals = await this.dao.getUserGoals();
-        this.requestUpdate();
-    }
+  createRenderRoot() {
+    return this;
+  }
+
+  async firstUpdated() {
+    this.entries = await this.dao.listEntries();
+    this.entries.forEach(entry => {
+      this.kcals += Math.round(Number(entry.nutriments.kcals));
+      this.proteins += Math.round(Number(entry.nutriments.proteins));
+      this.carbs += Math.round(Number(entry.nutriments.carbs));
+      this.fats += Math.round(Number(entry.nutriments.fats));
+    });
+    const goals = await this.dao.getUserGoals();
+    this.goals = goals || {};
+    this.requestUpdate();
+  }
 
 
-    render() {
-        return html`
+  render() {
+    const goals = this.goals as Goals;
+    return html`
 
             <div class="accordion accordion-flush pt-2" id="accordionFlushSummary">
 
@@ -79,11 +96,11 @@ export class SummaryComponent extends LitElement {
         <div class="mb-3">
           <div class="d-flex justify-content-between align-items-center mb-1">
             <small class="fw-semibold text-secondary">Kcals</small>
-            <small class="fw-semibold text-secondary">${this.kcals} / ${this.goals.kcals}</small>
+            <small class="fw-semibold text-secondary">${this.kcals} / ${goals.kcals || 0}</small>
           </div>
           <div class="progress rounded-pill" style="height: 0.35em; background-color: #f0f0f0;">
             <div class="progress-bar bg-primary rounded-pill opacity-75" 
-                 style="width: ${Math.round((this.kcals / this.goals.kcals) * 100)}%; transition: width 0.4s ease;"></div>
+                 style="width: ${goals.kcals ? Math.round((this.kcals / goals.kcals) * 100) : 0}%; transition: width 0.4s ease;"></div>
           </div>
         </div>
 
@@ -91,11 +108,11 @@ export class SummaryComponent extends LitElement {
         <div class="mb-3">
           <div class="d-flex justify-content-between align-items-center mb-1">
             <small class="fw-semibold text-secondary">Prot.</small>
-            <small class="fw-semibold text-secondary">${this.proteins} / ${this.goals.proteins} g</small>
+            <small class="fw-semibold text-secondary">${this.proteins} / ${goals.proteins || 0} g</small>
           </div>
           <div class="progress rounded-pill" style="height: 0.35em; background-color: #f0f0f0;">
             <div class="progress-bar bg-danger rounded-pill opacity-75" 
-                 style="width: ${Math.round((this.proteins / this.goals.proteins) * 100)}%; transition: width 0.4s ease;"></div>
+                 style="width: ${goals.proteins ? Math.round((this.proteins / goals.proteins) * 100) : 0}%; transition: width 0.4s ease;"></div>
           </div>
         </div>
 
@@ -103,11 +120,11 @@ export class SummaryComponent extends LitElement {
         <div class="mb-3">
           <div class="d-flex justify-content-between align-items-center mb-1">
             <small class="fw-semibold text-secondary">Carb.</small>
-            <small class="fw-semibold text-secondary">${this.carbs} / ${this.goals.carbs} g</small>
+            <small class="fw-semibold text-secondary">${this.carbs} / ${goals.carbs || 0} g</small>
           </div>
           <div class="progress rounded-pill" style="height: 0.35em; background-color: #f0f0f0;">
             <div class="progress-bar bg-success rounded-pill opacity-75" 
-                 style="width: ${Math.round((this.carbs / this.goals.carbs) * 100)}%; transition: width 0.4s ease;"></div>
+                 style="width: ${goals.carbs ? Math.round((this.carbs / goals.carbs) * 100) : 0}%; transition: width 0.4s ease;"></div>
           </div>
         </div>
 
@@ -115,11 +132,11 @@ export class SummaryComponent extends LitElement {
         <div>
           <div class="d-flex justify-content-between align-items-center mb-1">
             <small class="fw-semibold text-secondary">Grasas</small>
-            <small class="fw-semibold text-secondary">${this.fats} / ${this.goals.fats} g</small>
+            <small class="fw-semibold text-secondary">${this.fats} / ${goals.fats || 0} g</small>
           </div>
           <div class="progress rounded-pill" style="height: 0.35em; background-color: #f0f0f0;">
             <div class="progress-bar bg-warning rounded-pill opacity-75" 
-                 style="width: ${Math.round((this.fats / this.goals.fats) * 100)}%; transition: width 0.4s ease;"></div>
+                 style="width: ${goals.fats ? Math.round((this.fats / goals.fats) * 100) : 0}%; transition: width 0.4s ease;"></div>
           </div>
         </div>
 
@@ -132,7 +149,7 @@ export class SummaryComponent extends LitElement {
 
 
         `;
-    }
+  }
 }
 
 customElements.define('summary-component', SummaryComponent);

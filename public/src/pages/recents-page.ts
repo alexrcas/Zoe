@@ -1,10 +1,29 @@
-import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {Dao} from '../components/Dao.js';
-import '../components/product-search.js';
-import '../components/scan-component.js';
+import { LitElement, html } from 'lit';
+import { Dao } from '../components/Dao';
+import '../components/product-search';
+import '../components/scan-component';
 
+declare const bootstrap: any;
 
 export class RecentsPage extends LitElement {
+    dao: Dao;
+    products: any[];
+    displayValues: any;
+    bsModal: any;
+    grams: number;
+    selectedProduct: any;
+    showScanner: boolean;
+    group: string | null;
+    modalElement: HTMLElement | null = null;
+
+    static properties = {
+        products: { type: Array },
+        displayValues: { type: Object },
+        grams: { type: Number },
+        selectedProduct: { type: Object },
+        showScanner: { type: Boolean },
+        group: { type: String }
+    };
 
     constructor() {
         super();
@@ -24,26 +43,30 @@ export class RecentsPage extends LitElement {
 
     async firstUpdated() {
         const query = window.location.hash.slice(1).split('?')[1];
-        this.group = new URLSearchParams(query).get('group');
+        if (query) {
+            this.group = new URLSearchParams(query).get('group');
+        }
 
         this.products = await this.dao.listProducts();
         this.modalElement = this.querySelector('#recentsModal');
-        this.bsModal = new bootstrap.Modal(this.modalElement, {backdrop: 'static'});
+        if (this.modalElement) {
+            this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
+        }
         this.requestUpdate();
     }
 
-    selectProduct(product) {
+    selectProduct(product: any) {
         this.selectedProduct = product;
         if (this.selectedProduct) {
-            this.updateValues(this.grams);
+            this.updateValues(this.grams.toString());
         }
         this.requestUpdate();
         this.bsModal.show();
     }
 
 
-    updateValues(grams) {
-        this.grams = grams;
+    updateValues(grams: string | number) {
+        this.grams = typeof grams === 'string' ? parseFloat(grams) : grams;
         const factor = this.grams / 100; // factor de escala
 
         this.displayValues = {
@@ -59,7 +82,7 @@ export class RecentsPage extends LitElement {
 
     async addEntry() {
         const entry = {
-            group: this.group,
+            group: this.group || '',
             name: this.selectedProduct.name,
             grams: this.grams,
             code: this.selectedProduct.code,
@@ -82,11 +105,11 @@ export class RecentsPage extends LitElement {
         window.location.hash = '#home';
     }
 
-    handleProductSelected(event) {
+    handleProductSelected(event: CustomEvent) {
         this.selectProduct(event.detail)
     }
 
-    handleProductScanned(event) {
+    handleProductScanned(event: CustomEvent) {
         this.showScanner = false;
         this.selectProduct(event.detail);
         this.requestUpdate();
@@ -127,10 +150,10 @@ export class RecentsPage extends LitElement {
                     <div class="list-group list-group-flush">
                         ${this.products.map(product => html`
                             <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
-                               @click=${(e) => {
-                                   e.preventDefault();
-                                   this.selectProduct(product);
-                               }}>
+                               @click=${(e: Event) => {
+                e.preventDefault();
+                this.selectProduct(product);
+            }}>
 
                                 <!-- Nombre del producto -->
                                 <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${product.name}</h6>
@@ -162,7 +185,7 @@ export class RecentsPage extends LitElement {
                 ` : html`
                     <div class="alert alert-info mx-4">No hay alimentos recientes para mostrar</div>
                 `
-                }
+            }
 
                 <!-- Scanner overlay -->
                 ${this.showScanner ? html`
@@ -188,7 +211,7 @@ export class RecentsPage extends LitElement {
                             ${this.selectedProduct ? html`
                                 <div class="list-group list-group-flush">
                                     <a class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
-                                       @click=${(e) => e.preventDefault()}>
+                                       @click=${(e: Event) => e.preventDefault()}>
 
                                         <h6 class="fw-normal mb-1" style="font-size: 0.85em;">
                                             ${this.selectedProduct.name}</h6>
@@ -229,7 +252,7 @@ export class RecentsPage extends LitElement {
                                         <input class="form-control rounded-start" type="number" inputmode="numeric"
                                                pattern="[0-9]*"
                                                placeholder="Cantidad en gramos" value=${this.grams}
-                                               @input=${e => this.updateValues(e.target.value)}>
+                                               @input=${(e: any) => this.updateValues(e.target.value)}>
                                         <span class="input-group-text rounded-end">g.</span>
                                     </div>
                                 </div>

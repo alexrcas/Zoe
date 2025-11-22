@@ -1,83 +1,96 @@
-import {LitElement, html} from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {Dao} from '../../components/Dao.js'
+import { LitElement, html } from 'lit';
+import { Dao, UserData } from '../../components/Dao';
 
 export class WizardStep2 extends LitElement {
+  dao: Dao;
+  goal: string;
+  slightDeficit: number;
+  deficit: number;
+  mantain: number;
+  slightSurplus: number;
+  surplus: number;
+  buttonDisabled: boolean;
 
-    static properties = {
-        goal: { type: String }
-    };
+  static properties = {
+    goal: { type: String }
+  };
 
-    constructor() {
-        super();
-        this.dao = new Dao();
-        this.goal = '';
+  constructor() {
+    super();
+    this.dao = new Dao();
+    this.goal = '';
 
-        this.slightDeficit = 0;
-        this.deficit = 0;
+    this.slightDeficit = 0;
+    this.deficit = 0;
 
-        this.mantain = 0;
+    this.mantain = 0;
 
-        this.slightSurplus = 0;
-        this.surplus = 0;
+    this.slightSurplus = 0;
+    this.surplus = 0;
 
-        this.buttonDisabled = true;
+    this.buttonDisabled = true;
+  }
+
+
+  calculateCalories({ genre, age, height, weight, activity }: UserData) {
+    const activityMultipliers = [1.2, 1.375, 1.55, 1.725, 1.9];
+    let BMR;
+    if (genre === "male") {
+      BMR = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
+    } else {
+      BMR = 655 + (9.6 * weight) + (1.8 * height) - (4.7 * age);
     }
 
+    const maintenance = BMR * activityMultipliers[Number(activity)];
 
-    calculateCalories({ genre, age, height, weight, activity }) {
-        const activityMultipliers = [1.2, 1.375, 1.55, 1.725, 1.9];
-        let BMR;
-        if (genre === "male") {
-            BMR = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
-        } else {
-            BMR = 655 + (9.6 * weight) + (1.8 * height) - (4.7 * age);
-        }
+    this.mantain = Math.round(maintenance);
+    this.slightDeficit = Math.round(maintenance * 0.9);
+    this.deficit = Math.round(maintenance * 0.8);
+    this.slightSurplus = Math.round(maintenance * 1.1);
+    this.surplus = Math.round(maintenance * 1.2);
+  }
 
-        const maintenance = BMR * activityMultipliers[activity];
+  createRenderRoot() {
+    return this; // usar el DOM global (Bootstrap)
+  }
 
-        this.mantain = Math.round(maintenance);
-        this.slightDeficit = Math.round(maintenance * 0.9);
-        this.deficit = Math.round(maintenance * 0.8);
-        this.slightSurplus = Math.round(maintenance * 1.1);
-        this.surplus = Math.round(maintenance * 1.2);
+
+  async firstUpdated() {
+    const userData = await this.dao.getUserData();
+    if (userData) {
+      this.calculateCalories(userData);
+    }
+    this.requestUpdate();
+  }
+
+
+  updateGoal(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.goal = input.value;
+    this.buttonDisabled = !this.goal;
+  }
+
+  async goToStep3() {
+    const userData = await this.dao.getUserData();
+    if (userData) {
+      userData.goal = {
+        goal: this.goal,
+        kcals: (this as any)[this.goal]
+      }
+      await this.dao.saveOrUpdateUserData(userData);
     }
 
-    createRenderRoot() {
-        return this; // usar el DOM global (Bootstrap)
-    }
+    this.dispatchEvent(
+      new CustomEvent('next-step', {
+        detail: { step: 3 },
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
 
-
-    async firstUpdated() {
-        const userData = await this.dao.getUserData();
-        this.calculateCalories(userData);
-        this.requestUpdate();
-    }
-
-
-    updateGoal(e) {
-        this.goal = e.target.value;
-        this.buttonDisabled = !this.goal;
-    }
-
-    async goToStep3() {
-        const userData = await this.dao.getUserData();
-        userData.goal = {
-            goal: this.goal,
-            kcals: this[this.goal]
-        }
-        await this.dao.saveOrUpdateUserData(userData);
-
-        this.dispatchEvent(
-            new CustomEvent('next-step', {
-                detail: { step: 3 },
-                bubbles: true,
-                composed: true
-            })
-        );
-    }
-
-    render() {
-        return html`
+  render() {
+    return html`
 <div class="container py-3" style="max-width: 420px;">
   <!-- Card principal -->
   <div class="px-3 pb-3">
@@ -158,7 +171,7 @@ export class WizardStep2 extends LitElement {
 
 
         `;
-    }
+  }
 }
 
 customElements.define('wizard-step2', WizardStep2);

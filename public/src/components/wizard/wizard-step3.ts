@@ -1,131 +1,160 @@
-import { LitElement, html } from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {Dao} from '../../components/Dao.js'
+import { LitElement, html } from 'lit';
+import { Dao } from '../../components/Dao';
 
 export class WizardStep3 extends LitElement {
-    static properties = {
-        kcals: { type: Number },
-        proteins: { type: Number },
-        carbs: { type: Number },
-        fats: { type: Number },
-        proteinPercent: { type: Number },
-        carbPercent: { type: Number },
-        fatPercent: { type: Number }
-    };
+  dao: Dao;
+  userData: any;
+  kcals: number;
+  proteinsMinRange: number;
+  proteinsMaxRange: number;
+  proteins: number;
+  proteinsRatio: string | number;
+  carbs: number;
+  carbsMaxRange: number;
+  fats: number;
+  proteinPercent: string | number;
+  carbPercent: string | number;
+  fatPercent: string | number;
+  showHelp: boolean;
+  helpButtonText: string;
+  animateClass: string;
+  buttonDisabled: boolean = false;
 
-    constructor() {
-        super();
+  static properties = {
+    kcals: { type: Number },
+    proteins: { type: Number },
+    carbs: { type: Number },
+    fats: { type: Number },
+    proteinPercent: { type: Number },
+    carbPercent: { type: Number },
+    fatPercent: { type: Number },
+    showHelp: { type: Boolean },
+    helpButtonText: { type: String },
+    animateClass: { type: String }
+  };
 
-        this.dao = new Dao();
+  constructor() {
+    super();
 
-        this.userData = null;
+    this.dao = new Dao();
 
-        this.kcals = 0;
+    this.userData = null;
 
-        this.proteinsMinRange = 0;
-        this.proteinsMaxRange = 0;
-        this.proteins = 0;
-        this.proteinsRatio = 0;
+    this.kcals = 0;
 
-        this.carbs = 0;
-        this.carbsMaxRange = 0;
+    this.proteinsMinRange = 0;
+    this.proteinsMaxRange = 0;
+    this.proteins = 0;
+    this.proteinsRatio = 0;
 
-        this.fats = 0;
-        this.proteinPercent = 0;
-        this.carbPercent = 0;
-        this.fatPercent = 0;
+    this.carbs = 0;
+    this.carbsMaxRange = 0;
 
-        this.showHelp = false;
-        this.helpButtonText = 'Mostrar ayuda';
-        this.animateClass = '';
+    this.fats = 0;
+    this.proteinPercent = 0;
+    this.carbPercent = 0;
+    this.fatPercent = 0;
+
+    this.showHelp = false;
+    this.helpButtonText = 'Mostrar ayuda';
+    this.animateClass = '';
+  }
+
+  toggleHelp() {
+    this.showHelp = !this.showHelp;
+    this.animateClass = 'animate__animated animate__zoomIn';
+    this.helpButtonText = this.showHelp ? 'Ocultar ayuda' : 'Mostrar ayuda';
+    this.requestUpdate();
+  }
+
+  createRenderRoot() {
+    return this;
+  }
+
+  async firstUpdated() {
+    this.userData = await this.dao.getUserData();
+
+    if (this.userData && this.userData.goal) {
+      this.kcals = this.userData.goal.kcals;
+
+      this.proteinsMinRange = Math.round(this.userData.weight * 0.5);
+      this.proteinsMaxRange = Math.round(this.userData.weight * 2.5);
+      this.proteins = Math.round(this.userData.weight * 1.5);
+
+      this.proteinsRatio = (this.proteins / this.userData.weight).toFixed(1);
+
+      this.carbs = Math.round((this.userData.goal.kcals * 0.45) / 4);
+      this.carbsMaxRange = Math.round((this.userData.goal.kcals * 0.75) / 4);
+
+      this.calculateMacros();
     }
 
-    toggleHelp() {
-        this.showHelp = !this.showHelp;
-        this.animateClass = 'animate__animated animate__zoomIn';
-        this.helpButtonText = this.showHelp ? 'Ocultar ayuda' : 'Mostrar ayuda';
-        this.requestUpdate();
+  }
+
+  updateProteins(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.proteins = Number(input.value);
+    this.calculateMacros();
+  }
+
+  updateCarbs(e: Event) {
+    const input = e.target as HTMLInputElement;
+    this.carbs = Number(input.value);
+    this.calculateMacros();
+  }
+
+  calculateMacros() {
+    const proteinKcals = this.proteins * 4;
+    const carbKcals = this.carbs * 4;
+    const remainingKcals = this.kcals - (proteinKcals + carbKcals);
+    this.fats = parseInt((remainingKcals > 0 ? (remainingKcals / 9).toFixed(1) : '0'));
+
+    // Porcentajes
+    this.proteinPercent = ((proteinKcals / this.kcals) * 100).toFixed(1);
+    this.carbPercent = ((carbKcals / this.kcals) * 100).toFixed(1);
+    this.fatPercent = ((this.fats * 9 / this.kcals) * 100).toFixed(1);
+
+    this.proteinsRatio = (this.proteins / this.userData.weight).toFixed(1);
+
+    this.requestUpdate();
+  }
+
+  renderCarbLabel() {
+    if (Number(this.carbPercent) <= 10) return html`<span class="badge bg-dark ms-2">keto</span>`;
+    if (Number(this.carbPercent) <= 20) return html`<span class="badge bg-secondary ms-2">low carb</span>`;
+    return null;
+  }
+
+  renderFatsLabel() {
+    if (Number(this.fatPercent) < 15) return html`<span class="badge bg-danger ms-2"><i class="fa-solid fa-triangle-exclamation"></i> El aporte de grasas debería ser mayor</span>`
+    return null;
+  }
+
+  async goToStep4() {
+    const userData = await this.dao.getUserData();
+    if (userData) {
+      userData.goal = {
+        ...userData.goal, ...{
+          proteins: this.proteins,
+          carbs: this.carbs,
+          fats: this.fats
+        }
+      }
+
+      await this.dao.saveOrUpdateUserData(userData);
     }
 
-    createRenderRoot() {
-        return this;
-    }
+    this.dispatchEvent(
+      new CustomEvent('next-step', {
+        detail: { step: 4 },
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
 
-    async firstUpdated() {
-        this.userData = await this.dao.getUserData();
-
-        this.kcals = this.userData.goal.kcals;
-
-        this.proteinsMinRange = Math.round(this.userData.weight * 0.5);
-        this.proteinsMaxRange = Math.round(this.userData.weight * 2.5);
-        this.proteins = Math.round(this.userData.weight * 1.5);
-
-        this.proteinsRatio = (this.proteins / this.userData.weight).toFixed(1);
-
-        this.carbs = Math.round((this.userData.goal.kcals * 0.45) / 4);
-        this.carbsMaxRange = Math.round((this.userData.goal.kcals * 0.75) / 4);
-
-        this.calculateMacros();
-
-    }
-
-    updateProteins(e) {
-        this.proteins = Number(e.target.value);
-        this.calculateMacros();
-    }
-
-    updateCarbs(e) {
-        this.carbs = Number(e.target.value);
-        this.calculateMacros();
-    }
-
-    calculateMacros() {
-        const proteinKcals = this.proteins * 4;
-        const carbKcals = this.carbs * 4;
-        const remainingKcals = this.kcals - (proteinKcals + carbKcals);
-        this.fats = parseInt(remainingKcals > 0 ? (remainingKcals / 9).toFixed(1) : 0);
-
-        // Porcentajes
-        this.proteinPercent = ((proteinKcals / this.kcals) * 100).toFixed(1);
-        this.carbPercent = ((carbKcals / this.kcals) * 100).toFixed(1);
-        this.fatPercent = ((this.fats * 9 / this.kcals) * 100).toFixed(1);
-
-        this.proteinsRatio = (this.proteins / this.userData.weight).toFixed(1);
-
-        this.requestUpdate();
-    }
-
-    renderCarbLabel() {
-        if (this.carbPercent <= 10) return html`<span class="badge bg-dark ms-2">keto</span>`;
-        if (this.carbPercent <= 20) return html`<span class="badge bg-secondary ms-2">low carb</span>`;
-        return null;
-    }
-
-    renderFatsLabel() {
-        if (this.fatPercent < 15) return html`<span class="badge bg-danger ms-2"><i class="fa-solid fa-triangle-exclamation"></i> El aporte de grasas debería ser mayor</span>`
-        return null;
-    }
-
-    async goToStep4() {
-        const userData = await this.dao.getUserData();
-        userData.goal = {...userData.goal, ...{
-                proteins: this.proteins,
-                carbs: this.carbs,
-                fats: this.fats
-        }}
-
-        await this.dao.saveOrUpdateUserData(userData);
-
-        this.dispatchEvent(
-            new CustomEvent('next-step', {
-                detail: { step: 4 },
-                bubbles: true,
-                composed: true
-            })
-        );
-    }
-
-    render() {
-        return html`
+  render() {
+    return html`
 <div class="container px-3 pb-3" style="max-width: 420px;">
   <!-- Card principal -->
   <div class="p-3">
@@ -237,7 +266,7 @@ export class WizardStep3 extends LitElement {
 
 
         `;
-    }
+  }
 }
 
 customElements.define('wizard-step3', WizardStep3);

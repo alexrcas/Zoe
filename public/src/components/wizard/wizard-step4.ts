@@ -1,58 +1,62 @@
-import {LitElement, html} from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {Dao} from '../../components/Dao.js'
+import { LitElement, html } from 'lit';
+import { Dao, Goals } from '../../components/Dao';
 
 export class WizardStep4 extends LitElement {
+  dao: Dao;
+  userData: any;
 
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.dao = new Dao();
-        this.userData = null;
+    this.dao = new Dao();
+    this.userData = null;
 
+  }
+
+  createRenderRoot() {
+    return this;
+  }
+
+  async firstUpdated() {
+    this.userData = await this.dao.getUserData();
+
+    if (this.userData && this.userData.goal) {
+      const goals: Goals = {
+        kcals: this.userData.goal.kcals,
+        carbs: this.userData.goal.carbs,
+        fats: this.userData.goal.fats,
+        proteins: this.userData.goal.proteins
+      };
+
+      await this.dao.saveOrUpdateUserGoals(goals);
+      this.requestUpdate();
+    }
+  }
+
+
+  renderGoal() {
+    switch (this.userData?.goal.goal) {
+      case 'slightDeficit':
+        return html`Perder grasa (déficit ligero)`
+      case 'deficit':
+        return html`Perder grasa (déficit)`;
+
+      case 'mantain':
+        return html`Mantener peso / tonificar`
+
+      case 'slightSurplus':
+        return html`Aumentar masa muscular (superávit ligero)`
+      case 'surplus':
+        return html`Aumentar masa muscular (superávit)`
+
+      default:
+        return html``;
     }
 
-    createRenderRoot() {
-        return this;
-    }
+  }
 
-    async firstUpdated() {
-        this.userData = await this.dao.getUserData();
-
-        const goals = {
-            kcals: this.userData.goal.kcals,
-            carbs: this.userData.goal.carbs,
-            fats: this.userData.goal.fats,
-            proteins: this.userData.goal.proteins
-        };
-
-        await this.dao.saveOrUpdateUserGoals(goals);
-        this.requestUpdate();
-    }
-
-
-    renderGoal() {
-        switch (this.userData?.goal.goal) {
-            case 'slightDeficit':
-                return html`Perder grasa (déficit ligero)`
-            case 'deficit':
-                return html`Perder grasa (déficit)`;
-
-            case 'mantain':
-                return html`Mantener peso / tonificar`
-
-            case 'slightSurplus':
-                return html`Aumentar masa muscular (superávit ligero)`
-            case 'surplus':
-                return html`Aumentar masa muscular (superávit)`
-
-            default:
-                return html``;
-        }
-
-    }
-
-    render() {
-        return html`
+  render() {
+    return html`
 <div class="container py-3" style="max-width: 420px;">
 
   <h6 class="text-center fw-semibold mb-3" style="font-size: 1em;">Tu Resumen</h6>
@@ -99,13 +103,13 @@ export class WizardStep4 extends LitElement {
 
     <!-- Botón Terminar -->
     <div class="d-flex justify-content-end mb-3">
-        <button @click="${() => window.location = '#home'}" class="btn btn-primary rounded-3 shadow-sm px-4">Terminar</button>
+        <button @click="${() => window.location.hash = '#home'}" class="btn btn-primary rounded-3 shadow-sm px-4">Terminar</button>
     </div>
 
 </div>
 
         `;
-    }
+  }
 }
 
 customElements.define('wizard-step4', WizardStep4);

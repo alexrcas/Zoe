@@ -1,25 +1,25 @@
-import '../../pages/home-page.js';
-import '../../pages/recents-page.js';
-import '../../pages/profile-page.js';
-import '../../pages/wizard-page.js';
+import '../../pages/home-page';
+import '../../pages/recents-page';
+import '../../pages/profile-page';
+import '../../pages/wizard-page';
 
 
 navigator.serviceWorker.register('/sw.js', { scope: '/' })
-    .then(() => console.log('Service Worker registrado correctamente'))
-    .catch(err => console.error('Error registrando SW:', err));
+  .then(() => console.log('Service Worker registrado correctamente'))
+  .catch(err => console.error('Error registrando SW:', err));
 
 
 
-const app = document.getElementById('app');
+const app = document.getElementById('app') as HTMLElement;
 
 function renderPage() {
-    const [routeName] = window.location.hash.replace('#', '').split('?');
-    const route = routeName || 'home';
-    app.innerHTML = `<${route}-page></${route}-page>`;
-    updateNav(route);
+  const [routeName] = window.location.hash.replace('#', '').split('?');
+  const route = routeName || 'home';
+  app.innerHTML = `<${route}-page></${route}-page>`;
+  updateNav(route);
 }
 
-function updateNav(activeRoute) {
+function updateNav(activeRoute: string) {
   const links = document.querySelectorAll('nav a');
   links.forEach(link => {
     const isActive = link.getAttribute('href') === `#${activeRoute}`;
@@ -33,8 +33,8 @@ window.addEventListener('hashchange', renderPage);
 
 
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                     || window.navigator.standalone  // iOS
-                     || document.referrer.startsWith('android-app://'); // Android WebAPK
+  || (window.navigator as any).standalone  // iOS
+  || document.referrer.startsWith('android-app://'); // Android WebAPK
 
 
 

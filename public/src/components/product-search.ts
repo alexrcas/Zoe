@@ -1,7 +1,21 @@
-import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {ApiService} from '../components/ApiService.js';
+import { LitElement, html } from 'lit';
+import { ApiService } from '../components/ApiService';
+
+declare const bootstrap: any;
 
 export class ProductSearch extends LitElement {
+    bsSearchModal: any;
+    searchValue: string;
+    searchText: string;
+    searchResult: any[] | null;
+    apiService: ApiService;
+    modalElement: HTMLElement | null = null;
+
+    static properties = {
+        searchValue: { type: String },
+        searchText: { type: String },
+        searchResult: { type: Array }
+    };
 
     constructor() {
         super();
@@ -14,7 +28,9 @@ export class ProductSearch extends LitElement {
 
     async firstUpdated() {
         this.modalElement = this.querySelector('#searchModal');
-        this.bsSearchModal = new bootstrap.Modal(this.modalElement, {backdrop: 'static'});
+        if (this.modalElement) {
+            this.bsSearchModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
+        }
         this.requestUpdate();
     }
 
@@ -22,13 +38,14 @@ export class ProductSearch extends LitElement {
         return this;
     }
 
-    async handleSearch(e) {
+    async handleSearch(e: KeyboardEvent) {
         if (e.key != 'Enter') {
             return;
         }
         this.searchText = this.searchValue;
         this.searchValue = '';
-        document.querySelector('#search-input').value = '';
+        const input = document.querySelector('#search-input') as HTMLInputElement;
+        if (input) input.value = '';
         this.bsSearchModal.show();
         this.requestUpdate();
         this.searchResult = await this.apiService.search(this.searchText);
@@ -46,7 +63,7 @@ export class ProductSearch extends LitElement {
                                @keyup=${this.handleSearch}
                                class="form-control rounded-pill px-4"
                                .value=${this.searchValue}
-                               @input="${e => this.searchValue = e.target.value}"
+                               @input="${(e: any) => this.searchValue = e.target.value}"
                                placeholder="Busca un alimento...">
                         <i class="fas fa-search position-absolute end-3 top-50 translate-middle-y text-muted"
                            style="font-size: 0.75em; padding-left: 0.75em"></i>
@@ -72,19 +89,19 @@ export class ProductSearch extends LitElement {
                             <div class="list-group">
 
                                 ${this.searchResult
-                                        ? html`
+                ? html`
                                             ${this.searchResult.map(product => html`
                                                 <a href="#"
                                                    class="list-group-item list-group-item-action d-flex flex-column py-2"
-                                                   @click=${e => {
-                                                       e.preventDefault();
-                                                       this.dispatchEvent(new CustomEvent('product-selected', {
-                                                           detail: product,
-                                                           bubbles: true,
-                                                           composed: true
-                                                       }));
-                                                       this.bsSearchModal.hide();
-                                                   }}>
+                                                   @click=${(e: Event) => {
+                        e.preventDefault();
+                        this.dispatchEvent(new CustomEvent('product-selected', {
+                            detail: product,
+                            bubbles: true,
+                            composed: true
+                        }));
+                        this.bsSearchModal.hide();
+                    }}>
 
                                                     <!-- Nombre y marca -->
                                                     <div class="d-flex w-100 justify-content-between align-items-start mb-1">
@@ -128,7 +145,7 @@ export class ProductSearch extends LitElement {
                                                 </a>
                                             `)}
                                         `
-                                        : html`
+                : html`
                                             <div class="d-flex justify-content-center align-items-center py-5">
                                                 <div class="spinner-border text-primary" role="status">
                                                     <span class="visually-hidden">Cargando...</span>

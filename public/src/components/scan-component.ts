@@ -1,9 +1,16 @@
-import {LitElement, html, css} from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {BrowserMultiFormatReader} from 'https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/+esm'
-import {ApiService} from './ApiService.js';
-import {Dao} from './Dao.js';
+import { LitElement, html } from 'lit';
+import { BrowserMultiFormatReader } from '@zxing/library';
+import { ApiService } from './ApiService';
+import { Dao } from './Dao';
 
 export class ScanComponent extends LitElement {
+    lecturas: number;
+    stream: MediaStream | null;
+    codeReader: BrowserMultiFormatReader | null;
+    scannedCode: string;
+    grams: number;
+    dao: Dao;
+    apiService: ApiService;
 
     constructor() {
         super();
@@ -39,13 +46,14 @@ export class ScanComponent extends LitElement {
         const constraints = {
             video: {
                 facingMode: 'environment', // cámara trasera
-                width: {ideal: 1920},
-                height: {ideal: 1080},
+                width: { ideal: 1920 },
+                height: { ideal: 1080 },
                 focusMode: 'continuous',   // no todos los navegadores lo soportan
             }
         };
 
         const videoElement = this.querySelector('video');
+        if (!videoElement) return;
         this.stream = await navigator.mediaDevices.getUserMedia(constraints);
         videoElement.srcObject = this.stream;
         await videoElement.play();
@@ -53,48 +61,52 @@ export class ScanComponent extends LitElement {
         const [videoTrack] = this.stream.getVideoTracks();
 
         // Aplicamos zoom si el dispositivo lo soporta
-        if (videoTrack.getCapabilities().zoom) {
+        const capabilities = videoTrack.getCapabilities() as any;
+        if (capabilities.zoom) {
             try {
-                await videoTrack.applyConstraints({advanced: [{zoom: 2.0}]});
+                await videoTrack.applyConstraints({ advanced: [{ zoom: 2.0 } as any] });
             } catch (err) {
             }
         }
 
-        let lastCode = null;
+        let lastCode: string | null = null;
         let consecutiveCount = 0;
         const requiredReads = 3;
 
         // Inicia el scanner continuo
-        this.codeReader.decodeFromVideoDevice(undefined, videoElement, (result, err) => {
-            if (err) {
-                return;
-            }
+        if (this.codeReader) {
+            this.codeReader.decodeFromVideoDevice(null, videoElement, (result: any, err: any) => {
+                if (err) {
+                    return;
+                }
+                if (!result) return;
 
-            const code = result.text;
-            this.lecturas++;
+                const code = result.getText();
+                this.lecturas++;
 
-            if (code === lastCode) {
-                consecutiveCount++;
-            } else {
-                lastCode = code;
-                consecutiveCount = 1;
-            }
+                if (code === lastCode) {
+                    consecutiveCount++;
+                } else {
+                    lastCode = code;
+                    consecutiveCount = 1;
+                }
 
-            if (consecutiveCount >= requiredReads) {
-                this.onDetection(code);
-                this.codeReader.reset();
-            }
-        });
+                if (consecutiveCount >= requiredReads) {
+                    this.onDetection(code);
+                    if (this.codeReader) this.codeReader.reset();
+                }
+            });
+        }
     }
 
-    async onDetection(code) {
+    async onDetection(code: string) {
         this.scannedCode = code;
         await this.fetchInfo(code);
         this.requestUpdate();
     }
 
 
-    async fetchInfo(code) {
+    async fetchInfo(code: string) {
         this.stopScanner();
         const localProduct = await this.dao.findProductByBarcode(code);
         if (localProduct) {
@@ -154,7 +166,7 @@ export class ScanComponent extends LitElement {
             <div class="scanner-overlay">
                 <div class="scanner-box">
                     <!-- Botón cerrar -->
-                    <button class="close-btn" @click=${() => {this.stopScanner(); this.dispatchEvent(new CustomEvent('close-scanner'))}}>✕</button>
+                    <button class="close-btn" @click=${() => { this.stopScanner(); this.dispatchEvent(new CustomEvent('close-scanner')) }}>✕</button>
 
                     <!-- Mensaje -->
                     <div class="text-secondary mb-1" style="font-weight: 300; font-size: 0.9em">Acerca un código de barras</div>

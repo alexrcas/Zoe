@@ -1,52 +1,60 @@
-import {LitElement, html} from 'https://unpkg.com/lit@3.2.0/index.js?module';
-import {Dao} from '../../components/Dao.js'
+import { LitElement, html } from 'lit';
+import { Dao, UserData } from '../../components/Dao';
 
 export class WizardStep1 extends LitElement {
+  dao: Dao;
+  genre: string;
+  age: string;
+  height: string;
+  weight: string;
+  activity: string;
+  buttonDisabled: boolean;
 
-    constructor() {
-        super();
-        this.dao = new Dao();
-        this.genre = '';
-        this.age = '';
-        this.height = '';
-        this.weight = '';
-        this.activity = '';
-        this.buttonDisabled = true;
+  constructor() {
+    super();
+    this.dao = new Dao();
+    this.genre = '';
+    this.age = '';
+    this.height = '';
+    this.weight = '';
+    this.activity = '';
+    this.buttonDisabled = true;
+  }
+
+  createRenderRoot() {
+    return this;
+  }
+
+  handleInput(e: Event, field: keyof WizardStep1) {
+    const input = e.target as HTMLInputElement | HTMLSelectElement;
+    (this as any)[field] = input.value;
+    this.buttonDisabled = !(this.genre && this.age && this.height && this.weight && this.activity);
+    this.requestUpdate();
+  }
+
+  async goToStep2() {
+
+    const userData: UserData = {
+      genre: this.genre,
+      weight: this.weight,
+      age: this.age,
+      height: this.height,
+      activity: this.activity
     }
 
-    createRenderRoot() {
-        return this;
-    }
+    await this.dao.saveOrUpdateUserData(userData);
 
-    handleInput(e, field) {
-        this[field] = e.target.value;
-        this.buttonDisabled = !(this.genre && this.age && this.height && this.weight && this.activity);
-        this.requestUpdate();
-    }
+    this.dispatchEvent(
+      new CustomEvent('next-step', {
+        detail: { step: 2 },
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
 
-    async goToStep2() {
-
-        const userData = {
-            genre: this.genre,
-            weight: this.weight,
-            age: this.age,
-            height: this.height,
-            activity: this.activity
-        }
-
-        await this.dao.saveOrUpdateUserData(userData);
-
-        this.dispatchEvent(
-            new CustomEvent('next-step', {
-                detail: { step: 2 },
-                bubbles: true,
-                composed: true
-            })
-        );
-    }
-
-    render() {
-        return html`
+  render() {
+    return html`
             
 <div class="container py-3" style="max-width: 420px;">
   <!-- Card principal -->
@@ -58,7 +66,7 @@ export class WizardStep1 extends LitElement {
         <select
           id="sexo"
           class="form-select"
-          @change=${e => this.handleInput(e, 'genre')}
+          @change=${(e: Event) => this.handleInput(e, 'genre')}
         >
           <option selected disabled value="">Selecciona tu sexo</option>
           <option value="male">Hombre</option>
@@ -79,7 +87,7 @@ export class WizardStep1 extends LitElement {
           placeholder="Edad"
           min="0"
           value=${this.age ?? ''}
-          @input=${e => this.handleInput(e, 'age')}
+          @input=${(e: Event) => this.handleInput(e, 'age')}
         />
         <label for="edad">Edad</label>
       </div>
@@ -95,7 +103,7 @@ export class WizardStep1 extends LitElement {
           placeholder="Altura (cm)"
           min="0"
           .value=${this.height}
-          @input=${e => this.handleInput(e, 'height')}
+          @input=${(e: Event) => this.handleInput(e, 'height')}
         />
         <label for="altura">Altura (cm)</label>
       </div>
@@ -111,7 +119,7 @@ export class WizardStep1 extends LitElement {
           placeholder="Peso (kg)"
           min="0"
           .value=${this.weight}
-          @input=${e => this.handleInput(e, 'weight')}
+          @input=${(e: Event) => this.handleInput(e, 'weight')}
         />
         <label for="peso">Peso (kg)</label>
       </div>
@@ -121,7 +129,7 @@ export class WizardStep1 extends LitElement {
         <select
           id="actividad"
           class="form-select"
-          @change=${e => this.handleInput(e, 'activity')}
+          @change=${(e: Event) => this.handleInput(e, 'activity')}
         >
           <option selected disabled value="">Selecciona nivel de actividad</option>
           <option value="0">Sedentario: poco o nada de ejercicio</option>
@@ -150,7 +158,7 @@ export class WizardStep1 extends LitElement {
 </div>
 
         `;
-    }
+  }
 }
 
 customElements.define('wizard-step1', WizardStep1);
