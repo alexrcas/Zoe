@@ -12,7 +12,7 @@ export class WizardStep1 extends LitElement {
 
   constructor() {
     super();
-    this.dao = new Dao();
+    this.dao = Dao.getInstance();
     this.genre = '';
     this.age = '';
     this.height = '';

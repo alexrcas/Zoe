@@ -6,11 +6,11 @@ import { JournalService } from "../components/JournalService";
 declare const bootstrap: any;
 
 interface DisplayValues {
-    grams: number;
-    kcals: number;
-    proteins: number;
-    carbs: number;
-    fats: number;
+  grams: number;
+  kcals: number;
+  proteins: number;
+  carbs: number;
+  fats: number;
 }
 
 export class HomePage extends LitElement {
@@ -27,24 +27,24 @@ export class HomePage extends LitElement {
     journal: { type: Array },
     selectedEntry: { type: Object },
     grams: { type: Number },
-    displayValues: { type: Object}
+    displayValues: { type: Object }
   };
 
   constructor() {
     super();
-    this.dao = new Dao();
+    this.dao = Dao.getInstance();
     this.journalService = new JournalService();
     this.journal = [];
     this.selectedEntry = null;
     this.bsModal = null;
     this.grams = null;
-      this.displayValues = {
-          grams: 0,
-          kcals: 0,
-          proteins: 0,
-          carbs: 0,
-          fats: 0
-      };
+    this.displayValues = {
+      grams: 0,
+      kcals: 0,
+      proteins: 0,
+      carbs: 0,
+      fats: 0
+    };
   }
 
   createRenderRoot() {
@@ -101,9 +101,9 @@ export class HomePage extends LitElement {
 
   updateValues(grams: string) {
 
-      if (!grams) {
-          return;
-      }
+    if (!grams) {
+      return;
+    }
     this.grams = parseFloat(grams);
     const factor = this.grams / 100;
     this.displayValues = {

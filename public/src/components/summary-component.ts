@@ -20,7 +20,7 @@ export class SummaryComponent extends LitElement {
 
   constructor() {
     super();
-    this.dao = new Dao();
+    this.dao = Dao.getInstance();
     this.kcals = 0;
     this.proteins = 0;
     this.carbs = 0;

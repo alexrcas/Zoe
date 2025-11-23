@@ -25,7 +25,7 @@ class ProfilePage extends LitElement {
 
   constructor() {
     super();
-    this.dao = new Dao();
+    this.dao = Dao.getInstance();
     this.toastEl = null;
     this.toast = null;
     this.saveButtonDisabled = true;

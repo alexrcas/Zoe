@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import {Dao, Entry} from '../components/Dao';
+import { Dao, Entry } from '../components/Dao';
 import '../components/product-search';
 import '../components/scan-component';
 
@@ -35,7 +35,7 @@ export class RecentsPage extends LitElement {
 
     constructor() {
         super();
-        this.dao = new Dao();
+        this.dao = Dao.getInstance();
         this.products = [];
         this.displayValues = {
             kcals: 0,

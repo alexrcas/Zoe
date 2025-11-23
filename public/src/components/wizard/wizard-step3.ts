@@ -36,7 +36,7 @@ export class WizardStep3 extends LitElement {
   constructor() {
     super();
 
-    this.dao = new Dao();
+    this.dao = Dao.getInstance();
 
     this.userData = null;
 

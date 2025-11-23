@@ -36,16 +36,22 @@ export interface UserData {
 }
 
 export class Dao {
-    db: IDBPDatabase | null;
+    private static instance: Dao;
+    private db: Promise<IDBPDatabase>;
 
-    constructor() {
-        this.db = null;
+    private constructor() {
+        this.db = this.openDatabase();
     }
 
-    async init() {
-        if (this.db) { return; }
+    public static getInstance(): Dao {
+        if (!Dao.instance) {
+            Dao.instance = new Dao();
+        }
+        return Dao.instance;
+    }
 
-        this.db = await openDB('scanDB', 1, {
+    private async openDatabase(): Promise<IDBPDatabase> {
+        const db = await openDB('scanDB', 1, {
             upgrade(db) {
                 db.createObjectStore('entries', { keyPath: 'id', autoIncrement: true });
                 db.createObjectStore('products', { keyPath: 'code' });
@@ -54,27 +60,28 @@ export class Dao {
             }
         });
 
-        const existingGoals = await this.getUserGoals();
-        if (existingGoals) { return; }
+        const existingGoals = await db.get('goals', 'userGoals');
+        if (!existingGoals) {
+            const goals = {
+                kcals: 1820,
+                carbs: 250,
+                fats: 60,
+                proteins: 70
+            };
+            await db.put('goals', goals, 'userGoals');
+        }
 
-        const goals = {
-            kcals: 1820,
-            carbs: 250,
-            fats: 60,
-            proteins: 70
-        };
-
-        await this.saveOrUpdateUserGoals(goals)
+        return db;
     }
 
     async saveEntry(entry: Entry) {
-        await this.init();
-        await this.db!.add('entries', entry);
+        const db = await this.db;
+        await db.add('entries', entry);
     }
 
     async updateEntryValues(id: number, grams: number) {
-        await this.init();
-        const entry = await this.db!.get('entries', id);
+        const db = await this.db;
+        const entry = await db.get('entries', id);
         if (!entry) { return; }
 
         const factor: number = grams / 100;
@@ -86,44 +93,44 @@ export class Dao {
             fats: (Number(entry.product.nutriments.fats) * factor).toFixed(1)
         };
 
-        await this.db!.put('entries', entry);
+        await db.put('entries', entry);
     }
 
     async listEntries(): Promise<Entry[]> {
-        await this.init();
-        return await this.db!.getAll('entries');
+        const db = await this.db;
+        return await db.getAll('entries');
     }
 
     async listProducts(): Promise<Product[]> {
-        await this.init();
-        return await this.db!.getAll('products');
+        const db = await this.db;
+        return await db.getAll('products');
     }
 
     async saveProduct(product: Product) {
-        await this.init();
-        const existing = await this.db!.get('products', product.code);
+        const db = await this.db;
+        const existing = await db.get('products', product.code);
         if (existing) { return; }
-        await this.db!.add('products', product)
+        await db.add('products', product)
     }
 
     async findProductByBarcode(barcode: string): Promise<Product | undefined> {
-        await this.init();
-        return await this.db!.get('products', barcode);
+        const db = await this.db;
+        return await db.get('products', barcode);
     }
 
     async saveOrUpdateUserGoals(userGoals: Goals) {
-        await this.init();
-        await this.db!.put('goals', userGoals, 'userGoals');
+        const db = await this.db;
+        await db.put('goals', userGoals, 'userGoals');
     }
 
     async getUserGoals(): Promise<Goals | undefined> {
-        await this.init();
-        return await this.db!.get('goals', 'userGoals');
+        const db = await this.db;
+        return await db.get('goals', 'userGoals');
     }
 
     async deleteEntry(entry: Entry) {
-        await this.init();
-        const transaction = this.db!.transaction(['entries'], 'readwrite');
+        const db = await this.db;
+        const transaction = db.transaction(['entries'], 'readwrite');
         const store = transaction.objectStore('entries');
         if (entry.id) {
             store.delete(entry.id);
@@ -131,13 +138,13 @@ export class Dao {
     }
 
     async saveOrUpdateUserData(userData: UserData) {
-        await this.init();
-        await this.db!.put('userData', userData, 'userData');
+        const db = await this.db;
+        await db.put('userData', userData, 'userData');
     }
 
     async getUserData(): Promise<UserData | undefined> {
-        await this.init();
-        return await this.db!.get('userData', 'userData');
+        const db = await this.db;
+        return await db.get('userData', 'userData');
     }
 
 }

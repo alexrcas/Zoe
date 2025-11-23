@@ -9,7 +9,7 @@ export class JournalService {
     dao: Dao;
 
     constructor() {
-        this.dao = new Dao();
+        this.dao = Dao.getInstance();
     }
 
     async getJournal(): Promise<JournalGroup[]> {

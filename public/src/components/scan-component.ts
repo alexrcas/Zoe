@@ -19,7 +19,7 @@ export class ScanComponent extends LitElement {
         this.codeReader = new BrowserMultiFormatReader();
         this.scannedCode = '';
         this.grams = 100;
-        this.dao = new Dao();
+        this.dao = Dao.getInstance();
         this.apiService = new ApiService();
     }
 
