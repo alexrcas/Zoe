@@ -23,7 +23,6 @@ export interface Entry {
     product: Product;
 }
 
-
 export interface Goals {
     kcals: number;
     carbs: number;
@@ -33,6 +32,19 @@ export interface Goals {
 
 export interface UserData {
     [key: string]: any;
+}
+
+export interface Ingredient {
+    product: Product;
+    grams: number;
+    nutriments: Nutriments;
+}
+
+export interface Dish {
+    id?: number;
+    name: string;
+    nutriments: Nutriments;
+    ingredients: Ingredient[];
 }
 
 export class Dao {
@@ -54,6 +66,7 @@ export class Dao {
         const db = await openDB('scanDB', 1, {
             upgrade(db) {
                 db.createObjectStore('entries', { keyPath: 'id', autoIncrement: true });
+                db.createObjectStore('dishes', { keyPath: 'id', autoIncrement: true });
                 db.createObjectStore('products', { keyPath: 'code' });
                 db.createObjectStore('goals');
                 db.createObjectStore('userData');
@@ -77,6 +90,11 @@ export class Dao {
     async saveEntry(entry: Entry) {
         const db = await this.db;
         await db.add('entries', entry);
+    }
+
+    async saveDish(dish: Dish) {
+        const db = await this.db;
+        return await db.add('dishes', dish);
     }
 
     async updateEntryValues(id: number, grams: number) {
