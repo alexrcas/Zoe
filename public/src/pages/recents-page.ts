@@ -80,7 +80,7 @@ export class RecentsPage extends LitElement {
 
     updateValues(grams: string | number) {
         this.grams = typeof grams === 'string' ? parseFloat(grams) : grams;
-        const factor = this.grams / 100; // factor de escala
+        const factor = this.grams / 100;
 
         this.displayValues = {
             kcals: Number((this.selectedProduct.nutriments.kcals * factor).toFixed(1)),
