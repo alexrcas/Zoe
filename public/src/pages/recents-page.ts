@@ -1,14 +1,22 @@
 import { LitElement, html } from 'lit';
-import { Dao } from '../components/Dao';
+import {Dao, Entry} from '../components/Dao';
 import '../components/product-search';
 import '../components/scan-component';
 
 declare const bootstrap: any;
 
+
+interface DisplayValues {
+    kcals: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+}
+
 export class RecentsPage extends LitElement {
     dao: Dao;
     products: any[];
-    displayValues: any;
+    displayValues: DisplayValues;
     bsModal: any;
     grams: number;
     selectedProduct: any;
@@ -29,7 +37,12 @@ export class RecentsPage extends LitElement {
         super();
         this.dao = new Dao();
         this.products = [];
-        this.displayValues = {};
+        this.displayValues = {
+            kcals: 0,
+            proteins: 0,
+            carbs: 0,
+            fats: 0
+        };
         this.bsModal = null;
         this.grams = 100;
         this.selectedProduct = {};
@@ -70,10 +83,10 @@ export class RecentsPage extends LitElement {
         const factor = this.grams / 100; // factor de escala
 
         this.displayValues = {
-            kcals: (this.selectedProduct.nutriments.kcals * factor).toFixed(1),
-            proteins: (this.selectedProduct.nutriments.proteins * factor).toFixed(1),
-            carbs: (this.selectedProduct.nutriments.carbs * factor).toFixed(1),
-            fats: (this.selectedProduct.nutriments.fats * factor).toFixed(1)
+            kcals: Number((this.selectedProduct.nutriments.kcals * factor).toFixed(1)),
+            proteins: Number((this.selectedProduct.nutriments.proteins * factor).toFixed(1)),
+            carbs: Number((this.selectedProduct.nutriments.carbs * factor).toFixed(1)),
+            fats: Number((this.selectedProduct.nutriments.fats * factor).toFixed(1))
         };
 
         this.requestUpdate();
@@ -81,7 +94,7 @@ export class RecentsPage extends LitElement {
 
 
     async addEntry() {
-        const entry = {
+        const entry: Entry = {
             group: this.group || '',
             name: this.selectedProduct.name,
             grams: this.grams,
@@ -92,15 +105,10 @@ export class RecentsPage extends LitElement {
                 carbs: this.displayValues.carbs,
                 fats: this.displayValues.fats
             },
-            nutriments_per100g: {
-                kcals: this.selectedProduct.nutriments.kcals,
-                proteins: this.selectedProduct.nutriments.proteins,
-                carbs: this.selectedProduct.nutriments.carbs,
-                fats: this.selectedProduct.nutriments.fats
-            }
+            product: this.selectedProduct
         }
         await this.dao.saveEntry(entry);
-        await this.dao.saveProduct(entry)
+        await this.dao.saveProduct(this.selectedProduct)
         this.bsModal.hide();
         window.location.hash = '#home';
     }

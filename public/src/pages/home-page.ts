@@ -5,6 +5,14 @@ import { JournalService } from "../components/JournalService";
 
 declare const bootstrap: any;
 
+interface DisplayValues {
+    grams: number;
+    kcals: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+}
+
 export class HomePage extends LitElement {
   dao: Dao;
   journalService: JournalService;
@@ -12,14 +20,14 @@ export class HomePage extends LitElement {
   selectedEntry: any;
   bsModal: any;
   grams: number | null;
-  displayValues: any;
+  displayValues: DisplayValues;
   modalElement: HTMLElement | null = null;
 
   static properties = {
     journal: { type: Array },
     selectedEntry: { type: Object },
     grams: { type: Number },
-    displayValues: { type: Object }
+    displayValues: { type: Object}
   };
 
   constructor() {
@@ -30,7 +38,13 @@ export class HomePage extends LitElement {
     this.selectedEntry = null;
     this.bsModal = null;
     this.grams = null;
-    this.displayValues = {};
+      this.displayValues = {
+          grams: 0,
+          kcals: 0,
+          proteins: 0,
+          carbs: 0,
+          fats: 0
+      };
   }
 
   createRenderRoot() {
@@ -49,6 +63,9 @@ export class HomePage extends LitElement {
   selectEntry(entry: any) {
     this.selectedEntry = entry;
     this.grams = this.selectedEntry.grams;
+
+    if (!this.grams) { return; }
+
     this.displayValues = {
       kcals: this.selectedEntry.nutriments.kcals,
       proteins: this.selectedEntry.nutriments.proteins,
@@ -83,13 +100,17 @@ export class HomePage extends LitElement {
 
 
   updateValues(grams: string) {
+
+      if (!grams) {
+          return;
+      }
     this.grams = parseFloat(grams);
     const factor = this.grams / 100;
     this.displayValues = {
-      kcals: (this.selectedEntry.nutriments_per100g.kcals * factor).toFixed(1),
-      proteins: (this.selectedEntry.nutriments_per100g.proteins * factor).toFixed(1),
-      carbs: (this.selectedEntry.nutriments_per100g.carbs * factor).toFixed(1),
-      fats: (this.selectedEntry.nutriments_per100g.fats * factor).toFixed(1),
+      kcals: Number((this.selectedEntry.product.nutriments.kcals * factor).toFixed(0)),
+      proteins: Number((this.selectedEntry.product.nutriments.proteins * factor).toFixed(1)),
+      carbs: Number((this.selectedEntry.product.nutriments.carbs * factor).toFixed(1)),
+      fats: Number((this.selectedEntry.product.nutriments.fats * factor).toFixed(1)),
       grams: this.grams
     };
 

@@ -1,10 +1,16 @@
 import { openDB, IDBPDatabase } from 'idb';
 
 export interface Nutriments {
-    kcals: number | string;
-    proteins: number | string;
-    carbs: number | string;
-    fats: number | string;
+    kcals: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+}
+
+export interface Product {
+    code: string;
+    name: string;
+    nutriments: Nutriments;
 }
 
 export interface Entry {
@@ -14,14 +20,9 @@ export interface Entry {
     grams: number;
     code: string;
     nutriments: Nutriments;
-    nutriments_per100g: Nutriments;
+    product: Product;
 }
 
-export interface Product {
-    code: string;
-    name: string;
-    nutriments: Nutriments;
-}
 
 export interface Goals {
     kcals: number;
@@ -76,14 +77,15 @@ export class Dao {
         const entry = await this.db!.get('entries', id);
         if (!entry) { return; }
 
-        const factor = grams / 100;
+        const factor: number = grams / 100;
         entry.grams = grams;
         entry.nutriments = {
-            kcals: (Number(entry.nutriments_per100g.kcals) * factor).toFixed(1),
-            proteins: (Number(entry.nutriments_per100g.proteins) * factor).toFixed(1),
-            carbs: (Number(entry.nutriments_per100g.carbs) * factor).toFixed(1),
-            fats: (Number(entry.nutriments_per100g.fats) * factor).toFixed(1)
+            kcals: (Number(entry.product.nutriments.kcals) * factor).toFixed(1),
+            proteins: (Number(entry.product.nutriments.proteins) * factor).toFixed(1),
+            carbs: (Number(entry.product.nutriments.carbs) * factor).toFixed(1),
+            fats: (Number(entry.product.nutriments.fats) * factor).toFixed(1)
         };
+
         await this.db!.put('entries', entry);
     }
 
