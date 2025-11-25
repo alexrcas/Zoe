@@ -176,4 +176,12 @@ export class Dao {
         return await db.get('dishes', id);
     }
 
+    async deleteDish(dish: Dish) {
+        const db = await this.db;
+        const transaction = db.transaction(['dishes'], 'readwrite');
+        const store = transaction.objectStore('dishes');
+        if (dish.id) {
+            store.delete(dish.id);
+        }
+    }
 }

@@ -123,6 +123,33 @@ export class ElaboratePage extends LitElement {
         this.requestUpdate();
     }
 
+    async updateIngredient() {
+
+        if (!this.dish) {
+            return;
+        }
+
+        if (!this.selectedIngredient) {
+            return;
+        }
+
+        if (!this.grams) {
+            return;
+        }
+
+        this.selectedIngredient.nutriments.kcals = this.displayValues.kcals;
+        this.selectedIngredient.nutriments.proteins = this.displayValues.proteins;
+        this.selectedIngredient.nutriments.carbs = this.displayValues.carbs;
+        this.selectedIngredient.nutriments.fats = this.displayValues.fats;
+        this.selectedIngredient.grams = this.grams;
+
+        this.updateDish();
+        await this.dao.saveOrUpdateDish(this.dish);
+
+        this.bsModal.hide();
+        this.requestUpdate();
+    }
+
 
     updateDish() {
 
@@ -134,6 +161,7 @@ export class ElaboratePage extends LitElement {
         this.dish.nutriments.proteins = 0;
         this.dish.nutriments.carbs = 0;
         this.dish.nutriments.fats = 0;
+
         this.dish.ingredients.forEach(ingr => {
 
             // @ts-ignore
@@ -150,7 +178,16 @@ export class ElaboratePage extends LitElement {
         this.dish.nutriments.proteins = Number(this.dish.nutriments.proteins.toFixed(2));
         this.dish.nutriments.carbs = Number(this.dish.nutriments.carbs.toFixed(2));
         this.dish.nutriments.fats = Number(this.dish.nutriments.fats.toFixed(2));
+    }
 
+
+    async deleteDish() {
+        if (!this.dish) {
+            return;
+        }
+
+        await this.dao.deleteDish(this.dish);
+        window.location.hash = '#dishes'
     }
 
 
@@ -266,6 +303,11 @@ export class ElaboratePage extends LitElement {
             Añadir ingrediente
         </a>
     </div>
+
+            <div class="container pt-3 d-flex justify-content-end">
+                <button class="btn btn-danger btn-sm w-50 ms-1 rounded-3 shadow-sm" @click=${this.deleteDish}>Eliminar Plato</button>  
+            </div>
+
 
 
 
