@@ -35,6 +35,7 @@ export interface UserData {
 }
 
 export interface Ingredient {
+    id: number;
     product: Product;
     grams: number;
     nutriments: Nutriments;

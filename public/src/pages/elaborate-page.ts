@@ -82,11 +82,76 @@ export class ElaboratePage extends LitElement {
 
     updateValues(grams: string) {
 
+        if (!grams) {
+            return;
+        }
+
+        if (!this.selectedIngredient) {
+            return;
+        }
+
+        this.grams = parseFloat(grams);
+        const factor = this.grams / 100;
+        this.displayValues = {
+            kcals: Number((this.selectedIngredient.product.nutriments.kcals * factor).toFixed(0)),
+            proteins: Number((this.selectedIngredient.product.nutriments.proteins * factor).toFixed(1)),
+            carbs: Number((this.selectedIngredient.product.nutriments.carbs * factor).toFixed(1)),
+            fats: Number((this.selectedIngredient.product.nutriments.fats * factor).toFixed(1)),
+            grams: this.grams
+        };
+
+        this.requestUpdate();
     }
 
-    deleteIngredient() {}
 
-    updateIngredient() {}
+    async deleteIngredient() {
+        if (!this.dish) {
+            return;
+        }
+
+        if (!this.selectedIngredient) {
+            return;
+        }
+
+        this.dish.ingredients = this.dish.ingredients
+            .filter(ingr => ingr.product.code != this.selectedIngredient!.product.code)
+
+        await this.dao.saveOrUpdateDish(this.dish);
+        this.updateDish();
+
+        this.bsModal.hide();
+        this.requestUpdate();
+    }
+
+
+    updateDish() {
+
+        if (!this.dish) {
+            return;
+        }
+
+        this.dish.nutriments.kcals = 0;
+        this.dish.nutriments.proteins = 0;
+        this.dish.nutriments.carbs = 0;
+        this.dish.nutriments.fats = 0;
+        this.dish.ingredients.forEach(ingr => {
+
+            // @ts-ignore
+            this.dish.nutriments.kcals += ingr.nutriments.kcals;
+            // @ts-ignore
+            this.dish.nutriments.carbs += ingr.nutriments.carbs;
+            // @ts-ignore
+            this.dish.nutriments.proteins += ingr.nutriments.proteins;
+            // @ts-ignore
+            this.dish.nutriments.fats += ingr.nutriments.fats;
+        });
+
+        this.dish.nutriments.kcals = Number(this.dish.nutriments.kcals.toFixed(2));
+        this.dish.nutriments.proteins = Number(this.dish.nutriments.proteins.toFixed(2));
+        this.dish.nutriments.carbs = Number(this.dish.nutriments.carbs.toFixed(2));
+        this.dish.nutriments.fats = Number(this.dish.nutriments.fats.toFixed(2));
+
+    }
 
 
 
