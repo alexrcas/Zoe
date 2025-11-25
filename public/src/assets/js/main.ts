@@ -1,6 +1,7 @@
 import '../../pages/home-page';
 import '../../pages/recents-page';
 import '../../pages/profile-page';
+import '../../pages/select-ingredient-page';
 import '../../pages/dishes-page';
 import '../../pages/elaborate-page';
 import '../../pages/wizard-page';

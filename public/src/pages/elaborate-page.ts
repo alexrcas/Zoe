@@ -1,16 +1,48 @@
 import { LitElement, html } from 'lit';
-import {Dao, Dish} from '../components/Dao';
+import {Dao, Dish, Ingredient} from '../components/Dao';
 
 declare const bootstrap: any;
+
+interface DisplayValues {
+    grams: number;
+    kcals: number;
+    proteins: number;
+    carbs: number;
+    fats: number;
+}
 
 
 export class ElaboratePage extends LitElement {
 
     dao: Dao;
+    dish: Dish | null;
+    displayValues: DisplayValues;
+    selectedIngredient: Ingredient | null;
+    bsModal: any;
+    modalElement: HTMLElement | null = null;
+    grams: number | null;
+
+    static properties = {
+        dish: { type: Object},
+        selectedEntry: { type: Object },
+        grams: { type: Number },
+        displayValues: { type: Object }
+    }
 
     constructor() {
         super();
         this.dao = Dao.getInstance();
+        this.dish = null;
+        this.displayValues = {
+            grams: 0,
+            kcals: 0,
+            proteins: 0,
+            carbs: 0,
+            fats: 0
+        };
+        this.selectedIngredient = null;
+        this.bsModal = null;
+        this.grams = null;
     }
 
     createRenderRoot() {
@@ -18,7 +50,44 @@ export class ElaboratePage extends LitElement {
     }
 
     async firstUpdated() {
+        const query = window.location.hash.slice(1).split('?')[1];
+        if (!query) {
+            return;
+        }
+
+        const id: number = parseInt(new URLSearchParams(query).get('id')!);
+        this.dish = await this.dao.getDish(id);
+
+        this.modalElement = this.querySelector('#entryModal');
+        if (this.modalElement) {
+            this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
+        }
     }
+
+
+    selectIngredient(ingredient: Ingredient) {
+        this.selectedIngredient = ingredient;
+        this.grams = this.selectedIngredient.grams;
+        this.displayValues = {
+            kcals: this.selectedIngredient.nutriments.kcals,
+            proteins: this.selectedIngredient.nutriments.proteins,
+            carbs: this.selectedIngredient.nutriments.carbs,
+            fats: this.selectedIngredient.nutriments.carbs,
+            grams: this.selectedIngredient.grams
+        }
+        this.bsModal.show();
+        this.requestUpdate();
+    }
+
+
+    updateValues(grams: string) {
+
+    }
+
+    deleteIngredient() {}
+
+    updateIngredient() {}
+
 
 
 
@@ -29,34 +98,170 @@ export class ElaboratePage extends LitElement {
             </div>
             
             
-<div class="mx-2">
-    
-            <div class="form-floating mb-3 w-100">
-                <input
-                        id="proteins"
-                        class="form-control form-control-sm"
-                        type="text"
-                        pattern="[0-9]*"
-                        placeholder="Nombre del plato"
-                />
-                <label for="proteins">Nombre del plato</label>
+            <div class="container">
+                <div class="form-floating mb-3 w-100">
+                    <input
+                            id="dishName"
+                            class="form-control form-control-sm"
+                            type="text"
+                            .value="${this.dish?.name}"
+                            @input=${e => {
+                                if (!this.dish) { return; }
+                                this.dish.name = e.target.value}
+                            }
+                            placeholder="Nombre del plato"
+                    />
+                    <label for="proteins">Nombre del plato</label>
+                </div>
             </div>
 
-    
-    <div>Lista de ingredientes</div>
+
+
+            <div class="accordion accordion-flush pt-2" id="accordionFlushSummary">
+                <div class="accordion-item">
+                    <!-- Header del acordeón -->
+                    <h2 class="accordion-header">
+                        <div class="px-3 py-1 fs-6">
+                            <div class="w-100 d-flex flex-column">
+                                <!-- Título Total -->
+                                <h6 class="my-2 fw-normal mb-2" style="font-size: 0.9em;">Total</h6>
+                                <!-- Valores y labels en columnas -->
+                                <div class="d-flex justify-content-between text-center" style="font-weight: 500; font-size: 0.85em;">
+                                    <div>
+                                        <div>${this.dish?.nutriments.kcals}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
+                                    </div>
+                                    <div>
+                                        <div>${this.dish?.nutriments.proteins}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
+                                    </div>
+                                    <div>
+                                        <div>${this.dish?.nutriments.carbs}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
+                                    </div>
+                                    <div>
+                                        <div>${this.dish?.nutriments.fats}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    
+                    <!-- Body del acordeón -->
+                    <div id="flush-collapseSummary" class="accordion-collapse collapse show"
+                         data-bs-parent="#accordionFlushSummary">
+                        <div class="accordion-body px-0" style="background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity))">
+
+                            <div class="list-group list-group-flush shadow-sm rounded-3 bg-white striped-list">
+                                ${this.dish?.ingredients.map((ingredient: Ingredient) => html`
+          <a href="#" class="list-group-item list-group-item-action py-2 d-flex flex-column"
+             @click=${(e: Event) => { e.preventDefault();  this.selectIngredient(ingredient)}}>
+
+            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+              <h6 style="font-weight: 400; font-size: 0.85em;">${ingredient.product.name}</h6>
+              <small class="opacity-50 text-nowrap">${ingredient.grams} g.</small>
+            </div>
+
+            <!-- Valores y labels alineados en columnas -->
+            <div class="d-flex justify-content-between text-center" style="font-weight: 500; font-size: 0.85em;">
+              <div>
+                <div>${ingredient.nutriments.kcals}</div>
+                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
+              </div>
+              <div>
+                <div>${ingredient.nutriments.proteins}</div>
+                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
+              </div>
+              <div>
+                <div>${ingredient.nutriments.carbs}</div>
+                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
+              </div>
+              <div>
+                <div>${ingredient.nutriments.fats}</div>
+                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas</div>
+              </div>
+            </div>
+
+          </a>
+        `)}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+        
+    </div>
+
 
     <div class="d-flex justify-content-center py-2">
-        <a class="text-decoration-underline text-muted" style="font-weight: 300; font-size: 0.8em;">
+        <a class="text-decoration-underline text-muted" style="font-weight: 300; font-size: 0.8em;" href="#select-ingredient?id=${this.dish?.id}">
             Añadir ingrediente
         </a>
     </div>
-    
-    <button class="btn btn-primary">Guardar</button>
 
-</div>
 
-        `
-    }
+
+
+            <!-- Modal de edición de entrada -->
+            <div class="modal fade" id="entryModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 shadow-sm">
+
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title fw-semibold">Editar</h5>
+                            <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
+                        </div>
+
+                        <div class="modal-body px-3 pt-2 pb-0">
+
+                            <h6 class="fw-normal mb-2" style="font-size: 0.85em;">
+                                ${this.selectedEntry?.name}
+                            </h6>
+
+                            <!-- Valores y labels en columnas, alineados -->
+                            <div class="d-flex justify-content-between text-center mb-3" style="font-weight: 500; font-size: 0.85em;">
+                                <div>
+                                    <div>${this.displayValues?.kcals}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
+                                </div>
+                                <div>
+                                    <div>${this.displayValues?.proteins}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
+                                </div>
+                                <div>
+                                    <div>${this.displayValues?.carbs}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
+                                </div>
+                                <div>
+                                    <div>${this.displayValues?.fats}</div>
+                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas</div>
+                                </div>
+                            </div>
+
+                            <!-- Input gramos -->
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="input-group input-group-sm" style="width: 40%;">
+                                    <input class="form-control text-center" type="number" inputmode="numeric" pattern="[0-9]*"
+                                           placeholder="Cantidad en gramos"
+                                           value=${this.grams} @input=${(e: any) => this.updateValues(e.target.value)}/>
+                                    <span class="input-group-text">g.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer d-flex justify-content-between border-0 pt-0 pb-1 px-1">
+                            <button class="btn btn-outline-danger rounded-pill" @click=${this.deleteIngredient}>Eliminar</button>
+                            <button class="btn btn-outline-primary rounded-pill" @click=${this.updateIngredient}>Aceptar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+    `}
 }
 
 customElements.define('elaborate-page', ElaboratePage);

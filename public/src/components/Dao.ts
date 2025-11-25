@@ -92,9 +92,9 @@ export class Dao {
         await db.add('entries', entry);
     }
 
-    async saveDish(dish: Dish) {
+    async saveOrUpdateDish(dish: Dish) {
         const db = await this.db;
-        return await db.add('dishes', dish);
+        return await db.put('dishes', dish);
     }
 
     async updateEntryValues(id: number, grams: number) {
@@ -122,6 +122,11 @@ export class Dao {
     async listProducts(): Promise<Product[]> {
         const db = await this.db;
         return await db.getAll('products');
+    }
+
+    async listDishes(): Promise<Dish[]> {
+        const db = await this.db;
+        return await db.getAll('dishes');
     }
 
     async saveProduct(product: Product) {
@@ -163,6 +168,11 @@ export class Dao {
     async getUserData(): Promise<UserData | undefined> {
         const db = await this.db;
         return await db.get('userData', 'userData');
+    }
+
+    async getDish(id: number): Promise<Dish> {
+        const db = await this.db;
+        return await db.get('dishes', id);
     }
 
 }
