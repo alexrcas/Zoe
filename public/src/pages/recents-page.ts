@@ -1,7 +1,9 @@
 import { LitElement, html } from 'lit';
-import {Dao, Dish, Entry} from '../components/Dao';
+import { Dao, Dish, Entry } from '../components/Dao';
 import '../components/product-search';
 import '../components/scan-component';
+import '../components/product-list';
+import '../components/dish-list';
 
 declare const bootstrap: any;
 
@@ -127,6 +129,10 @@ export class RecentsPage extends LitElement {
         this.requestUpdate();
     }
 
+    handleDishSelected(event: CustomEvent) {
+        // console.log('Dish selected:', event.detail);
+    }
+
     enableScanner() {
         this.showScanner = true;
         this.requestUpdate();
@@ -153,8 +159,6 @@ export class RecentsPage extends LitElement {
             </div>
             
             
-            
-
             <ul class="nav nav-pills nav-fill mb-3 w-100 bg-light rounded-3 p-1" id="formToggle" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button
@@ -193,104 +197,18 @@ export class RecentsPage extends LitElement {
                             <h5 class="pt-2 pb-0 mb-0" style="font-weight: 500; font-size: 0.9em">Alimentos recientes</h5>
                             <em class="d-block mb-2" style="font-weight: 300; font-size: 0.85em;">Valores nutricionales por 100 g. / ml.</em>
                         </div>
-
-                        ${(this.products && this.products.length > 0) ? html`
-                            <!-- Lista de productos -->
-                            <div class="list-group list-group-flush w-100">
-                                ${this.products.map(product => html`
-                            <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
-                               @click=${(e: Event) => {
-                                    e.preventDefault();
-                                    this.selectProduct(product);
-                                }}>
-
-                                <!-- Nombre del producto -->
-                                <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${product.name}</h6>
-
-                                <!-- Valores nutricionales -->
-                                <div class="d-flex justify-content-between text-center"
-                                     style="font-weight: 500; font-size: 0.85em;">
-                                    <div>
-                                        <div>${product.nutriments.kcals}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
-                                    </div>
-                                    <div>
-                                        <div>${product.nutriments.proteins}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
-                                    </div>
-                                    <div>
-                                        <div>${product.nutriments.carbs}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
-                                    </div>
-                                    <div>
-                                        <div>${product.nutriments.fats}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        `)}
-                            </div>
-                        ` : html`
-                    <div class="alert alert-info mx-4">No hay alimentos recientes para mostrar</div>
-                `
-                        }
+                        <product-list class="w-100" .products=${this.products} @product-selected=${this.handleProductSelected}></product-list>
                     </div>
                 </div>
-
-
-                <!-- Formulario 1 -->
-                <div class="tab-pane fade show active" id="alimentos" role="tabpanel">
+                
+                <!-- Formulario 2 -->
+                <div class="tab-pane fade" id="dishes" role="tabpanel">
                     <div class="d-flex flex-column align-items-center">
-
-                        ${(this.dishes && this.dishes.length > 0) ? html`
-                            <!-- Lista de productos -->
-                            <div class="list-group list-group-flush w-100">
-                                ${this.dishes.map(dish => html`
-                            <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
-                               @click=${(e: Event) => {
-                                    e.preventDefault();
-
-                                }}>
-
-                                <!-- Nombre del producto -->
-                                <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${dish.name}</h6>
-
-                                <!-- Valores nutricionales -->
-                                <div class="d-flex justify-content-between text-center"
-                                     style="font-weight: 500; font-size: 0.85em;">
-                                    <div>
-                                        <div>${dish.nutriments.kcals}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
-                                    </div>
-                                    <div>
-                                        <div>${dish.nutriments.proteins}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
-                                    </div>
-                                    <div>
-                                        <div>${dish.nutriments.carbs}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
-                                    </div>
-                                    <div>
-                                        <div>${dish.nutriments.fats}</div>
-                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        `)}
-                            </div>
-                        ` : html`
-                    <div class="alert alert-info mx-4">No hay alimentos recientes para mostrar</div>
-                `
-                        }
+                        <dish-list class="w-100" .dishes=${this.dishes} @dish-selected=${this.handleDishSelected}></dish-list>
                     </div>
                 </div>
                 
             </div>
-            
-            
-            
 
                 <!-- Scanner overlay -->
                 ${this.showScanner ? html`
