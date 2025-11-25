@@ -13,15 +13,23 @@ export interface Product {
     nutriments: Nutriments;
 }
 
-export interface Entry {
-    id?: number;
-    group: string;
-    name: string;
+export interface AbstractEntry {
+    id?: number,
+    group: string,
+    name: string,
+    nutriments: Nutriments,
+}
+
+export interface Entry extends AbstractEntry {
     grams: number;
     code: string;
-    nutriments: Nutriments;
     product: Product;
 }
+
+export interface DishEntry extends AbstractEntry {
+    dishDto: DishDto
+}
+
 
 export interface Goals {
     kcals: number;
@@ -43,6 +51,12 @@ export interface Ingredient {
 
 export interface Dish {
     id?: number;
+    name: string;
+    nutriments: Nutriments;
+    ingredients: Ingredient[];
+}
+
+export interface DishDto {
     name: string;
     nutriments: Nutriments;
     ingredients: Ingredient[];
@@ -88,7 +102,7 @@ export class Dao {
         return db;
     }
 
-    async saveEntry(entry: Entry) {
+    async saveEntry(entry: AbstractEntry) {
         const db = await this.db;
         await db.add('entries', entry);
     }
@@ -115,7 +129,7 @@ export class Dao {
         await db.put('entries', entry);
     }
 
-    async listEntries(): Promise<Entry[]> {
+    async listEntries(): Promise<AbstractEntry[]> {
         const db = await this.db;
         return await db.getAll('entries');
     }

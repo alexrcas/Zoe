@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { Dao, Entry } from '../components/Dao';
+import {Dao, Dish, Entry} from '../components/Dao';
 import '../components/product-search';
 import '../components/scan-component';
 
@@ -16,6 +16,7 @@ interface DisplayValues {
 export class RecentsPage extends LitElement {
     dao: Dao;
     products: any[];
+    dishes: Dish[];
     displayValues: DisplayValues;
     bsModal: any;
     grams: number;
@@ -26,6 +27,7 @@ export class RecentsPage extends LitElement {
 
     static properties = {
         products: { type: Array },
+        dishes: { type: Array },
         displayValues: { type: Object },
         grams: { type: Number },
         selectedProduct: { type: Object },
@@ -37,6 +39,7 @@ export class RecentsPage extends LitElement {
         super();
         this.dao = Dao.getInstance();
         this.products = [];
+        this.dishes = [];
         this.displayValues = {
             kcals: 0,
             proteins: 0,
@@ -61,6 +64,7 @@ export class RecentsPage extends LitElement {
         }
 
         this.products = await this.dao.listProducts();
+        this.dishes = await this.dao.listDishes();
         this.modalElement = this.querySelector('#recentsModal');
         if (this.modalElement) {
             this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
@@ -147,21 +151,58 @@ export class RecentsPage extends LitElement {
                     </button>
                 </div>
             </div>
-
-            <div class="px-3">
-                <h5 class="pt-2 pb-0 mb-0" style="font-weight: 500; font-size: 0.9em">Alimentos recientes</h5>
-                <em class="d-block mb-2" style="font-weight: 300; font-size: 0.85em;">Valores nutricionales por 100 g. / ml.</em>
-            </div>
             
-                ${(this.products && this.products.length > 0) ? html`
-                    <!-- Lista de productos -->
-                    <div class="list-group list-group-flush">
-                        ${this.products.map(product => html`
+            
+            
+
+            <ul class="nav nav-pills nav-fill mb-3 w-100 bg-light rounded-3 p-1" id="formToggle" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button
+                            class="nav-link active rounded-3 py-2 small"
+                            id="alimentos-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#alimentos"
+                            type="button"
+                            role="tab"
+                            style="font-size: 0.88em; font-weight: 500"
+                    >
+                        Alimentos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                            class="nav-link rounded-3 py-2 small"
+                            id="dishes-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#dishes"
+                            type="button"
+                            role="tab"
+                            style="font-size: 0.88em; font-weight: 500"
+                    >
+                        Mis Platos
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content w-100" id="formToggleContent">
+
+                <!-- Formulario 1 -->
+                <div class="tab-pane fade show active" id="alimentos" role="tabpanel">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="px-3 w-100">
+                            <h5 class="pt-2 pb-0 mb-0" style="font-weight: 500; font-size: 0.9em">Alimentos recientes</h5>
+                            <em class="d-block mb-2" style="font-weight: 300; font-size: 0.85em;">Valores nutricionales por 100 g. / ml.</em>
+                        </div>
+
+                        ${(this.products && this.products.length > 0) ? html`
+                            <!-- Lista de productos -->
+                            <div class="list-group list-group-flush w-100">
+                                ${this.products.map(product => html`
                             <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
                                @click=${(e: Event) => {
-                e.preventDefault();
-                this.selectProduct(product);
-            }}>
+                                    e.preventDefault();
+                                    this.selectProduct(product);
+                                }}>
 
                                 <!-- Nombre del producto -->
                                 <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${product.name}</h6>
@@ -189,11 +230,67 @@ export class RecentsPage extends LitElement {
                                 </div>
                             </a>
                         `)}
-                    </div>
-                ` : html`
+                            </div>
+                        ` : html`
                     <div class="alert alert-info mx-4">No hay alimentos recientes para mostrar</div>
                 `
-            }
+                        }
+                    </div>
+                </div>
+
+
+                <!-- Formulario 1 -->
+                <div class="tab-pane fade show active" id="alimentos" role="tabpanel">
+                    <div class="d-flex flex-column align-items-center">
+
+                        ${(this.dishes && this.dishes.length > 0) ? html`
+                            <!-- Lista de productos -->
+                            <div class="list-group list-group-flush w-100">
+                                ${this.dishes.map(dish => html`
+                            <a href="#" class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
+                               @click=${(e: Event) => {
+                                    e.preventDefault();
+
+                                }}>
+
+                                <!-- Nombre del producto -->
+                                <h6 class="fw-normal mb-1" style="font-size: 0.85em;">${dish.name}</h6>
+
+                                <!-- Valores nutricionales -->
+                                <div class="d-flex justify-content-between text-center"
+                                     style="font-weight: 500; font-size: 0.85em;">
+                                    <div>
+                                        <div>${dish.nutriments.kcals}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
+                                    </div>
+                                    <div>
+                                        <div>${dish.nutriments.proteins}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
+                                    </div>
+                                    <div>
+                                        <div>${dish.nutriments.carbs}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
+                                    </div>
+                                    <div>
+                                        <div>${dish.nutriments.fats}</div>
+                                        <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        `)}
+                            </div>
+                        ` : html`
+                    <div class="alert alert-info mx-4">No hay alimentos recientes para mostrar</div>
+                `
+                        }
+                    </div>
+                </div>
+                
+            </div>
+            
+            
+            
 
                 <!-- Scanner overlay -->
                 ${this.showScanner ? html`
