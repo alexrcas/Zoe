@@ -4,6 +4,7 @@ import '../components/product-search';
 import '../components/scan-component';
 import '../components/product-list';
 import '../components/dish-list';
+import '../components/modals/recents-product-modal';
 
 declare const bootstrap: any;
 
@@ -20,12 +21,11 @@ export class RecentsPage extends LitElement {
     products: any[];
     dishes: Dish[];
     displayValues: DisplayValues;
-    bsModal: any;
     grams: number;
     selectedProduct: any;
     showScanner: boolean;
     group: string | null;
-    modalElement: HTMLElement | null = null;
+    modalComponent: any;
 
     static properties = {
         products: { type: Array },
@@ -48,7 +48,6 @@ export class RecentsPage extends LitElement {
             carbs: 0,
             fats: 0
         };
-        this.bsModal = null;
         this.grams = 100;
         this.selectedProduct = {};
         this.showScanner = false;
@@ -67,10 +66,7 @@ export class RecentsPage extends LitElement {
 
         this.products = await this.dao.listProducts();
         this.dishes = await this.dao.listDishes();
-        this.modalElement = this.querySelector('#recentsModal');
-        if (this.modalElement) {
-            this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
-        }
+        this.modalComponent = this.querySelector('recents-product-modal');
         this.requestUpdate();
     }
 
@@ -80,7 +76,9 @@ export class RecentsPage extends LitElement {
             this.updateValues(this.grams.toString());
         }
         this.requestUpdate();
-        this.bsModal.show();
+        if (this.modalComponent) {
+            this.modalComponent.show();
+        }
     }
 
 
@@ -115,7 +113,9 @@ export class RecentsPage extends LitElement {
         }
         await this.dao.saveEntry(entry);
         await this.dao.saveProduct(this.selectedProduct)
-        this.bsModal.hide();
+        if (this.modalComponent) {
+            this.modalComponent.hide();
+        }
         window.location.hash = '#home';
     }
 
@@ -141,6 +141,10 @@ export class RecentsPage extends LitElement {
     handleCloseScanner() {
         this.showScanner = false;
         this.requestUpdate();
+    }
+
+    handleModalUpdateValues(e: CustomEvent) {
+        this.updateValues(e.detail);
     }
 
     render() {
@@ -220,89 +224,15 @@ export class RecentsPage extends LitElement {
             </div>
 
             <!-- Modal de añadir producto -->
-            <div class="modal fade" id="recentsModal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content rounded-4 shadow-sm">
-
-                        <div class="modal-header border-0 pb-2">
-                            <h5 class="modal-title fw-semibold">Añadir</h5>
-                            <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
-                        </div>
-
-                        <div class="modal-body px-0 pt-2 pb-0">
-
-                            ${this.selectedProduct ? html`
-                                <div class="list-group list-group-flush">
-                                    <a class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
-                                       @click=${(e: Event) => e.preventDefault()}>
-
-                                        <h6 class="fw-normal mb-1" style="font-size: 0.85em;">
-                                            ${this.selectedProduct.name}</h6>
-
-                                        <div class="d-flex justify-content-between text-center"
-                                             style="font-weight: 500; font-size: 0.85em;">
-                                            <div>
-                                                <div>${this.displayValues.kcals}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    kcals
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>${this.displayValues.proteins}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    Prot.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>${this.displayValues.carbs}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    Carb.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>${this.displayValues.fats}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    Grasas
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-
-                                <!-- Input gramos -->
-                                <div class="d-flex justify-content-center pt-2 pb-2">
-                                    <div class="input-group input-group-sm" style="width: 40%">
-                                        <input class="form-control rounded-start" type="number" inputmode="numeric"
-                                               pattern="[0-9]*"
-                                               placeholder="Cantidad en gramos" value=${this.grams}
-                                               @input=${(e: any) => this.updateValues(e.target.value)}>
-                                        <span class="input-group-text rounded-end">g.</span>
-                                    </div>
-                                </div>
-
-                                <!-- Botón añadir -->
-                                <div class="modal-footer d-flex justify-content-end border-0 pt-0">
-                                    <button class="btn btn-outline-primary rounded-pill" @click=${this.addEntry}>
-                                        Añadir
-                                    </button>
-                                </div>
-
-                            ` : html`
-                                <div class="alert alert-info py-2 my-2 mx-3" style="font-size: 0.8em;">No hemos
-                                    encontrado información sobre este producto
-                                </div>
-                            `}
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
+            <recents-product-modal
+                .selectedProduct=${this.selectedProduct}
+                .grams=${this.grams}
+                .displayValues=${this.displayValues}
+                @update-values=${this.handleModalUpdateValues}
+                @add-entry=${this.addEntry}
+            ></recents-product-modal>
         `;
     }
-
-
 }
 
 customElements.define('recents-page', RecentsPage);

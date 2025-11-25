@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit';
-import {Dao, Dish, Ingredient} from '../components/Dao';
+import { Dao, Dish, Ingredient } from '../components/Dao';
+import '../components/modals/elaborate-entry-modal';
 
 declare const bootstrap: any;
 
@@ -18,12 +19,11 @@ export class ElaboratePage extends LitElement {
     dish: Dish | null;
     displayValues: DisplayValues;
     selectedIngredient: Ingredient | null;
-    bsModal: any;
-    modalElement: HTMLElement | null = null;
+    modalComponent: any;
     grams: number | null;
 
     static properties = {
-        dish: { type: Object},
+        dish: { type: Object },
         selectedEntry: { type: Object },
         grams: { type: Number },
         displayValues: { type: Object }
@@ -41,7 +41,6 @@ export class ElaboratePage extends LitElement {
             fats: 0
         };
         this.selectedIngredient = null;
-        this.bsModal = null;
         this.grams = null;
     }
 
@@ -58,10 +57,7 @@ export class ElaboratePage extends LitElement {
         const id: number = parseInt(new URLSearchParams(query).get('id')!);
         this.dish = await this.dao.getDish(id);
 
-        this.modalElement = this.querySelector('#entryModal');
-        if (this.modalElement) {
-            this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
-        }
+        this.modalComponent = this.querySelector('elaborate-entry-modal');
     }
 
 
@@ -75,7 +71,9 @@ export class ElaboratePage extends LitElement {
             fats: this.selectedIngredient.nutriments.carbs,
             grams: this.selectedIngredient.grams
         }
-        this.bsModal.show();
+        if (this.modalComponent) {
+            this.modalComponent.show();
+        }
         this.requestUpdate();
     }
 
@@ -119,7 +117,9 @@ export class ElaboratePage extends LitElement {
         await this.dao.saveOrUpdateDish(this.dish);
         this.updateDish();
 
-        this.bsModal.hide();
+        if (this.modalComponent) {
+            this.modalComponent.hide();
+        }
         this.requestUpdate();
     }
 
@@ -146,7 +146,9 @@ export class ElaboratePage extends LitElement {
         this.updateDish();
         await this.dao.saveOrUpdateDish(this.dish);
 
-        this.bsModal.hide();
+        if (this.modalComponent) {
+            this.modalComponent.hide();
+        }
         this.requestUpdate();
     }
 
@@ -191,6 +193,9 @@ export class ElaboratePage extends LitElement {
     }
 
 
+    handleModalUpdateValues(e: CustomEvent) {
+        this.updateValues(e.detail);
+    }
 
 
     render() {
@@ -208,9 +213,10 @@ export class ElaboratePage extends LitElement {
                             type="text"
                             .value="${this.dish?.name}"
                             @input=${e => {
-                                if (!this.dish) { return; }
-                                this.dish.name = e.target.value}
-                            }
+                if (!this.dish) { return; }
+                this.dish.name = e.target.value
+            }
+            }
                             placeholder="Nombre del plato"
                     />
                     <label for="proteins">Nombre del plato</label>
@@ -259,7 +265,7 @@ export class ElaboratePage extends LitElement {
                             <div class="list-group list-group-flush shadow-sm rounded-3 bg-white striped-list">
                                 ${this.dish?.ingredients.map((ingredient: Ingredient) => html`
           <a href="#" class="list-group-item list-group-item-action py-2 d-flex flex-column"
-             @click=${(e: Event) => { e.preventDefault();  this.selectIngredient(ingredient)}}>
+             @click=${(e: Event) => { e.preventDefault(); this.selectIngredient(ingredient) }}>
 
             <div class="d-flex w-100 justify-content-between align-items-center mb-1">
               <h6 style="font-weight: 400; font-size: 0.85em;">${ingredient.product.name}</h6>
@@ -309,64 +315,15 @@ export class ElaboratePage extends LitElement {
             </div>
 
 
-
-
-
             <!-- Modal de edición de entrada -->
-            <div class="modal fade" id="entryModal" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content rounded-4 shadow-sm">
-
-                        <div class="modal-header border-0">
-                            <h5 class="modal-title fw-semibold">Editar</h5>
-                            <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
-                        </div>
-
-                        <div class="modal-body px-3 pt-2 pb-0">
-
-                            <h6 class="fw-normal mb-2" style="font-size: 0.85em;">
-                                ${this.selectedEntry?.name}
-                            </h6>
-
-                            <!-- Valores y labels en columnas, alineados -->
-                            <div class="d-flex justify-content-between text-center mb-3" style="font-weight: 500; font-size: 0.85em;">
-                                <div>
-                                    <div>${this.displayValues?.kcals}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
-                                </div>
-                                <div>
-                                    <div>${this.displayValues?.proteins}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
-                                </div>
-                                <div>
-                                    <div>${this.displayValues?.carbs}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
-                                </div>
-                                <div>
-                                    <div>${this.displayValues?.fats}</div>
-                                    <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas</div>
-                                </div>
-                            </div>
-
-                            <!-- Input gramos -->
-                            <div class="d-flex justify-content-center mb-3">
-                                <div class="input-group input-group-sm" style="width: 40%;">
-                                    <input class="form-control text-center" type="number" inputmode="numeric" pattern="[0-9]*"
-                                           placeholder="Cantidad en gramos"
-                                           value=${this.grams} @input=${(e: any) => this.updateValues(e.target.value)}/>
-                                    <span class="input-group-text">g.</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer d-flex justify-content-between border-0 pt-0 pb-1 px-1">
-                            <button class="btn btn-outline-danger rounded-pill" @click=${this.deleteIngredient}>Eliminar</button>
-                            <button class="btn btn-outline-primary rounded-pill" @click=${this.updateIngredient}>Aceptar</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+            <elaborate-entry-modal
+                .selectedEntry=${this.selectedIngredient}
+                .grams=${this.grams}
+                .displayValues=${this.displayValues}
+                @update-values=${this.handleModalUpdateValues}
+                @delete-entry=${this.deleteIngredient}
+                @update-entry=${this.updateIngredient}
+            ></elaborate-entry-modal>
             
     `}
 }

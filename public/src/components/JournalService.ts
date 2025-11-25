@@ -1,8 +1,8 @@
-import { Dao, Entry } from '../components/Dao';
+import {AbstractEntry, Dao} from '../components/Dao';
 
 export interface JournalGroup {
     group: string;
-    entries: Entry[];
+    entries: AbstractEntry[];
 }
 
 export class JournalService {

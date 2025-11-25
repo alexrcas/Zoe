@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { Dao, Entry, Goals } from './Dao';
+import {AbstractEntry, Dao, Entry, Goals} from './Dao';
 
 export class SummaryComponent extends LitElement {
   dao: Dao;
@@ -8,7 +8,7 @@ export class SummaryComponent extends LitElement {
   carbs: number;
   fats: number;
   goals: Goals | Record<string, never>;
-  entries: Entry[] = [];
+  entries: AbstractEntry[] = [];
 
   static properties = {
     kcals: { type: Number },

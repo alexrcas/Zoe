@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit';
 import { Dao } from '../components/Dao';
 import '../components/summary-component';
 import { JournalService } from "../components/JournalService";
+import '../components/modals/home-entry-modal';
 
 declare const bootstrap: any;
 
@@ -18,10 +19,9 @@ export class HomePage extends LitElement {
   journalService: JournalService;
   journal: any[];
   selectedEntry: any;
-  bsModal: any;
   grams: number | null;
   displayValues: DisplayValues;
-  modalElement: HTMLElement | null = null;
+  modalComponent: any;
 
   static properties = {
     journal: { type: Array },
@@ -36,7 +36,6 @@ export class HomePage extends LitElement {
     this.journalService = new JournalService();
     this.journal = [];
     this.selectedEntry = null;
-    this.bsModal = null;
     this.grams = null;
     this.displayValues = {
       grams: 0,
@@ -52,10 +51,7 @@ export class HomePage extends LitElement {
   }
 
   async firstUpdated() {
-    this.modalElement = this.querySelector('#entryModal');
-    if (this.modalElement) {
-      this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
-    }
+    this.modalComponent = this.querySelector('home-entry-modal');
     this.journal = await this.journalService.getJournal();
     this.requestUpdate();
   }
@@ -73,14 +69,18 @@ export class HomePage extends LitElement {
       fats: this.selectedEntry.nutriments.carbs,
       grams: this.grams
     }
-    this.bsModal.show();
+    if (this.modalComponent) {
+      this.modalComponent.show();
+    }
     this.requestUpdate();
   }
 
   async deleteEntry() {
     await this.dao.deleteEntry(this.selectedEntry);
     this.journal = await this.journalService.getJournal();
-    this.bsModal.hide();
+    if (this.modalComponent) {
+      this.modalComponent.hide();
+    }
     this.requestUpdate();
   }
 
@@ -93,7 +93,9 @@ export class HomePage extends LitElement {
     this.selectedEntry.nutriments.carbs = this.displayValues.carbs;
     this.selectedEntry.nutriments.fats = this.displayValues.fats;
 
-    this.bsModal.hide();
+    if (this.modalComponent) {
+      this.modalComponent.hide();
+    }
     this.requestUpdate();
     window.location.reload();
   }
@@ -115,6 +117,10 @@ export class HomePage extends LitElement {
     };
 
     this.requestUpdate();
+  }
+
+  handleModalUpdateValues(e: CustomEvent) {
+    this.updateValues(e.detail);
   }
 
   render() {
@@ -181,60 +187,14 @@ export class HomePage extends LitElement {
 </div>
 
 <!-- Modal de edición de entrada -->
-<div class="modal fade" id="entryModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-4 shadow-sm">
-
-      <div class="modal-header border-0">
-        <h5 class="modal-title fw-semibold">Editar</h5>
-        <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
-      </div>
-
-      <div class="modal-body px-3 pt-2 pb-0">
-
-        <h6 class="fw-normal mb-2" style="font-size: 0.85em;">
-          ${this.selectedEntry?.name}
-        </h6>
-
-        <!-- Valores y labels en columnas, alineados -->
-        <div class="d-flex justify-content-between text-center mb-3" style="font-weight: 500; font-size: 0.85em;">
-          <div>
-            <div>${this.displayValues?.kcals}</div>
-            <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">kcals</div>
-          </div>
-          <div>
-            <div>${this.displayValues?.proteins}</div>
-            <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Prot.</div>
-          </div>
-          <div>
-            <div>${this.displayValues?.carbs}</div>
-            <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Carb.</div>
-          </div>
-          <div>
-            <div>${this.displayValues?.fats}</div>
-            <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">Grasas</div>
-          </div>
-        </div>
-
-        <!-- Input gramos -->
-        <div class="d-flex justify-content-center mb-3">
-          <div class="input-group input-group-sm" style="width: 40%;">
-            <input class="form-control text-center" type="number" inputmode="numeric" pattern="[0-9]*"
-                   placeholder="Cantidad en gramos"
-                   value=${this.grams} @input=${(e: any) => this.updateValues(e.target.value)}/>
-            <span class="input-group-text">g.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer d-flex justify-content-between border-0 pt-0 pb-1 px-1">
-        <button class="btn btn-outline-danger rounded-pill" @click=${this.deleteEntry}>Eliminar</button>
-        <button class="btn btn-outline-primary rounded-pill" @click=${this.updateEntry}>Aceptar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
+<home-entry-modal
+    .selectedEntry=${this.selectedEntry}
+    .grams=${this.grams}
+    .displayValues=${this.displayValues}
+    @update-values=${this.handleModalUpdateValues}
+    @delete-entry=${this.deleteEntry}
+    @update-entry=${this.updateEntry}
+></home-entry-modal>
 
 
         `;

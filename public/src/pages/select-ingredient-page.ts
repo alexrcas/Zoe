@@ -1,7 +1,8 @@
 import { LitElement, html } from 'lit';
-import {Dao, Dish, Entry, Ingredient} from '../components/Dao';
+import { Dao, Dish, Entry, Ingredient } from '../components/Dao';
 import '../components/product-search';
 import '../components/scan-component';
+import '../components/modals/select-ingredient-modal';
 
 declare const bootstrap: any;
 
@@ -17,13 +18,13 @@ export class SelectIngredientPage extends LitElement {
     dao: Dao;
     products: any[];
     displayValues: DisplayValues;
-    bsModal: any;
     grams: number;
     selectedProduct: any;
     showScanner: boolean;
     group: string | null;
-    modalElement: HTMLElement | null = null;
+    modalComponent: any;
     dish: Dish | null;
+    dishId: number | null;
 
     static properties = {
         products: { type: Array },
@@ -44,11 +45,11 @@ export class SelectIngredientPage extends LitElement {
             carbs: 0,
             fats: 0
         };
-        this.bsModal = null;
         this.grams = 100;
         this.selectedProduct = {};
         this.showScanner = false;
         this.group = null;
+        this.dish = null;
         this.dishId = null;
     }
 
@@ -66,10 +67,7 @@ export class SelectIngredientPage extends LitElement {
         console.log(this.dish);
 
         this.products = await this.dao.listProducts();
-        this.modalElement = this.querySelector('#recentsModal');
-        if (this.modalElement) {
-            this.bsModal = new bootstrap.Modal(this.modalElement, { backdrop: 'static' });
-        }
+        this.modalComponent = this.querySelector('select-ingredient-modal');
         this.requestUpdate();
     }
 
@@ -79,7 +77,9 @@ export class SelectIngredientPage extends LitElement {
             this.updateValues(this.grams.toString());
         }
         this.requestUpdate();
-        this.bsModal.show();
+        if (this.modalComponent) {
+            this.modalComponent.show();
+        }
     }
 
 
@@ -105,22 +105,25 @@ export class SelectIngredientPage extends LitElement {
         }
 
         const ingredient: Ingredient = {
-            grams: this.grams,
+            id: Date.now(),
             product: this.selectedProduct,
+            grams: this.grams,
             nutriments: {
                 kcals: this.displayValues.kcals,
                 proteins: this.displayValues.proteins,
                 carbs: this.displayValues.carbs,
                 fats: this.displayValues.fats
             }
-        };
+        }
 
-        this.dish.ingredients = [...this.dish.ingredients, ingredient]
+        this.dish.ingredients.push(ingredient);
         this.updateDishNutriments();
 
         await this.dao.saveOrUpdateDish(this.dish);
         await this.dao.saveProduct(this.selectedProduct)
-        this.bsModal.hide();
+        if (this.modalComponent) {
+            this.modalComponent.hide();
+        }
         window.location.hash = `#elaborate?id=${this.dish.id}`;
     }
 
@@ -137,14 +140,14 @@ export class SelectIngredientPage extends LitElement {
         this.dish.nutriments.fats = 0;
         this.dish.ingredients.forEach(ingr => {
 
-        // @ts-ignore
-        this.dish.nutriments.kcals += ingr.nutriments.kcals;
-        // @ts-ignore
-        this.dish.nutriments.carbs += ingr.nutriments.carbs;
-        // @ts-ignore
-        this.dish.nutriments.proteins += ingr.nutriments.proteins;
-        // @ts-ignore
-        this.dish.nutriments.fats += ingr.nutriments.fats;
+            // @ts-ignore
+            this.dish.nutriments.kcals += ingr.nutriments.kcals;
+            // @ts-ignore
+            this.dish.nutriments.carbs += ingr.nutriments.carbs;
+            // @ts-ignore
+            this.dish.nutriments.proteins += ingr.nutriments.proteins;
+            // @ts-ignore
+            this.dish.nutriments.fats += ingr.nutriments.fats;
         });
 
         this.dish.nutriments.kcals = Number(this.dish.nutriments.kcals.toFixed(2));
@@ -172,6 +175,10 @@ export class SelectIngredientPage extends LitElement {
     handleCloseScanner() {
         this.showScanner = false;
         this.requestUpdate();
+    }
+
+    handleModalUpdateValues(e: CustomEvent) {
+        this.updateValues(e.detail);
     }
 
     render() {
@@ -248,85 +255,13 @@ export class SelectIngredientPage extends LitElement {
             </div>
 
             <!-- Modal de añadir producto -->
-            <div class="modal fade" id="recentsModal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content rounded-4 shadow-sm">
-
-                        <div class="modal-header border-0 pb-2">
-                            <h5 class="modal-title fw-semibold">Añadir</h5>
-                            <button type="button" class="btn-close" @click=${() => this.bsModal.hide()}></button>
-                        </div>
-
-                        <div class="modal-body px-0 pt-2 pb-0">
-
-                            ${this.selectedProduct ? html`
-                                <div class="list-group list-group-flush">
-                                    <a class="list-group-item list-group-item-action d-flex flex-column py-2 px-3"
-                                       @click=${(e: Event) => e.preventDefault()}>
-
-                                        <h6 class="fw-normal mb-1" style="font-size: 0.85em;">
-                                            ${this.selectedProduct.name}</h6>
-
-                                        <div class="d-flex justify-content-between text-center"
-                                             style="font-weight: 500; font-size: 0.85em;">
-                                            <div>
-                                                <div>${this.displayValues.kcals}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    kcals
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>${this.displayValues.proteins}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    Prot.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>${this.displayValues.carbs}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    Carb.
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div>${this.displayValues.fats}</div>
-                                                <div class="text-muted" style="font-weight: 400; font-size: 0.75em;">
-                                                    Grasas
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-
-                                <!-- Input gramos -->
-                                <div class="d-flex justify-content-center pt-2 pb-2">
-                                    <div class="input-group input-group-sm" style="width: 40%">
-                                        <input class="form-control rounded-start" type="number" inputmode="numeric"
-                                               pattern="[0-9]*"
-                                               placeholder="Cantidad en gramos" value=${this.grams}
-                                               @input=${(e: any) => this.updateValues(e.target.value)}>
-                                        <span class="input-group-text rounded-end">g.</span>
-                                    </div>
-                                </div>
-
-                                <!-- Botón añadir -->
-                                <div class="modal-footer d-flex justify-content-end border-0 pt-0">
-                                    <button class="btn btn-outline-primary rounded-pill" @click=${this.addEntry}>
-                                        Añadir
-                                    </button>
-                                </div>
-
-                            ` : html`
-                                <div class="alert alert-info py-2 my-2 mx-3" style="font-size: 0.8em;">No hemos
-                                    encontrado información sobre este producto
-                                </div>
-                            `}
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
+            <select-ingredient-modal
+                .selectedProduct=${this.selectedProduct}
+                .grams=${this.grams}
+                .displayValues=${this.displayValues}
+                @update-values=${this.handleModalUpdateValues}
+                @add-entry=${this.addEntry}
+            ></select-ingredient-modal>
         `;
     }
 
